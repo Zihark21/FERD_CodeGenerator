@@ -4103,7 +4103,7 @@
         "Volug": "80885B18",
         "Zihark": "808866E8"
     },
-    "Item 1": {
+    "Item_1": {
         "Aran": "8088D91C",
         "Astrid": "80893F7C",
         "Bastian": "8089181C",
@@ -4175,7 +4175,7 @@
         "Volug": "80885B1C",
         "Zihark": "808866EC"
     },
-    "Item 1 Uses": {
+    "Item_1_Uses": {
         "Aran": "8088D920",
         "Astrid": "80893F80",
         "Bastian": "80891820",
@@ -4247,7 +4247,7 @@
         "Volug": "80885B20",
         "Zihark": "808866F0"
     },
-    "Item 1 Status": {
+    "Item_1_Status": {
         "Aran": "8088D921",
         "Astrid": "80893F81",
         "Bastian": "80891821",
@@ -4319,7 +4319,7 @@
         "Volug": "80885B21",
         "Zihark": "808866F1"
     },
-    "Item 1 Forge": {
+    "Item_1_Forge": {
         "Aran": "8088D93A",
         "Astrid": "80893F9A",
         "Bastian": "8089183A",
@@ -4391,7 +4391,7 @@
         "Volug": "80885B3A",
         "Zihark": "8088670A"
     },
-    "Item 2": {
+    "Item_2": {
         "Aran": "8088D944",
         "Astrid": "80893FA4",
         "Bastian": "80891844",
@@ -4463,7 +4463,7 @@
         "Volug": "80885B44",
         "Zihark": "80886714"
     },
-    "Item 2 Uses": {
+    "Item_2_Uses": {
         "Aran": "8088D948",
         "Astrid": "80893FA8",
         "Bastian": "80891848",
@@ -4535,7 +4535,7 @@
         "Volug": "80885B48",
         "Zihark": "80886718"
     },
-    "Item 2 Status": {
+    "Item_2_Status": {
         "Aran": "8088D949",
         "Astrid": "80893FA9",
         "Bastian": "80891849",
@@ -4607,7 +4607,7 @@
         "Volug": "80885B49",
         "Zihark": "80886719"
     },
-    "Item 2 Forge": {
+    "Item_2_Forge": {
         "Aran": "8088D962",
         "Astrid": "80893FC2",
         "Bastian": "80891862",
@@ -4679,7 +4679,7 @@
         "Volug": "80885B62",
         "Zihark": "80886732"
     },
-    "Item 3": {
+    "Item_3": {
         "Aran": "8088D96C",
         "Astrid": "80893FCC",
         "Bastian": "8089186C",
@@ -4751,7 +4751,7 @@
         "Volug": "80885B6C",
         "Zihark": "8088673C"
     },
-    "Item 3 Uses": {
+    "Item_3_Uses": {
         "Aran": "8088D970",
         "Astrid": "80893FD0",
         "Bastian": "80891870",
@@ -4823,7 +4823,7 @@
         "Volug": "80885B70",
         "Zihark": "80886740"
     },
-    "Item 3 Status": {
+    "Item_3_Status": {
         "Aran": "8088D971",
         "Astrid": "80893FD1",
         "Bastian": "80891871",
@@ -4895,7 +4895,7 @@
         "Volug": "80885B71",
         "Zihark": "80886741"
     },
-    "Item 3 Forge": {
+    "Item_3_Forge": {
         "Aran": "8088D98A",
         "Astrid": "80893FEA",
         "Bastian": "8089188A",
@@ -4967,7 +4967,7 @@
         "Volug": "80885B8A",
         "Zihark": "8088675A"
     },
-    "Item 4": {
+    "Item_4": {
         "Aran": "8088D994",
         "Astrid": "80893FF4",
         "Bastian": "80891894",
@@ -5039,7 +5039,7 @@
         "Volug": "80885B94",
         "Zihark": "80886764"
     },
-    "Item 4 Uses": {
+    "Item_4_Uses": {
         "Aran": "8088D998",
         "Astrid": "80893FF8",
         "Bastian": "80891898",
@@ -5111,7 +5111,7 @@
         "Volug": "80885B98",
         "Zihark": "80886768"
     },
-    "Item 4 Status": {
+    "Item_4_Status": {
         "Aran": "8088D999",
         "Astrid": "80893FF9",
         "Bastian": "80891899",
@@ -5183,7 +5183,7 @@
         "Volug": "80885B99",
         "Zihark": "80886769"
     },
-    "Item 4 Forge": {
+    "Item_4_Forge": {
         "Aran": "8088D9B2",
         "Astrid": "80894012",
         "Bastian": "808918B2",
@@ -5255,7 +5255,7 @@
         "Volug": "80885BB2",
         "Zihark": "80886782"
     },
-    "Item 5": {
+    "Item_5": {
         "Aran": "8088D9BC",
         "Astrid": "8089401C",
         "Bastian": "808918BC",
@@ -5327,7 +5327,7 @@
         "Volug": "80885BBC",
         "Zihark": "8088678C"
     },
-    "Item 5 Uses": {
+    "Item_5_Uses": {
         "Aran": "8088D9C0",
         "Astrid": "80894020",
         "Bastian": "808918C0",
@@ -5399,7 +5399,7 @@
         "Volug": "80885BC0",
         "Zihark": "80886790"
     },
-    "Item 5 Status": {
+    "Item_5_Status": {
         "Aran": "8088D9C1",
         "Astrid": "80894021",
         "Bastian": "808918C1",
@@ -5471,7 +5471,7 @@
         "Volug": "80885BC1",
         "Zihark": "80886791"
     },
-    "Item 5 Forge": {
+    "Item_5_Forge": {
         "Aran": "8088D9DA",
         "Astrid": "8089403A",
         "Bastian": "808918DA",
@@ -5543,7 +5543,7 @@
         "Volug": "80885BDA",
         "Zihark": "808867AA"
     },
-    "Item 6": {
+    "Item_6": {
         "Aran": "8088D9E4",
         "Astrid": "80894044",
         "Bastian": "808918E4",
@@ -5615,7 +5615,7 @@
         "Volug": "80885BE4",
         "Zihark": "808867B4"
     },
-    "Item 6 Uses": {
+    "Item_6_Uses": {
         "Aran": "8088D9E8",
         "Astrid": "80894048",
         "Bastian": "808918E8",
@@ -5687,7 +5687,7 @@
         "Volug": "80885BE8",
         "Zihark": "808867B8"
     },
-    "Item 6 Status": {
+    "Item_6_Status": {
         "Aran": "8088D9E9",
         "Astrid": "80894049",
         "Bastian": "808918E9",
@@ -5759,7 +5759,7 @@
         "Volug": "80885BE9",
         "Zihark": "808867B9"
     },
-    "Item 6 Forge": {
+    "Item_6_Forge": {
         "Aran": "8088DA02",
         "Astrid": "80894062",
         "Bastian": "80891902",
@@ -5831,7 +5831,7 @@
         "Volug": "80885C02",
         "Zihark": "808867D2"
     },
-    "Item 7": {
+    "Item_7": {
         "Aran": "8088DA0C",
         "Astrid": "8089406C",
         "Bastian": "8089190C",
@@ -5903,7 +5903,7 @@
         "Volug": "80885C0C",
         "Zihark": "808867DC"
     },
-    "Item 7 Uses": {
+    "Item_7_Uses": {
         "Aran": "8088DA10",
         "Astrid": "80894070",
         "Bastian": "80891910",
@@ -5975,7 +5975,7 @@
         "Volug": "80885C10",
         "Zihark": "808867E0"
     },
-    "Item 7 Status": {
+    "Item_7_Status": {
         "Aran": "8088DA11",
         "Astrid": "80894071",
         "Bastian": "80891911",
@@ -6047,7 +6047,7 @@
         "Volug": "80885C11",
         "Zihark": "808867E1"
     },
-    "Item 7 Forge": {
+    "Item_7_Forge": {
         "Aran": "8088DA2A",
         "Astrid": "8089408A",
         "Bastian": "8089192A",
@@ -6119,7 +6119,7 @@
         "Volug": "80885C2A",
         "Zihark": "808867FA"
     },
-    "Sword Rank": {
+    "Sword_Rank": {
         "Aran": "8088DA34",
         "Astrid": "80894094",
         "Bastian": "80891934",
@@ -6191,7 +6191,7 @@
         "Volug": "80885C34",
         "Zihark": "80886804"
     },
-    "Lance Rank": {
+    "Lance_Rank": {
         "Aran": "8088DA36",
         "Astrid": "80894096",
         "Bastian": "80891936",
@@ -6263,7 +6263,7 @@
         "Volug": "80885C36",
         "Zihark": "80886806"
     },
-    "Axe Rank": {
+    "Axe_Rank": {
         "Aran": "8088DA38",
         "Astrid": "80894098",
         "Bastian": "80891938",
@@ -6335,7 +6335,7 @@
         "Volug": "80885C38",
         "Zihark": "80886808"
     },
-    "Bow Rank": {
+    "Bow_Rank": {
         "Aran": "8088DA3A",
         "Astrid": "8089409A",
         "Bastian": "8089193A",
@@ -6407,7 +6407,7 @@
         "Volug": "80885C3A",
         "Zihark": "8088680A"
     },
-    "Knife Rank": {
+    "Knife_Rank": {
         "Aran": "8088DA3C",
         "Astrid": "8089409C",
         "Bastian": "8089193C",
@@ -6479,7 +6479,7 @@
         "Volug": "80885C3C",
         "Zihark": "8088680C"
     },
-    "Strike Rank": {
+    "Strike_Rank": {
         "Aran": "8088DA3E",
         "Astrid": "8089409E",
         "Bastian": "8089193E",
@@ -6551,7 +6551,7 @@
         "Volug": "80885C3E",
         "Zihark": "8088680E"
     },
-    "Fire Rank": {
+    "Fire_Rank": {
         "Aran": "8088DA40",
         "Astrid": "808940A0",
         "Bastian": "80891940",
@@ -6623,7 +6623,7 @@
         "Volug": "80885C40",
         "Zihark": "80886810"
     },
-    "Thunder Rank": {
+    "Thunder_Rank": {
         "Aran": "8088DA42",
         "Astrid": "808940A2",
         "Bastian": "80891942",
@@ -6695,7 +6695,7 @@
         "Volug": "80885C42",
         "Zihark": "80886812"
     },
-    "Wind Rank": {
+    "Wind_Rank": {
         "Aran": "8088DA44",
         "Astrid": "808940A4",
         "Bastian": "80891944",
@@ -6767,7 +6767,7 @@
         "Volug": "80885C44",
         "Zihark": "80886814"
     },
-    "Light Rank": {
+    "Light_Rank": {
         "Aran": "8088DA46",
         "Astrid": "808940A6",
         "Bastian": "80891946",
@@ -6839,7 +6839,7 @@
         "Volug": "80885C46",
         "Zihark": "80886816"
     },
-    "Dark Rank": {
+    "Dark_Rank": {
         "Aran": "8088DA48",
         "Astrid": "808940A8",
         "Bastian": "80891948",
@@ -6911,7 +6911,7 @@
         "Volug": "80885C48",
         "Zihark": "80886818"
     },
-    "Staff Rank": {
+    "Staff_Rank": {
         "Aran": "8088DA4A",
         "Astrid": "808940AA",
         "Bastian": "8089194A",

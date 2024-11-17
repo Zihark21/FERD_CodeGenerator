@@ -1,5 +1,6 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, scrolledtext
+import tkinter.messagebox as messagebox
 import json
 
 characters = json.load(open('Character_Offsets.json', 'r'))
@@ -10,6 +11,155 @@ char_sel = list(characters['Name'])
 class_sel = list(classes['Name'])
 item_sel = list(items['Name'])
 
+base_code_beg = '283D79BA 00001000'
+base_code_end = 'E0000000 80008000'
+
+def get_char_code(data):
+    output = []
+    output.append(base_code_beg)
+    char = data['character']
+    for i in range(0,7):
+        item = data['items'][i]['item']
+        uses = data['items'][i]['uses']
+        blessed = data['items'][i]['blessed']
+        forged = data['items'][i]['forged']
+        mt = data['items'][i]['mt']
+        hit = data['items'][i]['hit']
+        crit = data['items'][i]['crit']
+        wt = data['items'][i]['wt']
+
+        fname_off = characters[f'Item_{i+1}'][char]
+        fstat_off = characters[f'Item_{i+1}_Forge'][char]
+
+        if item:
+            temp = f'04{characters[f'Item_{i+1}'][char][-6:]} {items['Offset'][item]}'
+            output.append(temp)
+
+            if not uses:
+                uses = 0
+            temp = f'00{characters[f'Item_{i+1}_Uses'][char][-6:]} 000000{hex(int(uses)).replace('0x', '').zfill(2)}'
+            output.append(temp)
+
+            sts = 0
+            if blessed:
+                sts += int('10', 16)
+            if forged:
+                sts += int('20', 16)
+
+                fname = ''
+                for c in item:
+                    fname += format(ord(c), "x")
+                fname = fname.ljust(28, '0')
+
+                offset1 = hex(int(fname_off, 16) + 6).replace('0x', '').zfill(8)
+                temp1 = f'02{offset1[-6:]} 0000{fname[:4]}'
+                output.append(temp1)
+
+                offset2 = hex(int(fname_off, 16) + 8).replace('0x', '').zfill(8)
+                temp2 = f'04{offset2[-6:]} {fname[4:12]}'
+                output.append(temp2)
+
+                offset3 = hex(int(fname_off, 16) + 12).replace('0x', '').zfill(8)
+                temp3 = f'04{offset3[-6:]} {fname[12:20]}'
+                output.append(temp3)
+
+                offset4 = hex(int(fname_off, 16) + 16).replace('0x', '').zfill(8)
+                temp4 = f'04{offset4[-6:]} {fname[20:28]}'
+                output.append(temp4)
+
+            equip = hex(sts).replace('0x', '').zfill(2)
+            temp = f'00{characters[f'Item_{i+1}_Status'][char][-6:]} 000000{equip}'
+            output.append(temp)
+
+            if mt == '':
+                mt = 0
+            if hit == '':
+                hit = 0
+            if wt == True:
+                wt = 'E0'
+            else:
+                wt = '00'
+            if crit == '':
+                crit = 0
+            temp1 = f'02{fstat_off[-6:]} 0000{hex(int(mt)).replace('0x', '').zfill(2)}{hex(int(hit)).replace('0x', '').zfill(2)}'
+            off2 = hex(int(fstat_off, 16) + 2).replace('0x', '').zfill(8)
+            temp2 = f'02{off2[-6:]} 0000{hex(int(crit)).replace('0x', '').zfill(2)}{wt}'
+            output.append(temp1)
+            output.append(temp2)
+    
+    output.append(base_code_end)
+    return "\n".join(output)
+
+def get_class_code(data):
+    output = []
+    output.append('20B54158 8070F8BC')
+
+    cls = data['class']
+
+    rank_names = [
+        'Sword_Rank',
+        'Lance_Rank',
+        'Axe_Rank',
+        'Bow_Rank',
+        'Knife_Rank',
+        'Strike_Rank',
+        'Fire_Rank',
+        'Thunder_Rank',
+        'Wind_Rank',
+        'Light_Rank',
+        'Dark_Rank',
+        'Staff_Rank'
+    ]
+
+    for i, name in enumerate(rank_names):
+        if data['weapon_ranks'][i]:
+            if data['weapon_ranks'][i] == 'SS':
+                val = '014B'
+            elif data['weapon_ranks'][i] == 'S':
+                val = '00FB'
+            elif data['weapon_ranks'][i] == 'A':
+                val = '00B5'
+            elif data['weapon_ranks'][i] == 'B':
+                val = '0079'
+            elif data['weapon_ranks'][i] == 'C':
+                val = '0047'
+            elif data['weapon_ranks'][i] == 'D':
+                val = '001F'
+            elif data['weapon_ranks'][i] == 'E':
+                val = '0001'
+
+            temp = f'02{classes[name][cls][-6:]} 0000{val}'
+            output.append(temp)
+
+    '''bwt = data['stats'][0]
+    bmv = data['stats'][1]
+    skl = data['stats'][2]
+    mhp = data['stats'][3]
+    mst = data['stats'][4]
+    mmg = data['stats'][5]
+    msk = data['stats'][6]
+    msp = data['stats'][7]
+    mlk = data['stats'][8]
+    mdf = data['stats'][9]
+    mrs = data['stats'][10]
+
+    bwt_off = classes['Base_WT'][cls]
+    bmv_off = classes['Base_Move'][cls]
+    skl_off = classes['Skill_Capacity'][cls]
+    mhp_off = classes['Max_HP'][cls]
+    mst_off = classes['Max_STR'][cls]
+    mmg_off = classes['Max_MAG'][cls]
+    msk_off = classes['Max_SKL'][cls]
+    msp_off = classes['Max_SP'][cls]
+    mlk_off = classes['Max_LCK'][cls]
+    mdf_off = classes['Max_DEF'][cls]
+    mrs_off = classes['Max_RES'][cls]'''
+
+    output.append('E0000000 80008000')
+    return "\n".join(output)
+
+def get_item_code(data):
+    pass
 
 class CodeGeneratorGUI:
     def __init__(self, root):
@@ -22,6 +172,11 @@ class CodeGeneratorGUI:
         self.character_tab()
         self.class_tab()
         self.items_tab()
+
+    def copy_to_clipboard(self, text):
+        self.root.clipboard_clear()  # Clear the clipboard
+        self.root.clipboard_append(text)  # Append the text to the clipboard
+        messagebox.showinfo("Copied", "Character code copied to clipboard!")  # Notify the user
 
     def character_tab(self):
         char_tab = ttk.Frame(self.notebook)
@@ -41,7 +196,7 @@ class CodeGeneratorGUI:
         self.item_table = ttk.Frame(char_tab)
         self.item_table.grid(row=2, column=1, padx=10)
 
-        headers = ["Items", "Uses", "Equip", "MT", "Hit", "WT", "Crit"]
+        headers = ["Items", "Uses", "Blessed", "Forged", "Might", "Hit", "Crit", "Weightless"]
         for i, header in enumerate(headers):
             ttk.Label(self.item_table, text=header).grid(row=0, column=i)
 
@@ -51,10 +206,23 @@ class CodeGeneratorGUI:
             item_combobox.grid(row=row, column=0)
             item_row.append(item_combobox)
 
-            for col in range(1, 7):
-                entry = ttk.Entry(self.item_table, width=5)
-                entry.grid(row=row, column=col)
-                item_row.append(entry)
+            for col in range(1, 8):  # Updating to 6 since the radial boxes are separate
+                if col == 2 or col == 3 or col == 7:
+                    var = tk.BooleanVar(value=False)
+                    if col == 2:  # Blessed checkbox
+                        blessed_checkbox = ttk.Checkbutton(self.item_table, text="", variable=var)
+                        blessed_checkbox.grid(row=row, column=2, sticky="w")
+                    elif col == 3:  # Forged checkbox
+                        forged_checkbox = ttk.Checkbutton(self.item_table, text="", variable=var)
+                        forged_checkbox.grid(row=row, column=3, sticky="w")
+                    elif col == 7:  # Weightless checkbox
+                        wt_checkbox = ttk.Checkbutton(self.item_table, text="", variable=var)
+                        wt_checkbox.grid(row=row, column=7, sticky="w")
+                    item_row.append(var)  # Store the variable controlling the radios
+                else:
+                    entry = ttk.Entry(self.item_table, width=5)
+                    entry.grid(row=row, column=col)
+                    item_row.append(entry)
 
             self.item_entries.append(item_row)
 
@@ -70,17 +238,30 @@ class CodeGeneratorGUI:
             "character": self.character_select.get(),
             "items": [
                 {
-                    "item": row[0].get(),
-                    "uses": row[1].get(),
-                    "equip": row[2].get(),
-                    "mt": row[3].get(),
-                    "hit": row[4].get(),
-                    "wt": row[5].get(),
-                    "crit": row[6].get()
+                    "item": row[0].get(),           # Item Combobox
+                    "uses": row[1].get(),          # Uses Entry
+                    "blessed": row[2].get(),  # Blessed Radio
+                    "forged": row[3].get(),  # Forged Radio
+                    "mt": row[4].get(),            # MT Entry
+                    "hit": row[5].get(),           # Hit Entry
+                    "crit": row[6].get(),           # Crit Entry
+                    "wt": row[7].get(),            # WT Entry
                 } for row in self.item_entries
             ]
         }
-        print(json.dumps(character_data, indent=4))
+        output = get_char_code(character_data)  # Get the output from get_char_code
+
+        # Create a new window for the message box
+        message_window = tk.Toplevel(self.root)
+        message_window.title("Character Code")
+        
+        # Add a label to display the output
+        output_label = tk.Label(message_window, text=output, justify="left")
+        output_label.pack(padx=10, pady=10)
+
+        # Add a button to copy to clipboard
+        copy_button = ttk.Button(message_window, text="Copy to Clipboard", command=lambda: self.copy_to_clipboard(output))
+        copy_button.pack(pady=5)
 
     def class_tab(self):
         class_tab = ttk.Frame(self.notebook)
@@ -138,7 +319,21 @@ class CodeGeneratorGUI:
             "weapon_ranks": [cb.get() for cb in self.weapon_rank_comboboxes],
             "stats": [entry.get() for entry in self.stats_entries]
         }
-        print(json.dumps(class_data, indent=4))
+        #print(json.dumps(class_data, indent=4))
+
+        output = get_class_code(class_data)  # Get the output from get_char_code
+
+        # Create a new window for the message box
+        message_window = tk.Toplevel(self.root)
+        message_window.title("Class Code")
+        
+        # Add a label to display the output
+        output_label = tk.Label(message_window, text=output, justify="left")
+        output_label.pack(padx=10, pady=10)
+
+        # Add a button to copy to clipboard
+        copy_button = ttk.Button(message_window, text="Copy to Clipboard", command=lambda: self.copy_to_clipboard(output))
+        copy_button.pack(pady=5)
 
     def items_tab(self):
         items_tab = ttk.Frame(self.notebook)
@@ -202,10 +397,24 @@ class CodeGeneratorGUI:
         item_data = {
             "item": self.item_select.get(),
             "misc_data": {key: (var.get() if isinstance(var, tk.BooleanVar) else var.get())
-                          for key, var in self.misc_data.items()},
+                        for key, var in self.misc_data.items()},
             "equip_bonuses": [entry.get() for entry in self.equip_bonus_entries]
         }
         print(json.dumps(item_data, indent=4))
+
+        output = get_item_code(item_data)  # Get the output from get_char_code
+
+        # Create a new window for the message box
+        message_window = tk.Toplevel(self.root)
+        message_window.title("Item Code")
+        
+        # Add a label to display the output
+        output_label = tk.Label(message_window, text=output, justify="left")
+        output_label.pack(padx=10, pady=10)
+
+        # Add a button to copy to clipboard
+        copy_button = ttk.Button(message_window, text="Copy to Clipboard", command=lambda: self.copy_to_clipboard(output))
+        copy_button.pack(pady=5)
 
 if __name__ == "__main__":
     root = tk.Tk()

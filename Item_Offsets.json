@@ -449,7 +449,7 @@
         "Worm": "80B62340",
         "Wyrmslayer": "80B60180"
     },
-    "Weapon Type": {
+    "Weapon_Type": {
         "Alondite": "80B604B2",
         "Amiti": "80B60502",
         "Antitoxin": "80B64472",
@@ -674,7 +674,7 @@
         "Worm": "80B62352",
         "Wyrmslayer": "80B60192"
     },
-    "Attack Type": {
+    "Attack_Type": {
         "Alondite": "80B604B3",
         "Amiti": "80B60503",
         "Antitoxin": "80B64473",
@@ -899,7 +899,7 @@
         "Worm": "80B62353",
         "Wyrmslayer": "80B60193"
     },
-    "Weapon Rank": {
+    "Weapon_Rank": {
         "Alondite": "80B604B9",
         "Amiti": "80B60509",
         "Antitoxin": "80B64479",
@@ -1124,7 +1124,7 @@
         "Worm": "80B62359",
         "Wyrmslayer": "80B60199"
     },
-    "EXP Gain": {
+    "EXP_Gain": {
         "Alondite": "80B604BA",
         "Amiti": "80B6050A",
         "Antitoxin": "80B6447A",
@@ -1349,7 +1349,7 @@
         "Worm": "80B6235A",
         "Wyrmslayer": "80B6019A"
     },
-    "Weapon Uses": {
+    "Weapon_Uses": {
         "Alondite": "80B604BB",
         "Amiti": "80B6050B",
         "Antitoxin": "80B6447B",
@@ -2474,7 +2474,7 @@
         "Worm": "80B6235F",
         "Wyrmslayer": "80B6019F"
     },
-    "Min Range": {
+    "Min_Range": {
         "Alondite": "80B604C0",
         "Amiti": "80B60510",
         "Antitoxin": "80B64480",
@@ -2699,7 +2699,7 @@
         "Worm": "80B62360",
         "Wyrmslayer": "80B601A0"
     },
-    "Max Range": {
+    "Max_Range": {
         "Alondite": "80B604C1",
         "Amiti": "80B60511",
         "Antitoxin": "80B64481",
@@ -2924,7 +2924,7 @@
         "Worm": "80B62361",
         "Wyrmslayer": "80B601A1"
     },
-    "HP Increase": {
+    "HP_Increase": {
         "Alondite": "80B604C2",
         "Amiti": "80B60512",
         "Antitoxin": "80B64482",
@@ -3149,7 +3149,7 @@
         "Worm": "80B62362",
         "Wyrmslayer": "80B601A2"
     },
-    "STR Increase": {
+    "STR_Increase": {
         "Alondite": "80B604C3",
         "Amiti": "80B60513",
         "Antitoxin": "80B64483",
@@ -3374,7 +3374,7 @@
         "Worm": "80B62363",
         "Wyrmslayer": "80B601A3"
     },
-    "MAG Increase": {
+    "MAG_Increase": {
         "Alondite": "80B604C4",
         "Amiti": "80B60514",
         "Antitoxin": "80B64484",
@@ -3599,7 +3599,7 @@
         "Worm": "80B62364",
         "Wyrmslayer": "80B601A4"
     },
-    "SKL Increase": {
+    "SKL_Increase": {
         "Alondite": "80B604C5",
         "Amiti": "80B60515",
         "Antitoxin": "80B64485",
@@ -3824,7 +3824,7 @@
         "Worm": "80B62365",
         "Wyrmslayer": "80B601A5"
     },
-    "SP Increase": {
+    "SP_Increase": {
         "Alondite": "80B604C6",
         "Amiti": "80B60516",
         "Antitoxin": "80B64486",
@@ -4049,7 +4049,7 @@
         "Worm": "80B62366",
         "Wyrmslayer": "80B601A6"
     },
-    "LCK Increase": {
+    "LCK_Increase": {
         "Alondite": "80B604C7",
         "Amiti": "80B60517",
         "Antitoxin": "80B64487",
@@ -4274,7 +4274,7 @@
         "Worm": "80B62367",
         "Wyrmslayer": "80B601A7"
     },
-    "DEF Increase": {
+    "DEF_Increase": {
         "Alondite": "80B604C8",
         "Amiti": "80B60518",
         "Antitoxin": "80B64488",
@@ -4499,7 +4499,7 @@
         "Worm": "80B62368",
         "Wyrmslayer": "80B601A8"
     },
-    "RES Increase": {
+    "RES_Increase": {
         "Alondite": "80B604C9",
         "Amiti": "80B60519",
         "Antitoxin": "80B64489",
@@ -4724,7 +4724,7 @@
         "Worm": "80B62369",
         "Wyrmslayer": "80B601A9"
     },
-    "Move Increase": {
+    "Move_Increase": {
         "Alondite": "80B604CA",
         "Amiti": "80B6051A",
         "Antitoxin": "80B6448A",
@@ -4949,7 +4949,7 @@
         "Worm": "80B6236A",
         "Wyrmslayer": "80B601AA"
     },
-    "CN\/WT Increase": {
+    "CN\/WT_Increase": {
         "Alondite": "80B604CB",
         "Amiti": "80B6051B",
         "Antitoxin": "80B6448B",
@@ -5849,7 +5849,7 @@
         "Worm": "80B6237A",
         "Wyrmslayer": "80B601BA"
     },
-    "Char Lock": {
+    "Char_Lock": {
         "Alondite": "80B604DB",
         "Amiti": "80B6052B",
         "Antitoxin": "80B6449B",

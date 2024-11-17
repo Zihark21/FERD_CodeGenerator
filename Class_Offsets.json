@@ -345,7 +345,7 @@
         "Wolf transformed": "80B5CE10",
         "Wolf untransformed": "80B5CCF4"
     },
-    "Sword Rank": {
+    "Sword_Rank": {
         "Arch sage dark (Pelleas)": "80B585A8",
         "Arch sage fire female (Calill)": "80B5848C",
         "Arch sage fire male (Tormod)": "80B58370",
@@ -518,7 +518,7 @@
         "Wolf transformed": "80B5CEE0",
         "Wolf untransformed": "80B5CDC4"
     },
-    "Lance Rank": {
+    "Lance_Rank": {
         "Arch sage dark (Pelleas)": "80B585AA",
         "Arch sage fire female (Calill)": "80B5848E",
         "Arch sage fire male (Tormod)": "80B58372",
@@ -691,7 +691,7 @@
         "Wolf transformed": "80B5CEE2",
         "Wolf untransformed": "80B5CDC6"
     },
-    "Axe Rank": {
+    "Axe_Rank": {
         "Arch sage dark (Pelleas)": "80B585AC",
         "Arch sage fire female (Calill)": "80B58490",
         "Arch sage fire male (Tormod)": "80B58374",
@@ -864,7 +864,7 @@
         "Wolf transformed": "80B5CEE4",
         "Wolf untransformed": "80B5CDC8"
     },
-    "Bow Rank": {
+    "Bow_Rank": {
         "Arch sage dark (Pelleas)": "80B585AE",
         "Arch sage fire female (Calill)": "80B58492",
         "Arch sage fire male (Tormod)": "80B58376",
@@ -1037,7 +1037,7 @@
         "Wolf transformed": "80B5CEE6",
         "Wolf untransformed": "80B5CDCA"
     },
-    "Knife Rank": {
+    "Knife_Rank": {
         "Arch sage dark (Pelleas)": "80B585B0",
         "Arch sage fire female (Calill)": "80B58494",
         "Arch sage fire male (Tormod)": "80B58378",
@@ -1210,7 +1210,7 @@
         "Wolf transformed": "80B5CEE8",
         "Wolf untransformed": "80B5CDCC"
     },
-    "Strike Rank": {
+    "Strike_Rank": {
         "Arch sage dark (Pelleas)": "80B585B2",
         "Arch sage fire female (Calill)": "80B58496",
         "Arch sage fire male (Tormod)": "80B5837A",
@@ -1383,7 +1383,7 @@
         "Wolf transformed": "80B5CEEA",
         "Wolf untransformed": "80B5CDCE"
     },
-    "Fire Rank": {
+    "Fire_Rank": {
         "Arch sage dark (Pelleas)": "80B585B4",
         "Arch sage fire female (Calill)": "80B58498",
         "Arch sage fire male (Tormod)": "80B5837C",
@@ -1556,7 +1556,7 @@
         "Wolf transformed": "80B5CEEC",
         "Wolf untransformed": "80B5CDD0"
     },
-    "Thunder Rank": {
+    "Thunder_Rank": {
         "Arch sage dark (Pelleas)": "80B585B6",
         "Arch sage fire female (Calill)": "80B5849A",
         "Arch sage fire male (Tormod)": "80B5837E",
@@ -1729,7 +1729,7 @@
         "Wolf transformed": "80B5CEEE",
         "Wolf untransformed": "80B5CDD2"
     },
-    "Wind Rank": {
+    "Wind_Rank": {
         "Arch sage dark (Pelleas)": "80B585B8",
         "Arch sage fire female (Calill)": "80B5849C",
         "Arch sage fire male (Tormod)": "80B58380",
@@ -1902,7 +1902,7 @@
         "Wolf transformed": "80B5CEF0",
         "Wolf untransformed": "80B5CDD4"
     },
-    "Light Rank": {
+    "Light_Rank": {
         "Arch sage dark (Pelleas)": "80B585BA",
         "Arch sage fire female (Calill)": "80B5849E",
         "Arch sage fire male (Tormod)": "80B58382",
@@ -2075,7 +2075,7 @@
         "Wolf transformed": "80B5CEF2",
         "Wolf untransformed": "80B5CDD6"
     },
-    "Dark Rank": {
+    "Dark_Rank": {
         "Arch sage dark (Pelleas)": "80B585BC",
         "Arch sage fire female (Calill)": "80B584A0",
         "Arch sage fire male (Tormod)": "80B58384",
@@ -2248,7 +2248,7 @@
         "Wolf transformed": "80B5CEF4",
         "Wolf untransformed": "80B5CDD8"
     },
-    "Staff Rank": {
+    "Staff_Rank": {
         "Arch sage dark (Pelleas)": "80B585BE",
         "Arch sage fire female (Calill)": "80B584A2",
         "Arch sage fire male (Tormod)": "80B58386",
@@ -2421,7 +2421,7 @@
         "Wolf transformed": "80B5CEF6",
         "Wolf untransformed": "80B5CDDA"
     },
-    "Base WT": {
+    "Base_WT": {
         "Arch sage dark (Pelleas)": "80B585CC",
         "Arch sage fire female (Calill)": "80B584B0",
         "Arch sage fire male (Tormod)": "80B58394",
@@ -2594,7 +2594,7 @@
         "Wolf transformed": "80B5CF04",
         "Wolf untransformed": "80B5CDE8"
     },
-    "Base Move": {
+    "Base_Move": {
         "Arch sage dark (Pelleas)": "80B585CD",
         "Arch sage fire female (Calill)": "80B584B1",
         "Arch sage fire male (Tormod)": "80B58395",
@@ -2767,7 +2767,7 @@
         "Wolf transformed": "80B5CF05",
         "Wolf untransformed": "80B5CDE9"
     },
-    "Skill Capacity": {
+    "Skill_Capacity": {
         "Arch sage dark (Pelleas)": "80B585CF",
         "Arch sage fire female (Calill)": "80B584B3",
         "Arch sage fire male (Tormod)": "80B58397",
@@ -2940,7 +2940,7 @@
         "Wolf transformed": "80B5CF07",
         "Wolf untransformed": "80B5CDEB"
     },
-    "Max HP": {
+    "Max_HP": {
         "Arch sage dark (Pelleas)": "80B585DC",
         "Arch sage fire female (Calill)": "80B584C0",
         "Arch sage fire male (Tormod)": "80B583A4",
@@ -3113,7 +3113,7 @@
         "Wolf transformed": "80B5CF14",
         "Wolf untransformed": "80B5CDF8"
     },
-    "Max STR": {
+    "Max_STR": {
         "Arch sage dark (Pelleas)": "80B585DD",
         "Arch sage fire female (Calill)": "80B584C1",
         "Arch sage fire male (Tormod)": "80B583A5",
@@ -3286,7 +3286,7 @@
         "Wolf transformed": "80B5CF15",
         "Wolf untransformed": "80B5CDF9"
     },
-    "Max MAG": {
+    "Max_MAG": {
         "Arch sage dark (Pelleas)": "80B585DE",
         "Arch sage fire female (Calill)": "80B584C2",
         "Arch sage fire male (Tormod)": "80B583A6",
@@ -3459,7 +3459,7 @@
         "Wolf transformed": "80B5CF16",
         "Wolf untransformed": "80B5CDFA"
     },
-    "Max SKL": {
+    "Max_SKL": {
         "Arch sage dark (Pelleas)": "80B585DF",
         "Arch sage fire female (Calill)": "80B584C3",
         "Arch sage fire male (Tormod)": "80B583A7",
@@ -3632,7 +3632,7 @@
         "Wolf transformed": "80B5CF17",
         "Wolf untransformed": "80B5CDFB"
     },
-    "Max SP": {
+    "Max_SP": {
         "Arch sage dark (Pelleas)": "80B585E0",
         "Arch sage fire female (Calill)": "80B584C4",
         "Arch sage fire male (Tormod)": "80B583A8",
@@ -3805,7 +3805,7 @@
         "Wolf transformed": "80B5CF18",
         "Wolf untransformed": "80B5CDFC"
     },
-    "Max LCK": {
+    "Max_LCK": {
         "Arch sage dark (Pelleas)": "80B585E1",
         "Arch sage fire female (Calill)": "80B584C5",
         "Arch sage fire male (Tormod)": "80B583A9",
@@ -3978,7 +3978,7 @@
         "Wolf transformed": "80B5CF19",
         "Wolf untransformed": "80B5CDFD"
     },
-    "Max DEF": {
+    "Max_DEF": {
         "Arch sage dark (Pelleas)": "80B585E2",
         "Arch sage fire female (Calill)": "80B584C6",
         "Arch sage fire male (Tormod)": "80B583AA",
@@ -4151,7 +4151,7 @@
         "Wolf transformed": "80B5CF1A",
         "Wolf untransformed": "80B5CDFE"
     },
-    "Max RES": {
+    "Max_RES": {
         "Arch sage dark (Pelleas)": "80B585E3",
         "Arch sage fire female (Calill)": "80B584C7",
         "Arch sage fire male (Tormod)": "80B583AB",
