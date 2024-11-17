@@ -1,0 +1,57 @@
+Code Generator GUI
+
+3 Tabs - Character, Class, Items
+
+1. Character Tab:
+    First Section - Character Select
+        This will have a single drop down list of character names that will be provided.
+    Second Section - Items
+        This will have 7 rows of data and a header row.
+            Header row - [Items, Uses, Equip, MT, Hit, WT, Crit]
+                Items column will be a drop down list
+                The rest of the columns will be small text boxes that will take 3 digits.
+    Bottom Section - Generate Button
+        This section will have a button that will take all the values inputted in the GUI. 
+            The Character Select will be a single string
+            The items section can be saved as a list array or json format. whichever is easier.
+            These saved items will be used later in the code for references to json listings
+
+2. Class Tab
+    First Section - Class Select
+        This section will have a single drop down list of classes that will be provided.
+    Second Section - Weapon Ranks
+        This section will contain 12 small drop down lists.
+            Headers for each list - [Sword Rank, Lance Rank, Axe Rank, Bow Rank, Knife Rank, Strike Rank, Fire Rank, Thunder Rank, Wind Rank, Light Rank, Dark Rank, Staff Rank]
+            Each list can take values [SS, S, A, B, C, D, E]
+    Third Section - Stats
+        This section will contain 11 small text boxes that can take in 3 digits.
+        Headers for each text box - [Base WT, Base Move, Skill Capacity, Max HP, Max STR, Max MAG, Max SKL, Max SP, Max LCK, Max DEF, Max RES]
+    Bottom Section - Generate Button
+        This section will have a button that will take all the values inputted in the GUI. 
+            The Class Select will be a single string
+            The Weapon Ranks section can be saved as a list
+            The Stats section can be saved as a list
+            These saved items will be used later in the code for references to json listings
+
+3. Items Tab
+    First Section - Item Select
+        This section will have a single drop down list of items that will be provided.
+    Second Section - Misc Weapon Data
+        This section will contain [Attack Type, Weapon Rank, EXP Gain, Lock, Infinite, Heal, CharLock, Brave]
+            Attack type will be a drop down list to select either STR or MAG
+            Weapon Rank will be a drop down list that can take values [SS, S, A, B, C, D, E]
+            EXP Gain will be a text box that can take in 3 values.
+            Lock will be a radial box that will return True or False
+            CharLock will be a radial box that will return True or False
+            Infinite will be a radial box that will return True or False
+            Brave will be a radial box that will return True or False
+            Heal will be a radial box that will return True or False
+    Third Section - Equip Bonuses
+        This section will contain 10 text boxes that can take in 3 digit values.
+            The header of each box will be [HP Increase, STR Increase, MAG Increase, SKL Increase, SP Increase, LCK Increase, DEF Increase, RES Increase, Move Increase, CN/WT Increase]
+    Bottom Section - Generate Button
+        This section will have a button that will take all the values inputted in the GUI. 
+            The Item Select will be a single string
+            The Misc Weapon Data section can be saved as a list
+            The Equip Bonuses section can be saved as a list
+            These saved items will be used later in the code for references to json listings
