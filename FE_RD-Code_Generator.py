@@ -35,11 +35,13 @@ def get_char_code(data):
             temp = f'04{characters[f'Item_{i+1}'][char][-6:]} {items['Offset'][item]}'
             output.append(temp)
 
+        if uses:
             if not uses:
                 uses = 0
             temp = f'00{characters[f'Item_{i+1}_Uses'][char][-6:]} 000000{hex(int(uses)).replace('0x', '').zfill(2)}'
             output.append(temp)
 
+        if blessed or forged or item:
             sts = 0
             if blessed:
                 sts += int('10', 16)
@@ -71,6 +73,7 @@ def get_char_code(data):
             temp = f'00{characters[f'Item_{i+1}_Status'][char][-6:]} 000000{equip}'
             output.append(temp)
 
+        if mt or hit or wt or crit:
             if mt == '':
                 mt = 0
             if hit == '':
