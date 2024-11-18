@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, scrolledtext
+from tkinter import ttk
 import tkinter.messagebox as messagebox
 import json
 
@@ -11,13 +11,12 @@ char_sel = list(characters['Name'])
 class_sel = list(classes['Name'])
 item_sel = list(items['Name'])
 
-base_code_beg = '283D79BA 00001000'
-base_code_end = 'E0000000 80008000'
-
-def get_char_code(data):
+def get_char_code(data, kb):
     output = []
-    output.append(base_code_beg)
+    output.append(kb)
     char = data['character']
+    if not char:
+        return "No character selected!"
     for i in range(0,7):
         item = data['items'][i]['item']
         uses = data['items'][i]['uses']
@@ -90,14 +89,16 @@ def get_char_code(data):
             output.append(temp1)
             output.append(temp2)
     
-    output.append(base_code_end)
+    output.append('E0000000 80008000')
     return "\n".join(output)
 
-def get_class_code(data):
+def get_class_code(data, kb):
     output = []
-    output.append('20B54158 8070F8BC')
+    output.append(kb)
 
     cls = data['class']
+    if not cls:
+        return "No class selected!"
 
     rank_names = [
         'Sword_Rank',
@@ -161,8 +162,137 @@ def get_class_code(data):
     output.append('E0000000 80008000')
     return "\n".join(output)
 
-def get_item_code(data):
+def get_item_code(data, kb):
     pass
+
+def get_keybind_code(data):
+    if data['controller'] == '':
+        return '20B54158 8070F8BC'
+
+    elif data['controller'] == 'Wiimote+Nunchuck':
+        val = 0
+        # Left
+        if data['keys'][0]:
+            val += int('1', 16)
+        # Right
+        if data['keys'][1]:
+            val += int('2', 16)
+        # Up
+        if data['keys'][2]:
+            val += int('8', 16)
+        # Down
+        if data['keys'][3]:
+            val += int('4', 16)
+        # A
+        if data['keys'][4]:
+            val += int('800', 16)
+        # B
+        if data['keys'][5]:
+            val += int('400', 16)
+        # C
+        if data['keys'][6]:
+            val += int('4000', 16)
+        # Z
+        if data['keys'][7]:
+            val += int('2000', 16)
+        # 1
+        if data['keys'][8]:
+            val += int('200', 16)
+        # 2
+        if data['keys'][9]:
+            val += int('100', 16)
+        # Plus
+        if data['keys'][10]:
+            val += int('10', 16)
+        # Minus
+        if data['keys'][11]:
+            val += int('1000', 16)
+        return f'UPDATE NUNCHUCK OFFSET {hex(val).replace('0x', '').zfill(8)}'
+
+    elif data['controller'] == 'Classic Controller':
+        val = 0
+        # Left
+        if data['keys'][0]:
+            val += int('2', 16)
+        # Right
+        if data['keys'][1]:
+            val += int('8000', 16)
+        # Up
+        if data['keys'][2]:
+            val += int('1', 16)
+        # Down
+        if data['keys'][3]:
+            val += int('4000', 16)
+        # A
+        if data['keys'][4]:
+            val += int('10', 16)
+        # B
+        if data['keys'][5]:
+            val += int('40', 16)
+        # X
+        if data['keys'][6]:
+            val += int('8', 16)
+        # Y
+        if data['keys'][7]:
+            val += int('20', 16)
+        # ZL
+        if data['keys'][8]:
+            val += int('80', 16)
+        # ZR
+        if data['keys'][9]:
+            val += int('4', 16)
+        # L
+        if data['keys'][10]:
+            val += int('2000', 16)
+        # R
+        if data['keys'][11]:
+            val += int('200', 16)
+        # Plus
+        if data['keys'][12]:
+            val += int('400', 16)
+        # Minus
+        if data['keys'][13]:
+            val += int('1000', 16)
+        return f'283D79BA {hex(val).replace('0x', '').zfill(8)}'
+    
+    elif data['controller'] == 'GameCube Controller':
+        # Left
+        if data['keys'][0]:
+            val += int('1', 16)
+        # Right
+        if data['keys'][0]:
+            val += int('2', 16)
+        # Up
+        if data['keys'][0]:
+            val += int('8', 16)
+        # Down
+        if data['keys'][0]:
+            val += int('4', 16)
+        # A
+        if data['keys'][0]:
+            val += int('100', 16)
+        # B
+        if data['keys'][0]:
+            val += int('200', 16)
+        # X
+        if data['keys'][0]:
+            val += int('400', 16)
+        # Y
+        if data['keys'][0]:
+            val += int('800', 16)
+        # Z
+        if data['keys'][0]:
+            val += int('2', 16)
+        # L
+        if data['keys'][0]:
+            val += int('40', 16)
+        # R
+        if data['keys'][0]:
+            val += int('20', 16)
+        # Start
+        if data['keys'][0]:
+            val += int('1000', 16)
+        return f'UPDATE GAMECUBE CONTROLLER OFFSET {hex(val).replace('0x', '').zfill(8)}'
 
 class CodeGeneratorGUI:
     def __init__(self, root):
@@ -172,9 +302,90 @@ class CodeGeneratorGUI:
         self.notebook = ttk.Notebook(root)
         self.notebook.pack(fill="both", expand=True)
 
+        self.keybinds_tab()
         self.character_tab()
         self.class_tab()
         self.items_tab()
+
+    def keybinds_tab(self):
+        new_tab = ttk.Frame(self.notebook)
+        self.notebook.add(new_tab, text="Keybind Activation")
+
+        self.keybinds = {
+            "Wiimote+Nunchuck": [
+                "Left",
+                "Right",
+                "Up",
+                "Down",
+                "A",
+                "B",
+                "C",
+                "Z",
+                "1",
+                "2",
+                "+",
+                "-"
+                
+            ],
+            'Classic Controller': [
+                "Left",
+                "Right",
+                "Up",
+                "Down",
+                "A",
+                "B",
+                "X",
+                "Y",
+                "ZL",
+                "ZR",
+                "L",
+                "R",
+                "+",
+                "-"
+            ],
+            'GameCube Controller': [
+                "Left",
+                "Right",
+                "Up",
+                "Down",
+                "A",
+                "B",
+                "X",
+                "Y",
+                "Z",
+                "L",
+                "R",
+                "Start"
+            ]
+        }
+
+        # Dropdown Section
+        ttk.Label(new_tab, text="Select Option:").grid(row=0, column=0, pady=10, padx=10)
+        self.dropdown = ttk.Combobox(new_tab, values=list(self.keybinds.keys()))
+        self.dropdown.grid(row=0, column=1, pady=10, padx=10)
+        self.dropdown.bind("<<ComboboxSelected>>", self.update_checkboxes)
+
+        # Separator
+        ttk.Separator(new_tab, orient="horizontal").grid(row=1, column=0, columnspan=2, sticky="ew", pady=5)
+
+        # Checkboxes Section
+        ttk.Label(new_tab, text="Select Options:").grid(row=2, column=0, pady=10, padx=10)
+        self.checkbox_frame = ttk.Frame(new_tab)
+        self.checkbox_frame.grid(row=2, column=1, padx=10)
+        self.checkboxes = []
+
+    def update_checkboxes(self, event):
+        for checkbox in self.checkbox_frame.winfo_children():
+            checkbox.destroy()
+        self.checkboxes.clear()
+
+        selected_option = self.dropdown.get()
+        if selected_option in self.keybinds:
+            for i, option in enumerate(self.keybinds[selected_option]):
+                var = tk.BooleanVar()
+                checkbox = ttk.Checkbutton(self.checkbox_frame, text=option, variable=var)
+                checkbox.grid(row=i, column=0, sticky="w")
+                self.checkboxes.append(var)
 
     def copy_to_clipboard(self, text):
         self.root.clipboard_clear()  # Clear the clipboard
@@ -252,7 +463,15 @@ class CodeGeneratorGUI:
                 } for row in self.item_entries
             ]
         }
-        output = get_char_code(character_data)  # Get the output from get_char_code
+
+        keybinds_data = {
+            "controller": self.dropdown.get(),
+            "keys": [key.get() for key in self.checkboxes]
+        }
+
+        key_code = get_keybind_code(keybinds_data)
+
+        output = get_char_code(character_data, key_code)
 
         # Create a new window for the message box
         message_window = tk.Toplevel(self.root)
@@ -262,9 +481,10 @@ class CodeGeneratorGUI:
         output_label = tk.Label(message_window, text=output, justify="left")
         output_label.pack(padx=10, pady=10)
 
-        # Add a button to copy to clipboard
-        copy_button = ttk.Button(message_window, text="Copy to Clipboard", command=lambda: self.copy_to_clipboard(output))
-        copy_button.pack(pady=5)
+        if output != "No character selected!":
+            # Add a button to copy to clipboard
+            copy_button = ttk.Button(message_window, text="Copy to Clipboard", command=lambda: self.copy_to_clipboard(output))
+            copy_button.pack(pady=5)
 
     def class_tab(self):
         class_tab = ttk.Frame(self.notebook)
@@ -322,9 +542,15 @@ class CodeGeneratorGUI:
             "weapon_ranks": [cb.get() for cb in self.weapon_rank_comboboxes],
             "stats": [entry.get() for entry in self.stats_entries]
         }
-        #print(json.dumps(class_data, indent=4))
 
-        output = get_class_code(class_data)  # Get the output from get_char_code
+        keybinds_data = {
+            "controller": self.dropdown.get(),
+            "keys": [key.get() for key in self.checkboxes]
+        }
+
+        key_code = get_keybind_code(keybinds_data)
+
+        output = get_class_code(class_data, key_code)
 
         # Create a new window for the message box
         message_window = tk.Toplevel(self.root)
@@ -334,9 +560,10 @@ class CodeGeneratorGUI:
         output_label = tk.Label(message_window, text=output, justify="left")
         output_label.pack(padx=10, pady=10)
 
-        # Add a button to copy to clipboard
-        copy_button = ttk.Button(message_window, text="Copy to Clipboard", command=lambda: self.copy_to_clipboard(output))
-        copy_button.pack(pady=5)
+        if output != "No class selected!":
+            # Add a button to copy to clipboard
+            copy_button = ttk.Button(message_window, text="Copy to Clipboard", command=lambda: self.copy_to_clipboard(output))
+            copy_button.pack(pady=5)
 
     def items_tab(self):
         items_tab = ttk.Frame(self.notebook)
@@ -403,7 +630,6 @@ class CodeGeneratorGUI:
                         for key, var in self.misc_data.items()},
             "equip_bonuses": [entry.get() for entry in self.equip_bonus_entries]
         }
-        print(json.dumps(item_data, indent=4))
 
         output = get_item_code(item_data)  # Get the output from get_char_code
 
