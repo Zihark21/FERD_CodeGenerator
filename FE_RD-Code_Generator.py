@@ -19,6 +19,7 @@ def get_char_code(data, kb):
         return "No character selected!"
     for i in range(0,7):
         item = data['items'][i]['item']
+        fname = data['items'][i]['forge_name']
         uses = data['items'][i]['uses']
         blessed = data['items'][i]['blessed']
         forged = data['items'][i]['forged']
@@ -37,7 +38,7 @@ def get_char_code(data, kb):
         if uses:
             if not uses:
                 uses = 0
-            temp = f'00{characters[f'Item_{i+1}_Uses'][char][-6:]} 000000{hex(int(uses)).replace('0x', '').zfill(2)}'
+            temp = f'00{characters[f'Item_{i+1}_Uses'][char][-6:]} 000000{hex(int(uses)).replace('0x', '').zfill(2).upper()}'
             output.append(temp)
 
         if blessed or forged or item:
@@ -50,25 +51,25 @@ def get_char_code(data, kb):
                 fname = ''
                 for c in item:
                     fname += format(ord(c), "x")
-                fname = fname.ljust(28, '0')
+                fname = fname.ljust(28, '0').upper()
 
-                offset1 = hex(int(fname_off, 16) + 6).replace('0x', '').zfill(8)
+                offset1 = hex(int(fname_off, 16) + 6).replace('0x', '').zfill(8).upper()
                 temp1 = f'02{offset1[-6:]} 0000{fname[:4]}'
                 output.append(temp1)
 
-                offset2 = hex(int(fname_off, 16) + 8).replace('0x', '').zfill(8)
+                offset2 = hex(int(fname_off, 16) + 8).replace('0x', '').zfill(8).upper()
                 temp2 = f'04{offset2[-6:]} {fname[4:12]}'
                 output.append(temp2)
 
-                offset3 = hex(int(fname_off, 16) + 12).replace('0x', '').zfill(8)
+                offset3 = hex(int(fname_off, 16) + 12).replace('0x', '').zfill(8).upper()
                 temp3 = f'04{offset3[-6:]} {fname[12:20]}'
                 output.append(temp3)
 
-                offset4 = hex(int(fname_off, 16) + 16).replace('0x', '').zfill(8)
+                offset4 = hex(int(fname_off, 16) + 16).replace('0x', '').zfill(8).upper()
                 temp4 = f'04{offset4[-6:]} {fname[20:28]}'
                 output.append(temp4)
 
-            equip = hex(sts).replace('0x', '').zfill(2)
+            equip = hex(sts).replace('0x', '').zfill(2).upper()
             temp = f'00{characters[f'Item_{i+1}_Status'][char][-6:]} 000000{equip}'
             output.append(temp)
 
@@ -83,18 +84,21 @@ def get_char_code(data, kb):
                 wt = '00'
             if crit == '':
                 crit = 0
-            temp1 = f'02{fstat_off[-6:]} 0000{hex(int(mt)).replace('0x', '').zfill(2)}{hex(int(hit)).replace('0x', '').zfill(2)}'
-            off2 = hex(int(fstat_off, 16) + 2).replace('0x', '').zfill(8)
-            temp2 = f'02{off2[-6:]} 0000{hex(int(crit)).replace('0x', '').zfill(2)}{wt}'
+            temp1 = f'02{fstat_off[-6:]} 0000{hex(int(mt)).replace('0x', '').zfill(2).upper()}{hex(int(hit)).replace('0x', '').zfill(2).upper()}'
+            off2 = hex(int(fstat_off, 16) + 2).replace('0x', '').zfill(8).upper()
+            temp2 = f'02{off2[-6:]} 0000{hex(int(crit)).replace('0x', '').zfill(2).upper()}{wt}'
             output.append(temp1)
             output.append(temp2)
     
     output.append('E0000000 80008000')
-    return "\n".join(output)
+    if len(output) == 2:
+        return "No changes made!"
+    else:
+        return "\n".join(output)
 
-def get_class_code(data, kb):
+def get_class_code(data):
     output = []
-    output.append(kb)
+    output.append('20B54158 8070F8BC')
 
     cls = data['class']
     if not cls:
@@ -134,33 +138,31 @@ def get_class_code(data, kb):
 
             temp = f'02{classes[name][cls][-6:]} 0000{val}'
             output.append(temp)
+    
+    stat_names = [
+        'Base_WT',
+        'Base_Move',
+        'Skill_Capacity',
+        'Max_HP',
+        'Max_STR',
+        'Max_MAG',
+        'Max_SKL',
+        'Max_SP',
+        'Max_LCK',
+        'Max_DEF',
+        'Max_RES'
+    ]
 
-    '''bwt = data['stats'][0]
-    bmv = data['stats'][1]
-    skl = data['stats'][2]
-    mhp = data['stats'][3]
-    mst = data['stats'][4]
-    mmg = data['stats'][5]
-    msk = data['stats'][6]
-    msp = data['stats'][7]
-    mlk = data['stats'][8]
-    mdf = data['stats'][9]
-    mrs = data['stats'][10]
-
-    bwt_off = classes['Base_WT'][cls]
-    bmv_off = classes['Base_Move'][cls]
-    skl_off = classes['Skill_Capacity'][cls]
-    mhp_off = classes['Max_HP'][cls]
-    mst_off = classes['Max_STR'][cls]
-    mmg_off = classes['Max_MAG'][cls]
-    msk_off = classes['Max_SKL'][cls]
-    msp_off = classes['Max_SP'][cls]
-    mlk_off = classes['Max_LCK'][cls]
-    mdf_off = classes['Max_DEF'][cls]
-    mrs_off = classes['Max_RES'][cls]'''
+    for i, name in enumerate(stat_names):
+        if data['stats'][i]:
+            temp = f'00{classes[name][cls][-6:]} 000000{hex(int(data["stats"][i])).replace("0x", "").zfill(2).upper()}'
+            output.append(temp)
 
     output.append('E0000000 80008000')
-    return "\n".join(output)
+    if len(output) == 2:
+        return "No changes made!"
+    else:
+        return "\n".join(output)
 
 def get_item_code(data, kb):
     pass
@@ -297,7 +299,7 @@ def get_keybind_code(data):
 class CodeGeneratorGUI:
     def __init__(self, root):
         self.root = root
-        self.root.title("Code Generator")
+        self.root.title("FE:RD Code Creator")
 
         self.notebook = ttk.Notebook(root)
         self.notebook.pack(fill="both", expand=True)
@@ -305,7 +307,7 @@ class CodeGeneratorGUI:
         self.keybinds_tab()
         self.character_tab()
         self.class_tab()
-        self.items_tab()
+        #self.items_tab()
 
     def keybinds_tab(self):
         new_tab = ttk.Frame(self.notebook)
@@ -410,33 +412,38 @@ class CodeGeneratorGUI:
         self.item_table = ttk.Frame(char_tab)
         self.item_table.grid(row=2, column=1, padx=10)
 
-        headers = ["Items", "Uses", "Blessed", "Forged", "Might", "Hit", "Crit", "Weightless"]
+        headers = ["Items", "Forge Name", "Uses", "Blessed", "Forged", "Might", "Hit", "Crit", "Weightless"]
         for i, header in enumerate(headers):
             ttk.Label(self.item_table, text=header).grid(row=0, column=i)
 
-        for row in range(1, 8):
+        for row in range(1, 9):
             item_row = []
             item_combobox = ttk.Combobox(self.item_table, values=item_sel, width=25)
             item_combobox.grid(row=row, column=0)
             item_row.append(item_combobox)
 
-            for col in range(1, 8):  # Updating to 6 since the radial boxes are separate
-                if col == 2 or col == 3 or col == 7:
+            for col in range(1, 9):
+                if col == 3 or col == 4 or col == 8:
                     var = tk.BooleanVar(value=False)
-                    if col == 2:  # Blessed checkbox
+                    if col == 3:
                         blessed_checkbox = ttk.Checkbutton(self.item_table, text="", variable=var)
                         blessed_checkbox.grid(row=row, column=2, sticky="w")
-                    elif col == 3:  # Forged checkbox
+                    elif col == 4:
                         forged_checkbox = ttk.Checkbutton(self.item_table, text="", variable=var)
                         forged_checkbox.grid(row=row, column=3, sticky="w")
-                    elif col == 7:  # Weightless checkbox
+                    elif col == 8:
                         wt_checkbox = ttk.Checkbutton(self.item_table, text="", variable=var)
                         wt_checkbox.grid(row=row, column=7, sticky="w")
-                    item_row.append(var)  # Store the variable controlling the radios
+                    item_row.append(var)
                 else:
-                    entry = ttk.Entry(self.item_table, width=5)
-                    entry.grid(row=row, column=col)
-                    item_row.append(entry)
+                    if col == 1:
+                        entry = ttk.Entry(self.item_table, width=20)
+                        entry.grid(row=row, column=col)
+                        item_row.append(entry)
+                    else:
+                        entry = ttk.Entry(self.item_table, width=5)
+                        entry.grid(row=row, column=col)
+                        item_row.append(entry)
 
             self.item_entries.append(item_row)
 
@@ -452,14 +459,15 @@ class CodeGeneratorGUI:
             "character": self.character_select.get(),
             "items": [
                 {
-                    "item": row[0].get(),           # Item Combobox
-                    "uses": row[1].get(),          # Uses Entry
-                    "blessed": row[2].get(),  # Blessed Radio
-                    "forged": row[3].get(),  # Forged Radio
-                    "mt": row[4].get(),            # MT Entry
-                    "hit": row[5].get(),           # Hit Entry
-                    "crit": row[6].get(),           # Crit Entry
-                    "wt": row[7].get(),            # WT Entry
+                    "item": row[0].get(),
+                    "forge_name": row[1].get(),
+                    "uses": row[2].get(),
+                    "blessed": row[3].get(),
+                    "forged": row[4].get(),
+                    "mt": row[5].get(),
+                    "hit": row[6].get(),
+                    "crit": row[7].get(),
+                    "wt": row[8].get(),
                 } for row in self.item_entries
             ]
         }
@@ -481,7 +489,7 @@ class CodeGeneratorGUI:
         output_label = tk.Label(message_window, text=output, justify="left")
         output_label.pack(padx=10, pady=10)
 
-        if output != "No character selected!":
+        if output != "No character selected!" and output != "No changes made!":
             # Add a button to copy to clipboard
             copy_button = ttk.Button(message_window, text="Copy to Clipboard", command=lambda: self.copy_to_clipboard(output))
             copy_button.pack(pady=5)
@@ -543,14 +551,7 @@ class CodeGeneratorGUI:
             "stats": [entry.get() for entry in self.stats_entries]
         }
 
-        keybinds_data = {
-            "controller": self.dropdown.get(),
-            "keys": [key.get() for key in self.checkboxes]
-        }
-
-        key_code = get_keybind_code(keybinds_data)
-
-        output = get_class_code(class_data, key_code)
+        output = get_class_code(class_data)
 
         # Create a new window for the message box
         message_window = tk.Toplevel(self.root)
@@ -560,7 +561,7 @@ class CodeGeneratorGUI:
         output_label = tk.Label(message_window, text=output, justify="left")
         output_label.pack(padx=10, pady=10)
 
-        if output != "No class selected!":
+        if output != "No class selected!" and output != "No changes made!":
             # Add a button to copy to clipboard
             copy_button = ttk.Button(message_window, text="Copy to Clipboard", command=lambda: self.copy_to_clipboard(output))
             copy_button.pack(pady=5)
