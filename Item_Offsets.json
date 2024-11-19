@@ -5174,7 +5174,7 @@
         "Worm": "80B6236B",
         "Wyrmslayer": "80B601AB"
     },
-    "Lock": {
+    "Unlock": {
         "Alondite": "80B604D8",
         "Amiti": "80B60528",
         "Antitoxin": "80B64498",
@@ -5849,7 +5849,7 @@
         "Worm": "80B6237A",
         "Wyrmslayer": "80B601BA"
     },
-    "Char_Lock": {
+    "Char_Unlock": {
         "Alondite": "80B604DB",
         "Amiti": "80B6052B",
         "Antitoxin": "80B6449B",
