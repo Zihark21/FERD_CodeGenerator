@@ -18166,12 +18166,14 @@ class CodeGeneratorGUI:
         ttk.Separator(key_tab, orient="horizontal").grid(row=1, column=0, columnspan=2, sticky="ew")
 
         # Checkboxes Section
+        self.checkboxes = []
         self.checkbox_frame = ttk.Frame(key_tab)
         self.checkbox_frame.grid(row=2, column=0, sticky="nsew")
 
     def update_checkboxes(self, event):
         for checkbox in self.checkbox_frame.winfo_children():
             checkbox.destroy()
+        self.checkboxes = []
         
         selected_option = self.dropdown.get()
         if selected_option == "":
@@ -18179,12 +18181,12 @@ class CodeGeneratorGUI:
         elif selected_option in self.keybinds:
             ttk.Label(self.checkbox_frame, text="Buttons").grid(row=0, column=0, rowspan=len(self.keybinds[selected_option]), padx=10)
             ttk.Separator(self.checkbox_frame, orient="vertical").grid(row=0, column=1, rowspan=len(self.keybinds[selected_option]), sticky="ns", pady=5)
-            self.checkboxes = []
             for i, option in enumerate(self.keybinds[selected_option]):
                 ttk.Label(self.checkbox_frame, text=option).grid(row=i, column=3, padx=5, sticky="e")
                 var = tk.BooleanVar()
-                checkbox = ttk.Checkbutton(self.checkbox_frame, variable=var).grid(row=i, column=4)
-                self.checkboxes.append(checkbox)
+                checkbox = ttk.Checkbutton(self.checkbox_frame, variable=var)
+                checkbox.grid(row=i, column=4)
+                self.checkboxes.append(var)
 
     def copy_to_clipboard(self, text):
         self.root.clipboard_clear()  # Clear the clipboard
