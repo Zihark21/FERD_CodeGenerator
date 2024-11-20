@@ -1,7 +1,7 @@
 # %%
 # Imports
 
-import tkinter as tk, json, ctypes
+import tkinter as tk, ctypes
 from tkinter import ttk
 
 dpi = ctypes.windll.shcore.SetProcessDpiAwareness(True)
@@ -18120,7 +18120,7 @@ class CodeGeneratorGUI:
         output_label = ttk.Label(message_window, text=code, justify="left")
         output_label.pack(padx=10, pady=10)
 
-        if code != "No character selected!" and "No class selected!" and "No item selected!" and code != "No changes made!":
+        if code not in ["No character selected!", "No class selected!", "No item selected!", "No changes made!"]:
             # Add a button to copy to clipboard
             copy_button = ttk.Button(message_window, text="Copy to Clipboard", command=lambda: self.copy_to_clipboard(code))
             copy_button.pack(pady=5)
@@ -18201,7 +18201,7 @@ class CodeGeneratorGUI:
         }
 
         controller_frame = ttk.Frame(key_tab)
-        controller_frame.grid(row=0, column=0, sticky="nsew")
+        controller_frame.grid(row=0, column=0, pady=10, sticky="nsew")
 
         # Dropdown Section
         ttk.Label(controller_frame, text="Controller:").grid(row=0, column=0, padx=5)
@@ -18365,7 +18365,7 @@ class CodeGeneratorGUI:
         for i, rank in enumerate(weapon_ranks):
             ttk.Label(ranks_stats, text=rank).grid(row=i+1, column=0, padx=5, sticky="e")
             combobox = ttk.Combobox(ranks_stats, values=["SS", "S", "A", "B", "C", "D", "E"], width=5)
-            combobox.grid(row=i+1, column=1, padx=0, pady=1)
+            combobox.grid(row=i+1, column=1, padx=5, pady=1)
             self.weapon_rank_comboboxes.append(combobox)
         
         # Separator
@@ -18380,7 +18380,7 @@ class CodeGeneratorGUI:
         for i, stat in enumerate(stats):
             ttk.Label(ranks_stats, text=stat).grid(row=i+1, column=3, padx=5, sticky="e")
             entry = ttk.Entry(ranks_stats, width=5)
-            entry.grid(row=i+1, column=4, padx=0, pady=1)
+            entry.grid(row=i+1, column=4, pady=1)
             self.stats_entries.append(entry)
 
         #endregion
