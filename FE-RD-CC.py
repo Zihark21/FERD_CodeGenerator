@@ -1,7 +1,7 @@
 # %%
 # Imports
 
-import tkinter as tk, ctypes
+import tkinter as tk, json, ctypes
 from tkinter import ttk
 
 dpi = ctypes.windll.shcore.SetProcessDpiAwareness(True)
@@ -17706,10 +17706,10 @@ item_sel = list(items['Name'])
 
 desc = {
     "intro": "Welcome to the Fire Emblem Radiant Dawn Code Creator! This tool will allow you to easily create Gecko Codes to change and add a variety of data to your game. Please see each section below for more details.",
-    "Misc Information": "All number input fields have a maximum value of 255. If you put a value higher, the code will not function properly. These will be all the text boxes except for Forge Name.",
-    "Keybind Activation Tab": "Allows users to select a controller type and configure keybindings. This tab only works in conjunction with the character tab. The codes generated from Class and Items are codes that need to be always on.",
-    "Character Tab": "Lets users select a character and configure their items, including forge names, uses, and various attributes. Make sure to pair with input in the keybinds tab to activate on custom pairings! If no keybinds are selected, the code defaults to an always on status and will repeatedly write to your character.",
-    "Class Tab": "Enables users to select a class and configure weapon ranks and stats.",
+    "Misc Information": "Text Input Fields - Forge Name has a max character count of 26. All other input fields are for numeric input with a max value of 255.\nDropdowns - All dropdowns are pre-populated and can only take values from the list provided. You can type in the name of the character, class or item, but it needs to be exact or the code will not find it.",
+    "Keybind Activation Tab": "Allows users to select a controller type and configure keybindings required to activate the code. This tab only works in conjunction with the character tab. The codes generated from Class and Items are codes that need to be always on.",
+    "Character Tab": "Lets users select a character and configure their items, including forge names, uses, and various attributes. Make sure to pair with input in the keybinds tab to activate based on custom button pairing! If no keybinds are selected, the code defaults to an always on status and will repeatedly write to your character.",
+    "Class Tab": "Allows users to select a class and configure max weapon ranks and stats.",
     "Items Tab": "Allows users to select an item and configure its miscellaneous data and equip bonuses."
 }
 
@@ -17741,11 +17741,15 @@ def get_char_code(data, kb):
             output.append(temp)
 
         if uses:
-            if not uses:
-                uses = 0
-            temp = f'00{characters[f'Item_{i+1}_Uses'][char][-6:]} 000000{hex(int(uses)).replace('0x', '').zfill(2).upper()}'
-            output.append(temp)
-
+            try:
+                uses = int(uses)
+                if uses > 255:
+                    return f'Error: Uses for {item} is too high! Please enter a value between 0 and 255.'
+                temp = f'00{characters[f'Item_{i+1}_Uses'][char][-6:]} 000000{hex(uses).replace('0x', '').zfill(2).upper()}'
+                output.append(temp)
+            except ValueError:
+                return f'Error: Uses for {item} is not a number! Please enter a value between 0 and 255.'
+        
         if blessed or forged or item:
             sts = 0
             if blessed:
@@ -17754,7 +17758,9 @@ def get_char_code(data, kb):
                 sts += int('20', 16)
 
                 fnamecode = ''
-                if fname and len(fname) < 26:
+                if len(fname) > 26:
+                        return f'Error: Forge Name for {item} is too long! Please enter a name with 26 characters or less.'
+                elif fname and len(fname) <= 26:
                     for c in fname:
                         fnamecode += format(ord(c), "x").zfill(2)
                 else:
@@ -17763,8 +17769,8 @@ def get_char_code(data, kb):
                 fnamecode = fnamecode.ljust(60, '0').upper()
 
                 j = 0
-                for i in range(0, 7):
-                    if i == 0:
+                for k in range(0, 7):
+                    if k == 0:
                         offset = hex(int(fname_off, 16) + 6).replace('0x', '').zfill(8).upper()
                         temp = f'02{offset[-6:]} 0000{fnamecode[:4]}'
                         if temp[-8:] != '00000000':
@@ -17775,7 +17781,7 @@ def get_char_code(data, kb):
                         if temp[-8:] != '00000000':
                             output.append(temp)
                         j += 4
-
+            
             equip = hex(sts).replace('0x', '').zfill(2).upper()
             temp = f'00{characters[f'Item_{i+1}_Status'][char][-6:]} 000000{equip}'
             output.append(temp)
@@ -17791,11 +17797,19 @@ def get_char_code(data, kb):
                 wt = '00'
             if crit == '':
                 crit = 0
-            temp1 = f'02{fstat_off[-6:]} 0000{hex(int(mt)).replace('0x', '').zfill(2).upper()}{hex(int(hit)).replace('0x', '').zfill(2).upper()}'
-            off2 = hex(int(fstat_off, 16) + 2).replace('0x', '').zfill(8).upper()
-            temp2 = f'02{off2[-6:]} 0000{hex(int(crit)).replace('0x', '').zfill(2).upper()}{wt}'
-            output.append(temp1)
-            output.append(temp2)
+            try:
+                mt = int(mt)
+                hit = int(hit)
+                crit = int(crit)
+                if mt > 255 or hit > 255 or crit > 255:
+                    return f'Error: Stat for {item} is too high! Please enter a value between 0 and 255.'
+                temp1 = f'02{fstat_off[-6:]} 0000{hex(mt).replace('0x', '').zfill(2).upper()}{hex(hit).replace('0x', '').zfill(2).upper()}'
+                off2 = hex(int(fstat_off, 16) + 2).replace('0x', '').zfill(8).upper()
+                temp2 = f'02{off2[-6:]} 0000{hex(crit).replace('0x', '').zfill(2).upper()}{wt}'
+                output.append(temp1)
+                output.append(temp2)
+            except ValueError:
+                return f'Error: Stat for {item} is not a number! Please enter a value between 0 and 255.'
     
     output.append('E0000000 80008000')
     if len(output) == 2:
@@ -17842,6 +17856,8 @@ def get_class_code(data):
                 val = '001F'
             elif data['weapon_ranks'][i] == 'E':
                 val = '0001'
+            else:
+                return f'Error: Invalid weapon rank for {name.replace('_', ' ')}! Please select a valid rank.'
 
             temp = f'02{classes[name][cls][-6:]} 0000{val}'
             output.append(temp)
@@ -17862,8 +17878,14 @@ def get_class_code(data):
 
     for i, name in enumerate(stat_names):
         if data['stats'][i]:
-            temp = f'00{classes[name][cls][-6:]} 000000{hex(int(data["stats"][i])).replace("0x", "").zfill(2).upper()}'
-            output.append(temp)
+            try:
+                num = int(data['stats'][i])
+                if num > 255:
+                    return f'Error: Stat for {name.replace('_', ' ')} is too high! Please enter a value between 0 and 255.'
+                temp = f'00{classes[name][cls][-6:]} 000000{hex(num).replace("0x", "").zfill(2).upper()}'
+                output.append(temp)
+            except ValueError:
+                return f'Error: Stat for {name} is not a number! Please enter a value between 0 and 255.'
 
     output.append('E0000000 80008000')
     if len(output) == 2:
@@ -17889,6 +17911,8 @@ def get_item_code(data):
                     val = '00'
                 elif data['misc_data'][d] == 'MAG':
                     val = '06'
+                else:
+                    return f'Error: Invalid attack type for {item}! Please select a valid type.'
                 temp = f'00{items[w][item][-6:]} 000000{val}'
                 output.append(temp)
             elif d == 'Weapon Rank':
@@ -17906,6 +17930,8 @@ def get_item_code(data):
                     val = '001F'
                 elif data['misc_data'][d] == 'E':
                     val = '0001'
+                else:
+                    return f'Error: Invalid weapon rank for {item}! Please select a valid rank.'
                 temp = f'02{items[w][item][-6:]} 0000{val}'
                 output.append(temp)
             elif d == 'EXP Gain':
@@ -17936,8 +17962,14 @@ def get_item_code(data):
 
     for i, bonus in enumerate(eq_bonus):
         if data['equip_bonuses'][i]:
-            temp = f'00{items[bonus][item][-6:]} 000000{hex(int(data["equip_bonuses"][i])).replace("0x", "").zfill(2).upper()}'
-            output.append(temp)
+            try:
+                num = int(data['equip_bonuses'][i])
+                if num > 255:
+                    return f'Error: Equip Bonus for {bonus.replace("_", " ")} is too high! Please enter a value between 0 and 255.'
+                temp = f'00{items[bonus][item][-6:]} 000000{hex(int(data["equip_bonuses"][i])).replace("0x", "").zfill(2).upper()}'
+                output.append(temp)
+            except ValueError:
+                return f'Error: Equip Bonus for {bonus} is not a number! Please enter a value between 0 and 255.'
 
     output.append('E0000000 80008000')
     if len(output) == 2:
@@ -17946,11 +17978,10 @@ def get_item_code(data):
         return "\n".join(output)
 
 def get_keybind_code(data):
+    val = 0
     if data['controller'] == '':
         return '20B54158 8070F8BC'
-
     elif data['controller'] == 'Wiimote+Nunchuck':
-        val = 0
         # Left
         if data['keys'][0]:
             val += int('1', 16)
@@ -17987,7 +18018,7 @@ def get_keybind_code(data):
         # Minus
         if data['keys'][11]:
             val += int('1000', 16)
-        return f'UPDATE NUNCHUCK OFFSET {hex(val).replace('0x', '').zfill(8)}'
+        return f'28 {hex(val).replace('0x', '').zfill(8)}'
 
     elif data['controller'] == 'Classic Controller':
         val = 0
@@ -18040,39 +18071,39 @@ def get_keybind_code(data):
         if data['keys'][0]:
             val += int('1', 16)
         # Right
-        if data['keys'][0]:
+        if data['keys'][1]:
             val += int('2', 16)
         # Up
-        if data['keys'][0]:
+        if data['keys'][2]:
             val += int('8', 16)
         # Down
-        if data['keys'][0]:
+        if data['keys'][3]:
             val += int('4', 16)
         # A
-        if data['keys'][0]:
+        if data['keys'][4]:
             val += int('100', 16)
         # B
-        if data['keys'][0]:
+        if data['keys'][5]:
             val += int('200', 16)
         # X
-        if data['keys'][0]:
+        if data['keys'][6]:
             val += int('400', 16)
         # Y
-        if data['keys'][0]:
+        if data['keys'][7]:
             val += int('800', 16)
         # Z
-        if data['keys'][0]:
-            val += int('2', 16)
+        if data['keys'][8]:
+            val += int('10', 16)
         # L
-        if data['keys'][0]:
+        if data['keys'][9]:
             val += int('40', 16)
         # R
-        if data['keys'][0]:
+        if data['keys'][10]:
             val += int('20', 16)
         # Start
-        if data['keys'][0]:
+        if data['keys'][11]:
             val += int('1000', 16)
-        return f'UPDATE GAMECUBE CONTROLLER OFFSET {hex(val).replace('0x', '').zfill(8)}'
+        return f'283D7928 {hex(val).replace('0x', '').zfill(8)}'
 
 # %%
 # GUI
@@ -18120,7 +18151,7 @@ class CodeGeneratorGUI:
         output_label = ttk.Label(message_window, text=code, justify="left")
         output_label.pack(padx=10, pady=10)
 
-        if code not in ["No character selected!", "No class selected!", "No item selected!", "No changes made!"]:
+        if code not in ["No character selected!", "No class selected!", "No item selected!", "No changes made!"] and 'Error:' not in code:
             # Add a button to copy to clipboard
             copy_button = ttk.Button(message_window, text="Copy to Clipboard", command=lambda: self.copy_to_clipboard(code))
             copy_button.pack(pady=5)
@@ -18135,14 +18166,14 @@ class CodeGeneratorGUI:
         i = 3
         for tab in list(desc):
             if tab == "intro":
-                label = ttk.Label(desc_frame, text=desc[tab], wraplength=950, justify="left")
-                label.grid(row=0, column=0, pady=10, columnspan=3, sticky="w")
+                label = ttk.Label(desc_frame, text=desc[tab], wraplength=950, justify="center")
+                label.grid(row=0, column=0, pady=10, columnspan=3)
                 ttk.Separator(desc_frame, orient="horizontal").grid(row=1, column=0, columnspan=3, sticky="ew")
             else:
                 label = ttk.Label(desc_frame, text=tab, wraplength=150)
                 label.grid(row=i, column=0, pady=10, sticky="w")
                 ttk.Separator(desc_frame, orient="vertical").grid(row=i, column=1, padx=5, rowspan=1, sticky="ns")
-                label = ttk.Label(desc_frame, text=desc[tab], wraplength=800, justify="left")
+                label = ttk.Label(desc_frame, text=desc[tab], wraplength=790, justify="left")
                 label.grid(row=i, column=2, pady=10, sticky="w")
                 ttk.Separator(desc_frame, orient="horizontal").grid(row=i+1, column=0, columnspan=3, sticky="ew")
             i += 2
@@ -18153,21 +18184,21 @@ class CodeGeneratorGUI:
 
         self.keybinds = {
             "": "",
-            "Wiimote+Nunchuck": [
-                "Left",
-                "Right",
-                "Up",
-                "Down",
-                "A",
-                "B",
-                "C",
-                "Z",
-                "1",
-                "2",
-                "+",
-                "-"
+            # "Wiimote+Nunchuck": [
+            #     "Left",
+            #     "Right",
+            #     "Up",
+            #     "Down",
+            #     "A",
+            #     "B",
+            #     "C",
+            #     "Z",
+            #     "1",
+            #     "2",
+            #     "+",
+            #     "-"
                 
-            ],
+            # ],
             'Classic Controller': [
                 "Left",
                 "Right",
@@ -18327,6 +18358,7 @@ class CodeGeneratorGUI:
             "controller": self.dropdown.get(),
             "keys": [key.get() for key in self.checkboxes]
         }
+        
         key_code = get_keybind_code(keybinds_data)
         output = get_char_code(character_data, key_code)
         self.output_code(output)
