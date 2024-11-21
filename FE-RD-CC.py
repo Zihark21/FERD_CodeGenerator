@@ -1,7 +1,7 @@
 # %%
 # Imports
 
-import tkinter as tk, json, ctypes
+import tkinter as tk, ctypes, os, sys
 from tkinter import ttk
 
 dpi = ctypes.windll.shcore.SetProcessDpiAwareness(True)
@@ -17740,7 +17740,9 @@ def get_char_code(data, kb):
             temp = f'04{characters[f'Item_{i+1}'][char][-6:]} {items['Offset'][item]}'
             output.append(temp)
 
-        if uses:
+        if uses or item:
+            if uses == '':
+                uses = 80
             try:
                 uses = int(uses)
                 if uses > 255:
@@ -17751,12 +17753,17 @@ def get_char_code(data, kb):
                 return f'Error: Uses for {item} is not a number! Please enter a value between 0 and 255.'
         
         if blessed or forged or item:
+
             sts = 0
             if blessed:
                 sts += int('10', 16)
             if forged:
                 sts += int('20', 16)
+            equip = hex(sts).replace('0x', '').zfill(2).upper()
+            temp = f'00{characters[f'Item_{i+1}_Status'][char][-6:]} 000000{equip}'
+            output.append(temp)
 
+            if forged:
                 fnamecode = ''
                 if len(fname) > 26:
                         return f'Error: Forge Name for {item} is too long! Please enter a name with 26 characters or less.'
@@ -17781,35 +17788,31 @@ def get_char_code(data, kb):
                         if temp[-8:] != '00000000':
                             output.append(temp)
                         j += 4
-            
-            equip = hex(sts).replace('0x', '').zfill(2).upper()
-            temp = f'00{characters[f'Item_{i+1}_Status'][char][-6:]} 000000{equip}'
-            output.append(temp)
 
-        if mt or hit or wt or crit:
-            if mt == '':
-                mt = 0
-            if hit == '':
-                hit = 0
-            if wt == True:
-                wt = 'E0'
-            else:
-                wt = '00'
-            if crit == '':
-                crit = 0
-            try:
-                mt = int(mt)
-                hit = int(hit)
-                crit = int(crit)
-                if mt > 255 or hit > 255 or crit > 255:
-                    return f'Error: Stat for {item} is too high! Please enter a value between 0 and 255.'
-                temp1 = f'02{fstat_off[-6:]} 0000{hex(mt).replace('0x', '').zfill(2).upper()}{hex(hit).replace('0x', '').zfill(2).upper()}'
-                off2 = hex(int(fstat_off, 16) + 2).replace('0x', '').zfill(8).upper()
-                temp2 = f'02{off2[-6:]} 0000{hex(crit).replace('0x', '').zfill(2).upper()}{wt}'
-                output.append(temp1)
-                output.append(temp2)
-            except ValueError:
-                return f'Error: Stat for {item} is not a number! Please enter a value between 0 and 255.'
+                if mt or hit or wt or crit:
+                    if mt == '':
+                        mt = 0
+                    if hit == '':
+                        hit = 0
+                    if wt == True:
+                        wt = 'E0'
+                    else:
+                        wt = '00'
+                    if crit == '':
+                        crit = 0
+                    try:
+                        mt = int(mt)
+                        hit = int(hit)
+                        crit = int(crit)
+                        if mt > 255 or hit > 255 or crit > 255:
+                            return f'Error: Stat for {item} is too high! Please enter a value between 0 and 255.'
+                        temp1 = f'02{fstat_off[-6:]} 0000{hex(mt).replace('0x', '').zfill(2).upper()}{hex(hit).replace('0x', '').zfill(2).upper()}'
+                        off2 = hex(int(fstat_off, 16) + 2).replace('0x', '').zfill(8).upper()
+                        temp2 = f'02{off2[-6:]} 0000{hex(crit).replace('0x', '').zfill(2).upper()}{wt}'
+                        output.append(temp1)
+                        output.append(temp2)
+                    except ValueError:
+                        return f'Error: Stat for {item} is not a number! Please enter a value between 0 and 255.'
     
     output.append('E0000000 80008000')
     if len(output) == 2:
@@ -18113,6 +18116,16 @@ class CodeGeneratorGUI:
         self.root = root
         self.root.title("FE:RD Code Creator")
 
+        # Set no resize
+        self.root.resizable(False, False)
+        
+        if hasattr(sys, '_MEIPASS'):
+            icon_path = os.path.join(sys._MEIPASS, 'FE-RD.ico')
+        else:
+            icon_path = 'FE-RD.ico'
+        
+        self.root.iconbitmap(icon_path)
+
         # Set dark mode colors
         style = ttk.Style()
         style.theme_use('clam')
@@ -18173,7 +18186,7 @@ class CodeGeneratorGUI:
                 label = ttk.Label(desc_frame, text=tab, wraplength=150)
                 label.grid(row=i, column=0, pady=10, sticky="w")
                 ttk.Separator(desc_frame, orient="vertical").grid(row=i, column=1, padx=5, rowspan=1, sticky="ns")
-                label = ttk.Label(desc_frame, text=desc[tab], wraplength=790, justify="left")
+                label = ttk.Label(desc_frame, text=desc[tab], wraplength=800, justify="left")
                 label.grid(row=i, column=2, pady=10, sticky="w")
                 ttk.Separator(desc_frame, orient="horizontal").grid(row=i+1, column=0, columnspan=3, sticky="ew")
             i += 2
