@@ -18150,9 +18150,10 @@ class CodeGeneratorGUI:
         self.class_tab()
         self.items_tab()
 
-    def copy_to_clipboard(self, text):
-        self.root.clipboard_clear()  # Clear the clipboard
-        self.root.clipboard_append(text)  # Append the text to the clipboard
+    def copy_and_close(self, code, message_window):
+        self.root.clipboard_clear()
+        self.root.clipboard_append(code)
+        message_window.destroy()
 
     def output_code(self, code):
         # Create a new window for the message box
@@ -18166,7 +18167,7 @@ class CodeGeneratorGUI:
 
         if code not in ["No character selected!", "No class selected!", "No item selected!", "No changes made!"] and 'Error:' not in code:
             # Add a button to copy to clipboard
-            copy_button = ttk.Button(message_window, text="Copy to Clipboard", command=lambda: self.copy_to_clipboard(code))
+            copy_button = ttk.Button(message_window, text="Copy to Clipboard", command=lambda: self.copy_and_close(code, message_window))
             copy_button.pack(pady=5)
 
     def info_tab(self):
