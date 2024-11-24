@@ -947,7 +947,7 @@ CODE_DATABASE = {
         'PAL': '088B5B9A 64646464\n216500FC 00000000\n088B5B9E 64646464\n216500FC 00000000'
     },
     'Stat Gain Modifier': {
-        'DESC': 'Info:\n\n\nCode:',
+        'DESC': 'Info:\nReplace XX with the gain you want. 02 means each stat that you get in a level up will get +2.\n\nCode:',
         'NTSC': '0006D303 000000XX\n0006D35F 000000XX',
         'PAL': 'Code unknown for PAL. Please request it.'
     },
@@ -964,6 +964,31 @@ CODE_DATABASE = {
     'All Convoy': {
         'DESC': 'Info:\nAll items in convoy. All items 50 uses.\n\nCode:',
         'NTSC': '083E92A0 80B5FE1\n21270028 00000050\n083E92A4 00000032\n01270028 00000000\n083E92A5 00000000\n01270028 00000000',
+        'PAL': 'Code unknown for PAL. Please request it.'
+    },
+    'Blessed Convoy': {
+        'DESC': 'Info:\nAll items in convoy. All items are blessed. Use with Clear Convoy to remove all items.\n\nCode:',
+        'NTSC': '083E92A0 80B5FE10\n21270028 00000050\n083E92A4 00000050\n01270028 00000000\n083E92A5 00000010\n01270028 00000000',
+        'PAL': 'Code unknown for PAL. Please request it.'
+    },
+    'Clear Convoy': {
+        'DESC': 'Info:\nClears all items in convoy. Use with Blessed Convoy to remove all items.\n\nCode:',
+        'NTSC': '083E92A0 00000000\n2BC10004 00000000',
+        'PAL': 'Code unknown for PAL. Please request it.'
+    },
+    'Convoy 300': {
+        'DESC': 'Info:\nEnables max convoy capacity for all teams and chapters to allow use for all items codes.\n\nCode:',
+        'NTSC': '024CB75A 0000012C\n024CB762 0000012C\n024CB766 000092A0\n024CB76A 0000012C\n024CB76E 000092A0\n024CB772 0000012C\n024CB776 000092A0',
+        'PAL': 'Code unknown for PAL. Please request it.'
+    },
+    'All Skills': {
+        'DESC': 'Info:\nCan assign all skills in the game.\n\nCode:',
+        'NTSC': '2050002C 00000000\n0870F8B0 00000002\n0023002C 00000000\n0870F8B4 80710B04',
+        'PAL': 'Code unknown for PAL. Please request it.'
+    },
+    'Free Skills': {
+        'DESC': 'Info:\nAll skills cost 0.\n\nCode:',
+        'NTSC': '0870F8AE 00000000\n0050002C 00000000',
         'PAL': 'Code unknown for PAL. Please request it.'
     },
 }
@@ -2312,7 +2337,6 @@ class CodeGeneratorGUI:
         output = '\n'.join([desc, key_code, code, 'E0000000 80008000'])
     
         self.output_code(output)
-
 
 # %%
 # Main
