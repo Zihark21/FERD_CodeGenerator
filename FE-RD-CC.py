@@ -1,13 +1,13 @@
 # %%
 # Imports
 
-import tkinter as tk, ctypes, os, sys
+import tkinter as tk, ctypes, os, sys, re
 from tkinter import ttk
 
 dpi = ctypes.windll.shcore.SetProcessDpiAwareness(True)
 
 # %%
-# Lists
+# Lists and Variables
 
 BASE = {
     "NTSC": {
@@ -178,8 +178,8 @@ CHAR = {
         "Commander": 50,
         "Move_Status": 51,
         "Current_HP": 56,
-        "CN-WT": 57,
-        "Move-Boots": 58,
+        "Weight": 57,
+        "Move": 58,
         "Affinity": 60,
         "HP": 61,
         "STR": 62,
@@ -839,16 +839,133 @@ CHAR_LIST = sorted(set(list(CHAR["NTSC"].keys()) + list(CHAR["PAL"].keys())))
 CLASS_LIST = list(CLASS["ID"])
 ITEM_LIST = list(ITEM["ID"])
 
-# %%
-# Description for info tab
+CHAR_STATS = [
+    'Level',
+    'EXP',
+    'Current_HP',
+    'Weight',
+    'Move',
+    'HP',
+    'STR',
+    'MAG',
+    'SKL',
+    'SP',
+    'LCK',
+    'DEF',
+    'RES',
+]
 
-desc = {
-    "intro": "Welcome to the Fire Emblem Radiant Dawn Code Creator! This tool will allow you to easily create Gecko Codes to change and add a variety of data to your game. Please see each section below for more details.",
-    "Misc Information": "Text Input Fields - Forge Name has a max character count of 26. All other input fields are for numeric input with a max value of 255.\nDropdowns - All dropdowns are pre-populated and can only take values from the list provided. You can type in the name of the character, class or item, but it needs to be exact or the code will not find it.",
-    "Keybind Activation Tab": "Allows users to select a controller type and configure keybindings required to activate the code. This tab only works in conjunction with the character tab. The codes generated from Class and Items are codes that need to be always on.",
-    "Character Tab": "Lets users select a character and configure their items, including forge names, uses, and various attributes. Make sure to pair with input in the keybinds tab to activate based on custom button pairing! If no keybinds are selected, the code defaults to an always on status and will repeatedly write to your character.",
-    "Class Tab": "Allows users to select a class and configure max weapon ranks and stats.",
-    "Items Tab": "Allows users to select an item and configure its miscellaneous data and equip bonuses."
+CHAR_RANKS = [
+    "Sword_Rank",
+    "Lance_Rank",
+    "Axe_Rank",
+    "Bow_Rank",
+    "Knife_Rank",
+    "Strike_Rank",
+    "Fire_Rank",
+    "Thunder_Rank",
+    "Wind_Rank",
+    "Light_Rank",
+    "Dark_Rank",
+    "Staff_Rank",
+]
+
+CLASS_STATS = [
+    'Base_WT',
+    'Base_Move',
+    'Skill_Capacity',
+    'Max_HP',
+    'Max_STR',
+    'Max_MAG',
+    'Max_SKL',
+    'Max_SP',
+    'Max_LCK',
+    'Max_DEF',
+    'Max_RES'
+    ]
+
+ITEM_STATS = [
+    "Weapon_Uses",
+    "Might",
+    "Hit",
+    "Weight",
+    "Crit",
+    "Min_Range",
+    "Max_Range"
+    ]
+
+ITEM_DATA = [
+    "Attack_Type",
+    "Weapon_Rank",
+    "EXP_Gain",
+    "Unlock",
+    "Char_Unlock",
+    "Infinite",
+    "Brave",
+    "Heal"
+]
+
+ITEM_BONUS = [
+    "HP_Increase",
+    "STR_Increase",
+    "MAG_Increase",
+    "SKL_Increase",
+    "SP_Increase",
+    "LCK_Increase",
+    "DEF_Increase",
+    "RES_Increase",
+    "Move_Increase",
+    "CN-WT_Increase"
+]
+
+SECTION_HEADER = ("TkDefaultFont", 10, "bold")
+
+CODE_DATABASE = {
+    'Game Clear Count': {
+        'DESC': 'Info:\nReplace XX below with (number desired + 1) and convert to hex.\n\nCode:',
+        'NTSC': '023CABD6 000000XX',
+        'PAL': '003C3577 000000XX'
+    },
+    'Infinite Money': {
+        'DESC': 'Info:\nGold set to 50,000\n\nCode:',
+        'NTSC': '083CAB50 0000C350\n20020004 00000000',
+        'PAL': ''
+    },
+    'Infinite BEXP': {
+        'DESC': 'Info:\nBEXP is set to 50,000\n\nCode:\n',
+        'NTSC': '083CAB5C 47435000\n20020004 00000000',
+        'PAL': ''
+    },
+    'BEXP Level Cap': {
+        'DESC': 'Info:\nReplace XX with cap. 03 is default.\nUse 08 for all stats possible.\nUse 01 for a challenge. (:\n\nCode:',
+        'NTSC': '0006D8EB 000000XX\n0006DAB7 000000XX\n0006DCD7 000000XX',
+        'PAL': '000520AF 000000XX\n0005227B 000000XX\n0005249B 000000XX'
+    },
+    'Perfect Level Up': {
+        'DESC': 'Info:\nMakes all units get all stat every level up. If used with Uncapped BEXP Level up, you can get all 8 in base as well.\n\nCode:',
+        'NTSC': '088C361A 64646464\n216500FC 00000000\n088C361E 64646464\n216500FC 00000000',
+        'PAL': '088B5B9A 64646464\n216500FC 00000000\n088B5B9E 64646464\n216500FC 00000000'
+    },
+    'Stat Gain Modifier': {
+        'DESC': 'Info:\n\n\nCode:',
+        'NTSC': '0006D303 000000XX\n0006D35F 000000XX',
+        'PAL': 'Code unknown for PAL. Please request it.'
+    },
+    'Special Items': {
+        'DESC': 'Info:\nFlorete - Uses Magic & Infinite\nEttard - Infinite\nCaladbolg - Infinite\nTarvos - Infinite\nLughnasadh - Infinite\nCymbeline - Infinite\nThani - Infinite\nCreiddylad - Infinite\n\nCode:',
+        'NTSC': '00B603C3 00000006\n00B603E9 00000001\n00B60439 00000001\n00B60259 00000001\n00B60ED9 00000001\n00B61339 00000001\n00B61C49 00000001\n00B622D9 00000001\n00B62329 00000001',
+        'PAL': 'Code unknown for PAL. Please request it.'
+    },
+    'Item Mods': {
+        'DESC': 'Info:\nAll unlocked, infinite, usable by anyone and no weapon ranks.\nFlorete does magic damage.\n\nCode:',
+        'NTSC': '08B5FE28 00000000\n10CB0050 00000000\n08B5FE48 00010000\n21270050 00000000\n08B5FE4C 00000000\n11270050 00000000\n00B603C3 00000006',
+        'PAL': 'Code unknown for PAL. Please request it.'
+    },
+    'All Convoy': {
+        'DESC': 'Info:\nAll items in convoy. All items 50 uses.\n\nCode:',
+        'NTSC': '083E92A0 80B5FE1\n21270028 00000050\n083E92A4 00000032\n01270028 00000000\n083E92A5 00000000\n01270028 00000000',
+        'PAL': 'Code unknown for PAL. Please request it.'
+    },
 }
 
 # %%
@@ -930,8 +1047,8 @@ def get_offset(name, data, opt):
 def get_char_code(data, kb):
 
     # Create code output and start with Keybind
-    output = []
-    output.append(kb)
+    char_output = []
+    char_output.append(kb)
 
     # Character Select Validation
     char = data['character']
@@ -944,8 +1061,23 @@ def get_char_code(data, kb):
     # Define Step Counts
     item_step = get_offset(char, 'Item_Step', 'Char')
     skill_step = get_offset(char, 'Skill_Step', 'Char')
+
+    #region Class
+
+    char_class = data['class']
+    if char_class:
+
+        # Get offsets
+        char_class_off = get_offset(char, 'Class', 'Char')
+        class_id = get_offset(char_class, 'Class', 'Class')
+
+        # Create class code and add to output
+        char_class_code = f'04{char_class_off[-6:]} {class_id}'
+        char_output.append(char_class_code)
     
-    # Loop through all 7 rows of input
+    #endregion
+
+    #region Items
     for i in range(0,7):
         item = data['items'][i]['item']
         fname = data['items'][i]['forge_name']
@@ -966,11 +1098,11 @@ def get_char_code(data, kb):
         # If item is populated
         if item:
             # Get item ID
-            item_code = get_offset(item, 'Item', 'Item')
+            item_id = get_offset(item, 'Item', 'Item')
 
             # Create item code and add to output
-            temp = f'04{item_off[-6:]} {item_code}'
-            output.append(temp)
+            char_item_code = f'04{item_off[-6:]} {item_id}'
+            char_output.append(char_item_code)
 
         # If uses or item is populated
         if uses or item:
@@ -990,8 +1122,8 @@ def get_char_code(data, kb):
                     uses = 80
 
                 # Create uses code and add to output
-                temp = f'00{item_uses_off[-6:]} 000000{hex(uses).replace('0x', '').zfill(2).upper()}'
-                output.append(temp)
+                char_item_uses_code = f'00{item_uses_off[-6:]} 000000{hex(uses).replace('0x', '').zfill(2).upper()}'
+                char_output.append(char_item_uses_code)
 
             # Error handling for uses
             except ValueError:
@@ -1010,14 +1142,14 @@ def get_char_code(data, kb):
                 sts += int('20', 16)
             
             # Create status code and add to output
-            equip = hex(sts).replace('0x', '').zfill(2).upper()
-            temp = f'00{item_status_off[-6:]} 000000{equip}'
-            output.append(temp)
+            status = hex(sts).replace('0x', '').zfill(2).upper()
+            char_status_code = f'00{item_status_off[-6:]} 000000{status}'
+            char_output.append(char_status_code)
 
             # If forged = True
             if forged:
                 # Create variable for forge name
-                fnamecode = ''
+                fname_hex = ''
 
                 # Error handling for forge name
                 if len(fname) > 26:
@@ -1025,14 +1157,14 @@ def get_char_code(data, kb):
                 elif fname and 0 < len(fname) <= 26:
                     # If forge name is populated, convert to hex
                     for c in fname:
-                        fnamecode += format(ord(c), "x").zfill(2)
+                        fname_hex += format(ord(c), "x").zfill(2)
                 else:
                     # If forge name does not meet requirements, default forge name to item name
                     for c in item:
-                        fnamecode += format(ord(c), "x").zfill(2)
+                        fname_hex += format(ord(c), "x").zfill(2)
                 
                 # Pad forge name to 60 digits (26 characters in hex)
-                fnamecode = fnamecode.ljust(52, '0').upper()
+                fname_hex = fname_hex.ljust(52, '0').upper()
 
                 # Create forge name code and add to output
                 j = 0
@@ -1041,17 +1173,18 @@ def get_char_code(data, kb):
                 for k in range(0, 7):
                     # First set is 16 bytes, so it needs to be handled differently
                     if k == 0:
-                        offset = hex(int(item_off, 16) + 6).replace('0x', '').zfill(8).upper()
-                        temp = f'02{offset[-6:]} 0000{fnamecode[:4]}'
+                        fname_offset = hex(int(item_off, 16) + 6).replace('0x', '').zfill(8).upper()
+                        char_fname_code = f'02{fname_offset[-6:]} 0000{fname_hex[:4]}'
+                        char_output.append(char_fname_code)
 
                     # The rest of the sets are 32 bytes
                     else:
-                        offset = hex(int(item_off, 16) + 8 + j).replace('0x', '').zfill(8).upper()
-                        temp = f'04{offset[-6:]} {fnamecode[4+(j*2):12+(j*2)]}'
+                        fname_offset = hex(int(item_off, 16) + 8 + j).replace('0x', '').zfill(8).upper()
+                        char_fname_code = f'04{fname_offset[-6:]} {fname_hex[4+(j*2):12+(j*2)]}'
 
                         # Checks for when name stops and removes empty lines
-                        if temp[-8:] != '00000000':
-                            output.append(temp)
+                        if char_fname_code[-8:] != '00000000':
+                            char_output.append(char_fname_code)
                         j += 4
 
                 # If mt, hit, wt, or crit is populated
@@ -1079,263 +1212,354 @@ def get_char_code(data, kb):
                             return f'Error: Stat for {item} is too high! Please enter a value between 0 and 255.'
                         
                         # Create stat codes and add to output, 16 bytes each
-                        temp1 = f'02{item_forge_off[-6:]} 0000{hex(mt).replace('0x', '').zfill(2).upper()}{hex(hit).replace('0x', '').zfill(2).upper()}'
-                        off2 = hex(int(item_forge_off, 16) + 2).replace('0x', '').zfill(8).upper()
-                        temp2 = f'02{off2[-6:]} 0000{hex(crit).replace('0x', '').zfill(2).upper()}{wt}'
-                        output.append(temp1)
-                        output.append(temp2)
+                        mt_hit_code = f'02{item_forge_off[-6:]} 0000{hex(mt).replace('0x', '').zfill(2).upper()}{hex(hit).replace('0x', '').zfill(2).upper()}'
+                        crit_wt_off = hex(int(item_forge_off, 16) + 2).replace('0x', '').zfill(8).upper()
+                        crit_wt_code = f'02{crit_wt_off[-6:]} 0000{hex(crit).replace('0x', '').zfill(2).upper()}{wt}'
+                        char_output.append(mt_hit_code)
+                        char_output.append(crit_wt_code)
                     
                     # Error handling for mt, hit, wt, and crit
                     except ValueError:
                         return f'Error: Stat for {item} is not a number! Please enter a value between 0 and 255.'
     
+    #endregion
+
+    #region Stats
+
+    for chstat, char_stat in enumerate(CHAR_STATS):
+
+            # Get data input
+            char_stat_input = data['stats'][chstat]
+            char_stat_offset = get_offset(char, char_stat, 'Char')
+    
+            # If data is populated
+            if char_stat_input:
+                # Error handling for stats
+                try:
+                    # Validation
+                    char_stat_num = int(char_stat_input)
+                    if char_stat == 'Level' and char_stat_num > 20:
+                        return f'Error: Stat for {char_stat.replace("_", " ")} is too high! Please enter a value between 0 and 20.'
+                    elif char_stat == 'EXP' and char_stat_num > 99:
+                        return f'Error: Stat for {char_stat.replace("_", " ")} is too high! Please enter a value between 0 and 99.'
+                    if char_stat_num > 255:
+                        return f'Error: Stat for {char_stat.replace("_", " ")} is too high! Please enter a value between 0 and 255.'
+                    
+                    # Get offset for stat name and create code
+                    char_stat_code = f'00{char_stat_offset[-6:]} 000000{hex(char_stat_num).replace("0x", "").zfill(2).upper()}'
+                    char_output.append(char_stat_code)
+                
+                # Error handling for stats
+                except ValueError:
+                    return f'Error: Stat for {char_stat} is not a number! Please enter a value between 0 and 255.'
+
+    #endregion
+
+    #region Weapon Ranks
+
+    for chwr, char_rank in enumerate(CHAR_RANKS):
+
+        # Get data input
+        char_rank_input = data['ranks'][chwr]
+        char_rank_offset = get_offset(char, char_rank, 'Char')
+
+        # If data is populated
+        if char_rank_input:
+            if char_rank_input == 'SS':
+                rank = '014B'
+            elif char_rank_input == 'S':
+                rank = '00FB'
+            elif char_rank_input == 'A':
+                rank = '00B5'
+            elif char_rank_input == 'B':
+                rank = '0079'
+            elif char_rank_input == 'C':
+                rank = '0047'
+            elif char_rank_input == 'D':
+                rank = '001F'
+            elif char_rank_input == 'E':
+                rank = '0001'
+            else:
+                return f'Error: Invalid weapon rank for {char_rank.replace('_', ' ')}! Please select a valid rank.'
+
+            # Create weapon rank code and add to output
+            char_rank_code = f'02{char_rank_offset[-6:]} 0000{rank}'
+            char_output.append(char_rank_code)
+
+    #endregion
+
     # Add end code to output
-    output.append('E0000000 80008000')
+    char_output.append('E0000000 80008000')
 
     # If only kb and end code, return no changes made
-    if len(output) == 2:
+    if len(char_output) == 2:
         return "No changes made!"
     else:
-        return "\n".join(output)
+        return "\n".join(char_output)
 
 def get_class_code(data):
 
     # Create code output and append start code
-    output = []
-    output.append('20B54158 8070F8BC')
+    class_output = []
+
+    if VERSION == 'NTSC':
+        class_output.append('20B54158 8070F8BC')
+    elif VERSION == 'PAL':
+        class_output.append('20B58CF8 80701E3C')
 
     # Class Select Validation
     cls = data['class']
     if not cls:
         return "No class selected!"
 
-    # Define rank names
-    rank_names = [
-        'Max_Sword_Rank',
-        'Max_Lance_Rank',
-        'Max_Axe_Rank',
-        'Max_Bow_Rank',
-        'Max_Knife_Rank',
-        'Max_Strike_Rank',
-        'Max_Fire_Rank',
-        'Max_Thunder_Rank',
-        'Max_Wind_Rank',
-        'Max_Light_Rank',
-        'Max_Dark_Rank',
-        'Max_Staff_Rank'
-    ]
+    #region Promote
 
-    # Loop through all 12 rank names and determine input level
-    for i, name in enumerate(rank_names):
+    promote = data['promote']
+    if promote:
+        class_promote_off = get_offset(cls, 'Next_Class', 'Class')
+        class_id = get_offset(promote, 'Class', 'Class')
+
+        # Create promote class code and add to output
+        class_promote_code = f'04{class_promote_off[-6:]} {class_id}'
+        class_output.append(class_promote_code)
+
+    #endregion
+
+    #region Weapon Ranks
+
+    min_ranks = ['Min_' + i for i in CHAR_RANKS]
+    max_ranks = ['Max_' + i for i in CHAR_RANKS]
+    class_ranks = min_ranks + max_ranks
+
+    for clwr, class_rank in enumerate(class_ranks):
 
         # Get data input
-        input = data['weapon_ranks'][i]
-        offset = get_offset(cls, name, 'Class')
+        class_rank_input = data['ranks'][clwr]
+        class_rank_offset = get_offset(cls, class_rank, 'Class')
 
         # If data is populated
-        if input:
-            if input == 'SS':
-                val = '014B'
-            elif input == 'S':
-                val = '00FB'
-            elif input == 'A':
-                val = '00B5'
-            elif input == 'B':
-                val = '0079'
-            elif input == 'C':
-                val = '0047'
-            elif input == 'D':
-                val = '001F'
-            elif input == 'E':
-                val = '0001'
+        if class_rank_input:
+            if class_rank_input == 'SS':
+                rank = '014B'
+            elif class_rank_input == 'S':
+                rank = '00FB'
+            elif class_rank_input == 'A':
+                rank = '00B5'
+            elif class_rank_input == 'B':
+                rank = '0079'
+            elif class_rank_input == 'C':
+                rank = '0047'
+            elif class_rank_input == 'D':
+                rank = '001F'
+            elif class_rank_input == 'E':
+                rank = '0001'
             else:
-                return f'Error: Invalid weapon rank for {name.replace('_', ' ')}! Please select a valid rank.'
+                return f'Error: Invalid weapon rank for {class_rank.replace('_', ' ')}! Please select a valid rank.'
 
             # Create weapon rank code and add to output
-            temp = f'02{offset[-6:]} 0000{val}'
-            output.append(temp)
+            class_rank_code = f'02{class_rank_offset[-6:]} 0000{rank}'
+            class_output.append(class_rank_code)
     
-    # Define stat names
-    stat_names = [
-        'Base_WT',
-        'Base_Move',
-        'Skill_Capacity',
-        'Max_HP',
-        'Max_STR',
-        'Max_MAG',
-        'Max_SKL',
-        'Max_SP',
-        'Max_LCK',
-        'Max_DEF',
-        'Max_RES'
-    ]
+    #endregion
 
-    # Loop through all 11 stat names and determine input
-    for i, name in enumerate(stat_names):
+    #region Stats
 
-        # Get data input
-        input = data['stats'][i]
-        offset = get_offset(cls, name, 'Class')
+    for clstat, class_stat in enumerate(CLASS_STATS):
 
-        if input:
+        class_stat_input = data['stats'][clstat]
+        class_stat_offset = get_offset(cls, class_stat, 'Class')
+
+        if class_stat_input:
             # Error handling for stats
             try:
                 # Validation
-                num = int(input)
-                if num > 255:
-                    return f'Error: Stat for {name.replace('_', ' ')} is too high! Please enter a value between 0 and 255.'
+                class_stat_num = int(class_stat_input)
+                if class_stat_num > 255:
+                    return f'Error: Stat for {class_stat.replace('_', ' ')} is too high! Please enter a value between 0 and 255.'
                 
                 # Get offset for stat name and create code
-                temp = f'00{offset[-6:]} 000000{hex(num).replace("0x", "").zfill(2).upper()}'
-                output.append(temp)
+                class_stat_code = f'00{class_stat_offset[-6:]} 000000{hex(class_stat_num).replace("0x", "").zfill(2).upper()}'
+                class_output.append(class_stat_code)
             
             # Error handling for stats
             except ValueError:
-                return f'Error: Stat for {name} is not a number! Please enter a value between 0 and 255.'
+                return f'Error: Stat for {class_stat} is not a number! Please enter a value between 0 and 255.'
+
+    #endregion
 
     # Add end code to output
-    output.append('E0000000 80008000')
+    class_output.append('E0000000 80008000')
 
     # If only start and end code, return no changes made
-    if len(output) == 2:
+    if len(class_output) == 2:
         return "No changes made!"
     else:
-        return "\n".join(output)
+        return "\n".join(class_output)
 
 def get_item_code(data):
 
     # Create code output and append start code
-    output = []
-    output.append('20B54158 8070F8BC')
+    item_output = []
+    
+    if VERSION == 'NTSC':
+        item_output.append('20B54158 8070F8BC')
+    elif VERSION == 'PAL':
+        item_output.append('20B58CF8 80701E3C')
 
     # Item Select Validation
     item = data['item']
     if not item:
         return "No item selected!"
-    
-    # Define item names
-    w_opts = ['Attack_Type', 'Weapon_Rank', 'EXP_Gain', 'Unlock', 'Char_Unlock', 'Infinite', 'Brave', 'Heal']
-    d_opts = ['Attack Type', 'Weapon Rank', 'EXP Gain', 'Unlock', 'CharUnlock', 'Infinite', 'Brave', 'Heal']
 
-    # Loop through all 8 item names and determine input
-    for w, d in zip(w_opts, d_opts):
+    #region Item Data
+
+    for item_data in ITEM_DATA:
 
         # Get data input
-        input = data['misc_data'][d]
-
-        # Get offset for item name
-        offset = get_offset(item, w, 'Item')
+        item_data_input = data['data'][item_data]
+        item_data_offset = get_offset(item, item_data, 'Item')
 
         # If data is populated
-        if input:
+        if item_data_input:
             # Determine attack type
-            if d == 'Attack Type':
-                if input == 'STR':
-                    val = '00'
-                elif input == 'MAG':
-                    val = '06'
+            if item_data == 'Attack_Type':
+                if item_data_input == 'STR':
+                    str_mag = '00'
+                elif item_data_input == 'MAG':
+                    str_mag = '06'
                 else:
                     return f'Error: Invalid attack type for {item}! Please select a valid type.'
                 
                 # Create attack type code and add to output
-                temp = f'00{offset[-6:]} 000000{val}'
-                output.append(temp)
+                item_data_code = f'00{item_data_offset[-6:]} 000000{str_mag}'
+                item_output.append(item_data_code)
 
             # Determine weapon rank
-            elif d == 'Weapon Rank':
-                if input == 'SS':
-                    val = '014B'
-                elif input == 'S':
-                    val = '00FB'
-                elif input == 'A':
-                    val = '00B5'
-                elif input == 'B':
-                    val = '0079'
-                elif input == 'C':
-                    val = '0047'
-                elif input == 'D':
-                    val = '001F'
-                elif input == 'E':
-                    val = '0001'
+            elif item_data == 'Weapon_Rank':
+                if item_data_input == 'SS':
+                    rank = '014B'
+                elif item_data_input == 'S':
+                    rank = '00FB'
+                elif item_data_input == 'A':
+                    rank = '00B5'
+                elif item_data_input == 'B':
+                    rank = '0079'
+                elif item_data_input == 'C':
+                    rank = '0047'
+                elif item_data_input == 'D':
+                    rank = '001F'
+                elif item_data_input == 'E':
+                    rank = '0001'
                 else:
                     return f'Error: Invalid weapon rank for {item}! Please select a valid rank.'
                 
                 # Create weapon rank code and add to output
-                temp = f'02{offset[-6:]} 0000{val}'
-                output.append(temp)
+                item_data_code = f'02{item_data_offset[-6:]} 0000{rank}'
+                item_output.append(item_data_code)
 
             # Determine EXP gain
-            elif d == 'EXP Gain':
-                temp = f'00{offset[-6:]} 000000{hex(int(data["misc_data"][d])).replace("0x", "").zfill(2).upper()}'
-                output.append(temp)
+            elif item_data == 'EXP Gain':
+                item_data_code = f'00{item_data_offset[-6:]} 000000{hex(int(item_data_input)).replace("0x", "").zfill(2).upper()}'
+                item_output.append(item_data_code)
 
             # Determine Unlock
-            elif d == 'Unlock':
-                if input:
-                    val = '00'
-                    temp = f'00{offset[-6:]} 000000{val}'
-                    output.append(temp)
+            elif item_data == 'Unlock':
+                if item_data_input:
+                    unlock = '00'
+                    item_data_code = f'00{item_data_offset[-6:]} 000000{unlock}'
+                    item_output.append(item_data_code)
 
             # Determine Infinite and Brave
-            elif d in ['Infinite', 'Brave']:
-                if input:
-                    val = '01'
-                    temp = f'00{offset[-6:]} 000000{val}'
-                    output.append(temp)
+            elif item_data in ['Infinite', 'Brave']:
+                if item_data_input:
+                    inf_brave = '01'
+                    item_data_code = f'00{item_data_offset[-6:]} 000000{inf_brave}'
+                    item_output.append(item_data_code)
 
             # Determine Char Unlock
-            elif d == 'CharUnlock':
-                if input:
-                    val = '0000'
-                    temp = f'02{offset[-6:]} 0000{val}'
-                    output.append(temp)
+            elif item_data == 'Char_Unlock':
+                if item_data_input:
+                    c_unlock = '0000'
+                    item_data_code = f'02{item_data_offset[-6:]} 0000{c_unlock}'
+                    item_output.append(item_data_code)
 
             # Determine Heal
-            elif d == 'Heal':
-                if input:
-                    val = '10'
-                    temp = f'00{offset[-6:]} 000000{val}'
-                    output.append(temp)
+            elif item_data == 'Heal':
+                if item_data_input:
+                    heal = '10'
+                    item_data_code = f'00{item_data_offset[-6:]} 000000{heal}'
+                    item_output.append(item_data_code)
+    
+    #endregion
 
-    # Define equip bonuses
-    eq_bonus = ['HP_Increase', 'STR_Increase', 'MAG_Increase', 'SKL_Increase', 'SP_Increase', 'LCK_Increase', 'DEF_Increase', 'RES_Increase', 'Move_Increase', 'CN-WT_Increase']
+    #region Item Stats
 
-    # Loop through all 10 equip bonuses and determine input
-    for i, bonus in enumerate(eq_bonus):
+    for istat, item_stat in enumerate(ITEM_STATS):
 
-        # Get data input and offset for equip bonus
-        input = data['equip_bonuses'][i]
-        offset = get_offset(item, bonus, 'Item')
+        # Get data input and offset for item stat
+        item_stat_input = data['stats'][istat]
+        item_stat_offset = get_offset(item, item_stat, 'Item')
 
         # If data is populated
-        if input:
+        if item_stat_input:
             try:
                 # Validation
-                num = int(input)
-                if num > 255:
+                item_stat_num = int(item_stat_input)
+                if item_stat_num > 255:
+                    return f'Error: Stat for {item_stat.replace("_", " ")} is too high! Please enter a value between 0 and 255.'
+                
+                # Create item stat code and add to output
+                item_stat_code = f'00{item_stat_offset[-6:]} 000000{hex(item_stat_num).replace("0x", "").zfill(2).upper()}'
+                item_output.append(item_stat_code)
+
+            # Error handling for item stats
+            except ValueError:
+                return f'Error: Stat for {item_stat} is not a number! Please enter a value between 0 and 255.'
+
+    #endregion
+
+    #region Item Equip Bonuses
+
+    for ibonus, bonus in enumerate(ITEM_BONUS):
+
+        # Get data input and offset for equip bonus
+        item_bonus_input = data['bonuses'][ibonus]
+        item_bonus_offset = get_offset(item, bonus, 'Item')
+
+        # If data is populated
+        if item_bonus_input:
+            try:
+                # Validation
+                bonus_num = int(item_bonus_input)
+                if bonus_num > 255:
                     return f'Error: Equip Bonus for {bonus.replace("_", " ")} is too high! Please enter a value between 0 and 255.'
                 
                 # Create equip bonus code and add to output
-                temp = f'00{offset[-6:]} 000000{hex(int(input)).replace("0x", "").zfill(2).upper()}'
-                output.append(temp)
+                item_bonus_code = f'00{item_bonus_offset[-6:]} 000000{hex(int(item_bonus_input)).replace("0x", "").zfill(2).upper()}'
+                item_output.append(item_bonus_code)
 
             # Error handling for equip bonuses
             except ValueError:
                 return f'Error: Equip Bonus for {bonus} is not a number! Please enter a value between 0 and 255.'
+    
+    #endregion
 
     # Add end code to output
-    output.append('E0000000 80008000')
+    item_output.append('E0000000 80008000')
 
     # If only start and end code, return no changes made
-    if len(output) == 2:
+    if len(item_output) == 2:
         return "No changes made!"
     else:
-        return "\n".join(output)
+        return "\n".join(item_output)
 
 def get_keybind_code(data):
     val = 0
     if data['controller'] == '':
-        return '20B54158 8070F8BC'
+        if VERSION == 'NTSC':
+            return '20B54158 8070F8BC'
+        elif VERSION == 'PAL':
+            return '20B58CF8 80701E3C'
     elif data['controller'] == 'Wiimote+Nunchuck':
         # Left
         if data['keys'][0]:
@@ -1419,7 +1643,11 @@ def get_keybind_code(data):
         # Minus
         if data['keys'][13]:
             val += int('1000', 16)
-        return f'283D79BA {hex(val).replace('0x', '').zfill(8)}'
+        
+        if VERSION == 'NTSC':
+            return f'283D79BA {hex(val).replace('0x', '').zfill(8)}'
+        elif VERSION == 'PAL':
+            return f'283D035A {hex(val).replace('0x', '').zfill(8)}'
     
     elif data['controller'] == 'GameCube Controller':
         # Left
@@ -1458,7 +1686,10 @@ def get_keybind_code(data):
         # Start
         if data['keys'][11]:
             val += int('1000', 16)
-        return f'283D7928 {hex(val).replace('0x', '').zfill(8)}'
+        if VERSION == 'NTSC':
+            return f'283D7928 {hex(val).replace('0x', '').zfill(8)}'
+        elif VERSION == 'PAL':
+            return f'283D02C8 {hex(val).replace('0x', '').zfill(8)}'
 
 # %%
 # GUI
@@ -1470,37 +1701,37 @@ class CodeGeneratorGUI:
 
         # Set no resize
         self.root.resizable(False, False)
-        
-        if hasattr(sys, '_MEIPASS'):
-            icon_path = os.path.join(sys._MEIPASS, 'FE-RD.ico')
+
+        if hasattr(sys, "_MEIPASS"):
+            icon_path = os.path.join(sys._MEIPASS, "FE-RD.ico")
         else:
-            icon_path = 'FE-RD.ico'
-        
+            icon_path = "FE-RD.ico"
+
         self.root.iconbitmap(icon_path)
 
         # Set dark mode colors
         style = ttk.Style()
-        style.theme_use('clam')
-        style.configure('TNotebook', background='#000000', foreground='#ffffff')
-        style.configure('TNotebook.Tab', background='#000000', foreground='#ffffff')
-        style.map('TNotebook.Tab', background=[('selected', '#2e2e2e')])
-        
+        style.theme_use("clam")
+        style.configure("TNotebook", background="#000000", foreground="#ffffff")
+        style.configure("TNotebook.Tab", background="#000000", foreground="#ffffff")
+        style.map("TNotebook.Tab", background=[("selected", "#2e2e2e")])
+
         # Configure text color for various widgets
-        style.configure('TFrame', background='#2e2e2e')
-        style.configure('TLabel', background='#2e2e2e', foreground='#ffffff')
-        style.configure('TEntry', fieldbackground='#ffffff', foreground='#000000')
-        style.configure('TCombobox', fieldbackground='#ffffff', foreground='#000000')
-        style.map('TCombobox', fieldbackground=[('readonly', '#ffffff')], foreground=[('readonly', '#000000')])
-        style.configure('TCheckbutton', background='#2e2e2e', foreground='#000000')
+        style.configure("TFrame", background="#2e2e2e")
+        style.configure("TLabel", background="#2e2e2e", foreground="#ffffff")
+        style.configure("TEntry", fieldbackground="#ffffff", foreground="#000000")
+        style.configure("TCombobox", fieldbackground="#ffffff", foreground="#000000")
+        style.map("TCombobox",fieldbackground=[("readonly", "#ffffff")],foreground=[("readonly", "#000000")],)
+        style.configure("TCheckbutton", background="#2e2e2e", foreground="#000000")
 
         self.notebook = ttk.Notebook(root)
         self.notebook.pack(fill="both", expand=True)
 
-        self.info_tab()
         self.options_tab()
         self.character_tab()
         self.class_tab()
         self.items_tab()
+        self.other_tab()
 
     def copy_and_close(self, code, message_window):
         self.root.clipboard_clear()
@@ -1511,42 +1742,41 @@ class CodeGeneratorGUI:
         # Create a new window for the message box
         message_window = tk.Toplevel(self.root)
         message_window.title("Code")
-        message_window.configure(bg='#2e2e2e')
-        
+        message_window.configure(bg="#2e2e2e")
+
         # Add a label to display the output
-        output_label = ttk.Label(message_window, text=code, justify="left")
+        output_label = ttk.Label(message_window, text=code, justify="center", wraplength=300)
         output_label.pack(padx=10, pady=10)
 
-        if code not in ["No character selected!", "No class selected!", "No item selected!", "No changes made!"] and 'Error:' not in code:
+        match = re.search(r'Code:\n((?:.*\n*)+)', code)
+        if match:
+            code_part = match.group(1).strip()
+        else:
+            code_part = code
+
+        error_list = [
+            "No character selected!",
+            "No class selected!",
+            "No item selected!",
+            "No changes made!"
+            ]
+        if code not in error_list and "Error:" not in code:
             # Add a button to copy to clipboard
-            copy_button = ttk.Button(message_window, text="Copy to Clipboard", command=lambda: self.copy_and_close(code, message_window))
+            copy_button = ttk.Button(message_window, text="Copy to Clipboard", command=lambda: self.copy_and_close(code_part, message_window))
             copy_button.pack(pady=5)
-
-    def info_tab(self):
-        info_tab = ttk.Frame(self.notebook)
-        self.notebook.add(info_tab, text="Info")
-
-        desc_frame = ttk.Frame(info_tab)
-        desc_frame.pack(fill="both", expand=True)
-
-        i = 3
-        for tab in list(desc):
-            if tab == "intro":
-                label = ttk.Label(desc_frame, text=desc[tab], wraplength=950, justify="center")
-                label.grid(row=0, column=0, pady=10, columnspan=3)
-                ttk.Separator(desc_frame, orient="horizontal").grid(row=1, column=0, columnspan=3, sticky="ew")
-            else:
-                label = ttk.Label(desc_frame, text=tab, wraplength=150)
-                label.grid(row=i, column=0, pady=10, sticky="w")
-                ttk.Separator(desc_frame, orient="vertical").grid(row=i, column=1, padx=5, rowspan=1, sticky="ns")
-                label = ttk.Label(desc_frame, text=desc[tab], wraplength=800, justify="left")
-                label.grid(row=i, column=2, pady=10, sticky="w")
-                ttk.Separator(desc_frame, orient="horizontal").grid(row=i+1, column=0, columnspan=3, sticky="ew")
-            i += 2
 
     def options_tab(self):
         options_tab = ttk.Frame(self.notebook)
         self.notebook.add(options_tab, text="Options")
+
+        #region Separators
+        ttk.Separator(options_tab, orient="horizontal").grid(row=1, column=0, columnspan=99, sticky="ew")
+        ttk.Separator(options_tab, orient="vertical").grid(row=0, column=2, rowspan=4, sticky="ns")
+        ttk.Separator(options_tab, orient="vertical").grid(row=0, column=4, rowspan=4, sticky="ns")
+        ttk.Separator(options_tab, orient="horizontal").grid(row=3, column=0, columnspan=99, sticky="ew")
+        #endregion
+
+        #region Controller
 
         self.keybinds = {
             "": "",
@@ -1563,9 +1793,8 @@ class CodeGeneratorGUI:
             #     "2",
             #     "+",
             #     "-"
-                
             # ],
-            'Classic Controller': [
+            "Classic Controller": [
                 "Left",
                 "Right",
                 "Up",
@@ -1579,9 +1808,9 @@ class CodeGeneratorGUI:
                 "L",
                 "R",
                 "+",
-                "-"
+                "-",
             ],
-            'GameCube Controller': [
+            "GameCube Controller": [
                 "Left",
                 "Right",
                 "Up",
@@ -1593,51 +1822,59 @@ class CodeGeneratorGUI:
                 "Z",
                 "L",
                 "R",
-                "Start"
-            ]
+                "Start",
+            ],
         }
 
-        # Controller Section
         controller_frame = ttk.Frame(options_tab)
-        controller_frame.grid(row=0, column=0, pady=10, sticky="nsew")
+        controller_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
-        # Create controller label and combobox
-        ttk.Label(controller_frame, text="Controller:").grid(row=0, column=0, padx=5)
+        ttk.Label(controller_frame, text="Controller:", font=SECTION_HEADER).grid(row=0, column=0, padx=5)
         self.controller = ttk.Combobox(controller_frame, values=list(self.keybinds.keys()))
-        self.controller.grid(row=0, column=1, padx=10, pady=10)
+        self.controller.grid(row=0, column=1)
         self.controller.bind("<<ComboboxSelected>>", self.update_checkboxes)
-
-        # Separator
-        ttk.Separator(controller_frame, orient="horizontal").grid(row=1, column=0, columnspan=2, sticky="ew")
 
         # Checkboxes Section
         self.checkboxes = []
-        self.checkbox_frame = ttk.Frame(controller_frame)
-        self.checkbox_frame.grid(row=2, column=0, columnspan=2)
+        self.checkbox_frame = ttk.Frame(options_tab)
+        self.checkbox_frame.grid(row=2, column=0, columnspan=2, padx=10, pady=10)
 
-        # Controller and Version Separator
-        ttk.Separator(options_tab, orient="vertical").grid(row=0, column=2, rowspan=99, sticky="ns")
+        #endregion
 
-        # Create version section
+        #region Version
+
         version_frame = ttk.Frame(options_tab)
-        version_frame.grid(row=0, column=3, pady=10, sticky="nsew")
+        version_frame.grid(row=0, column=3, padx=10, pady=10, sticky="nsew")
 
-        # Create version label
-        ttk.Label(version_frame, text="Version:").grid(row=0, column=0, padx=5)
-        self.version = ttk.Combobox(version_frame, values=['NTSC 1.00', 'NTSC 1.01', 'PAL'])
-        self.version.grid(row=0, column=1, padx=10, pady=10)
+        ttk.Label(version_frame, text="Version:", font=SECTION_HEADER).grid(row=0, column=0, padx=5)
+        self.version = ttk.Combobox(version_frame, values=["NTSC 1.00", "NTSC 1.01", "PAL"])
+        self.version.grid(row=0, column=1)
+
+        #endregion
+
+        #region Options Info
+
+        options_info = ttk.Frame(options_tab)
+        options_info.grid(row=2, column=3, padx=10, pady=10, sticky="nsew")
+
+        desc = 'Welcome to the Fire Emblem: Radiant Dawn Code Creator!\n\nThis tool allows you to generate codes for characters, classes and items. Fill in the desired information and click the "Generate Code" button to create the code.\n\nOptions Tab:\n- Controller Activation codes will only apply to the Character Tab. Codes generated from the Class and Item tabs are codes that will need to be always on for the game to function properly.\n- Version will determine which region the creator will make the code for. Leaving this section blank will have the creator default to NTSC-U 1.01.\n\nOther Notes:\n- Forged Name has a character cap of 26.\n- Number Input fields have a cap of 255 unless specified otherwise in the respective tab.'
+
+        ttk.Label(options_info, text=desc, wraplength=1000, justify="left").grid(row=0, column=0)
+
+        #endregion
 
     def update_checkboxes(self, event):
         for checkbox in self.checkbox_frame.winfo_children():
             checkbox.destroy()
         self.checkboxes = []
-        
+
         selected_option = self.controller.get()
         if selected_option == "":
             pass
         elif selected_option in self.keybinds:
-            ttk.Label(self.checkbox_frame, text="Buttons").grid(row=0, column=0, rowspan=len(self.keybinds[selected_option]), padx=10)
-            ttk.Separator(self.checkbox_frame, orient="vertical").grid(row=0, column=1, rowspan=len(self.keybinds[selected_option]), sticky="ns", pady=5)
+            length = len(self.keybinds[selected_option])
+            ttk.Label(self.checkbox_frame, text="Buttons", font=SECTION_HEADER).grid(row=0, column=0, rowspan=length, padx=5)
+            ttk.Separator(self.checkbox_frame, orient="vertical").grid(row=0, column=1, rowspan=length, sticky="ns")
             for i, option in enumerate(self.keybinds[selected_option]):
                 ttk.Label(self.checkbox_frame, text=option).grid(row=i, column=3, padx=5, sticky="e")
                 var = tk.BooleanVar()
@@ -1646,98 +1883,167 @@ class CodeGeneratorGUI:
                 self.checkboxes.append(var)
 
     def character_tab(self):
+
         char_tab = ttk.Frame(self.notebook)
         self.notebook.add(char_tab, text="Character")
 
-        #region Row 0
-
-        # Character Select Section
-        char_frame = ttk.Frame(char_tab)
-        char_frame.grid(row=0, column=0, pady=10, sticky="nsew")
-        
-        ttk.Label(char_frame, text="Character Select:").grid(row=0, column=0, padx=5)
-        self.character_select = ttk.Combobox(char_frame, values=CHAR_LIST)
-        self.character_select.grid(row=0, column=1)
-
+        #region Separators
+        ttk.Separator(char_tab, orient="vertical").grid(row=0, column=3, sticky="ns")
+        ttk.Separator(char_tab, orient="horizontal").grid(row=1, column=0, columnspan=99, sticky="ew")
+        ttk.Separator(char_tab, orient="vertical").grid(row=2, column=1, sticky="ns")
+        ttk.Separator(char_tab, orient="vertical").grid(row=2, column=3, sticky="ns")
+        ttk.Separator(char_tab, orient="horizontal").grid(row=3, column=0, columnspan=99, sticky="ew")
         #endregion
 
-        # Row 1 Separator
-        ttk.Separator(char_tab, orient="horizontal").grid(row=1, column=0, columnspan=2, sticky="ew")
+        #region Character and Class
 
-        #region Row 2
+        # Character Select Frame
+        char_frame = ttk.Frame(char_tab)
+        char_frame.grid(row=0, column=0, sticky="nsew", columnspan=3, padx=10, pady=10)
 
-        # Items Section
-        self.item_entries = []
-        self.item_table = ttk.Frame(char_tab)
-        self.item_table.grid(row=2, column=0)
+        ttk.Label(char_frame, text="Character:", font=SECTION_HEADER).grid(row=0, column=0)
+        self.char_select = ttk.Combobox(char_frame, values=CHAR_LIST)
+        self.char_select.grid(row=0, column=1, padx=10)
 
-        headers = ["Items", "Forge Name", "Uses", "Blessed", "Forged", "Might", "Hit", "Crit", "Weightless"]
+        # Class Select Frame
+        char_class_frame = ttk.Frame(char_tab)
+        char_class_frame.grid(row=0, column=4, sticky="nsew", columnspan=4, padx=10, pady=10)
+
+        ttk.Label(char_class_frame, text="Class:", font=SECTION_HEADER).grid(row=0, column=0)
+        self.char_class = ttk.Combobox(char_class_frame, values=CLASS_LIST, width=40)
+        self.char_class.grid(row=0, column=1, padx=10)
+
+        # endregion
+
+        #region Items Section
+        self.char_items = []
+        char_items_frame = ttk.Frame(char_tab)
+        char_items_frame.grid(row=2, column=5, padx=10, pady=10, sticky='nsew')
+
+        # Item table
+        char_item_table = ttk.Frame(char_items_frame)
+        char_item_table.grid(row=0, column=0, sticky='n')
+
+        headers = [
+            "Items",
+            "Uses",
+            "Forged Name",
+            "Mt",
+            "Hit",
+            "Crit",
+            "Weightless",
+            "Forged",
+            "Blessed"
+        ]
         for i, header in enumerate(headers):
-            ttk.Label(self.item_table, text=header).grid(row=0, column=i)
+            if header in ['Blessed', 'Forged', 'Weightless']:
+                ttk.Label(char_item_table, text=header, font=SECTION_HEADER).grid(row=0, column=i, padx=5, pady=5)
+            else:
+                ttk.Label(char_item_table, text=header, font=SECTION_HEADER).grid(row=0, column=i, pady=5)
 
         for row in range(1, 8):
-            item_row = []
-            item_combobox = ttk.Combobox(self.item_table, values=ITEM_LIST, width=25)
-            item_combobox.grid(row=row, column=0, padx=1, pady=1)
-            item_row.append(item_combobox)
+            char_item_row = []
+            char_item_combobox = ttk.Combobox(char_item_table, values=ITEM_LIST, width=25)
+            char_item_combobox.grid(row=row, column=0, padx=1, pady=1)
+            char_item_row.append(char_item_combobox)
 
             for col in range(1, 9):
-                if col == 3 or col == 4 or col == 8:
-                    var = tk.BooleanVar(value=False)
-                    if col == 3:
-                        blessed_checkbox = ttk.Checkbutton(self.item_table, text="", variable=var)
+                if col == 6 or col == 7 or col == 8:
+                    char_item_var = tk.BooleanVar(value=False)
+                    if col == 8:
+                        blessed_checkbox = ttk.Checkbutton(char_item_table, text="", variable=char_item_var)
                         blessed_checkbox.grid(row=row, column=col)
-                    elif col == 4:
-                        forged_checkbox = ttk.Checkbutton(self.item_table, text="", variable=var)
+                    elif col == 7:
+                        forged_checkbox = ttk.Checkbutton(char_item_table, text="", variable=char_item_var)
                         forged_checkbox.grid(row=row, column=col)
-                    elif col == 8:
-                        wt_checkbox = ttk.Checkbutton(self.item_table, text="", variable=var)
+                    elif col == 6:
+                        wt_checkbox = ttk.Checkbutton(char_item_table, text="", variable=char_item_var)
                         wt_checkbox.grid(row=row, column=col)
-                    item_row.append(var)
+                    char_item_row.append(char_item_var)
                 else:
-                    if col == 1:
-                        entry = ttk.Entry(self.item_table, width=20)
-                        entry.grid(row=row, column=col, padx=1)
-                        item_row.append(entry)
+                    if col == 2:
+                        char_item_entry = ttk.Entry(char_item_table, width=20)
+                        char_item_entry.grid(row=row, column=col, padx=1, pady=1)
+                        char_item_row.append(char_item_entry)
                     else:
-                        entry = ttk.Entry(self.item_table, width=5)
-                        entry.grid(row=row, column=col, padx=1)
-                        item_row.append(entry)
+                        char_item_entry = ttk.Entry(char_item_table, width=5)
+                        char_item_entry.grid(row=row, column=col, padx=1, pady=1)
+                        char_item_row.append(char_item_entry)
 
-            self.item_entries.append(item_row)
+            self.char_items.append(char_item_row)
+
+        # Item Description
+        char_desc_frame = ttk.Frame(char_items_frame)
+        char_desc_frame.grid(row=1, column=0, sticky='nsew')
+
+        desc = 'Stats:\n- Level, EXP and Current HP get set to input number: Level Max = 20 - EXP max = 99\n- Other stat fields are increases of the base class stats. Putting in 25 will add 25 to the base stat, not set the stat to 25.\n\nItem Table:\n- For Forged Name, Mt, Hit, Crit and Weightless to take effect, Forged must be checked.\n\nMake sure to pair with a keybind in the options tab!'
+        ttk.Label(char_desc_frame, text=desc, wraplength=1000, justify='left').grid(row=0, column=0, padx=5, pady=5)
+
+        # endregion
+
+        #region Character Stats
+
+        char_stat_frame = ttk.Frame(char_tab)
+        char_stat_frame.grid(row=2, column=0, padx=10, pady=10, sticky='nsew')
+
+        ttk.Label(char_stat_frame, text="Stats", font=SECTION_HEADER).grid(row=0, column=0, columnspan=2, pady=5)
+        self.char_stats = []
+
+        for i, stat in enumerate(CHAR_STATS):
+            ttk.Label(char_stat_frame, text=stat).grid(row=i+1, column=0, padx=5, sticky="e")
+            char_stat_entry = ttk.Entry(char_stat_frame, width=5)
+            char_stat_entry.grid(row=i+1, column=1, pady=1)
+            self.char_stats.append(char_stat_entry)
 
         #endregion
 
-        # Row 3 Separator
-        ttk.Separator(char_tab, orient="horizontal").grid(row=3, column=0, columnspan=2, sticky="ew")
+        #region Character Weapon Ranks
 
-        # Row 4 Generate Button
-        generate_button = ttk.Button(char_tab, text="Generate", command=self.generate_character)
-        generate_button.grid(row=4, column=0, sticky="nsew")
+        char_rank_frame = ttk.Frame(char_tab)
+        char_rank_frame.grid(row=2, column=2, padx=10, pady=10, sticky='nsew')
+
+        ttk.Label(char_rank_frame, text="Weapon Ranks", font=SECTION_HEADER).grid(row=0, column=3, columnspan=2, pady=5)
+        self.char_ranks = []
+
+        for i, rank in enumerate(CHAR_RANKS):
+            ttk.Label(char_rank_frame, text=rank.replace('_', ' ')).grid(row=i + 1, column=3, padx=5, sticky="e")
+            char_ranks_combobox = ttk.Combobox(char_rank_frame, values=["SS", "S", "A", "B", "C", "D", "E"], width=5)
+            char_ranks_combobox.grid(row=i + 1, column=4, pady=1)
+            self.char_ranks.append(char_ranks_combobox)
+        
+        # endregion
+
+        # Generate Button
+        char_button = ttk.Button(char_tab, text="Generate", command=self.generate_character)
+        char_button.grid(row=4, column=0, columnspan=99, sticky="nsew")
 
     def generate_character(self):
         character_data = {
-            "character": self.character_select.get(),
+            "character": self.char_select.get(),
+            "class": self.char_class.get(),
+            "stats": [stat.get() for stat in self.char_stats],
+            "ranks": [rank.get() for rank in self.char_ranks],
             "items": [
                 {
                     "item": row[0].get(),
-                    "forge_name": row[1].get(),
-                    "uses": row[2].get(),
-                    "blessed": row[3].get(),
-                    "forged": row[4].get(),
-                    "mt": row[5].get(),
-                    "hit": row[6].get(),
-                    "crit": row[7].get(),
-                    "wt": row[8].get(),
-                } for row in self.item_entries
+                    "uses": row[1].get(),
+                    "forge_name": row[2].get(),
+                    "mt": row[3].get(),
+                    "hit": row[4].get(),
+                    "crit": row[5].get(),
+                    "wt": row[6].get(),
+                    "forged": row[7].get(),
+                    "blessed": row[8].get(),
+                }
+                for row in self.char_items
             ]
         }
 
         keybinds_data = {
             "controller": self.controller.get(),
-            "keys": [key.get() for key in self.checkboxes]
+            "keys": [key.get() for key in self.checkboxes],
         }
-        
+
         version = self.version.get()
         set_version(version)
 
@@ -1749,68 +2055,113 @@ class CodeGeneratorGUI:
         class_tab = ttk.Frame(self.notebook)
         self.notebook.add(class_tab, text="Class")
 
-        #region Row 0
+        #region Separators
+        ttk.Separator(class_tab, orient="vertical").grid(row=0, column=5, sticky="ns")
+        ttk.Separator(class_tab, orient="horizontal").grid(row=1, column=0, columnspan=99, sticky="ew")
+        ttk.Separator(class_tab, orient="horizontal").grid(row=3, column=0, columnspan=99, sticky="ew")
+        ttk.Separator(class_tab, orient="vertical").grid(row=2, column=1, rowspan=99, sticky="ns")
+        ttk.Separator(class_tab, orient="vertical").grid(row=2, column=3, rowspan=99, sticky="ns")
+        ttk.Separator(class_tab, orient="vertical").grid(row=2, column=5, rowspan=99, sticky="ns")
+        #endregion
+
+        #region Class and Promote section
 
         # Class Select Section
         class_frame = ttk.Frame(class_tab)
-        class_frame.grid(row=0, column=0, pady=10, sticky="nsew")
-        
-        ttk.Label(class_frame, text="Class Select:").grid(row=0, column=0, padx=5)
+        class_frame.grid(row=0, column=0, padx=10, pady=10, columnspan=5, sticky="nsew")
+
+        ttk.Label(class_frame, text="Class:", font=SECTION_HEADER).grid(row=0, column=0)
         self.class_select = ttk.Combobox(class_frame, values=CLASS_LIST, width=40)
-        self.class_select.grid(row=0, column=1)
+        self.class_select.grid(row=0, column=1, padx=10)
 
-        #endregion
+        # Promotion Section
+        class_promote_frame = ttk.Frame(class_tab)
+        class_promote_frame.grid(row=0, column=6, padx=10, pady=10, columnspan=99, sticky="nsew")
 
-        # Row 1 Separator
-        ttk.Separator(class_tab, orient="horizontal").grid(row=1, column=0, columnspan=1, sticky="ew")
+        ttk.Label(class_promote_frame, text="Next Class:", font=SECTION_HEADER).grid(row=0, column=3)
+        self.class_promote = ttk.Combobox(class_promote_frame, values=CLASS_LIST, width=40)
+        self.class_promote.grid(row=0, column=4, padx=10)
 
-        #region Row 2
+        # endregion
+
+        #region Min Weapon Ranks
 
         # Create frame for weapon ranks and stats
-        ranks_stats = ttk.Frame(class_tab)
-        ranks_stats.grid(row=2, column=0)
 
-        # Weapon Ranks Section
-        ttk.Label(ranks_stats, text="Weapon Ranks").grid(row=0, column=0, pady=5, columnspan=2)
-        weapon_ranks = ["Sword Rank", "Lance Rank", "Axe Rank", "Bow Rank", "Knife Rank", "Strike Rank",
-                        "Fire Rank", "Thunder Rank", "Wind Rank", "Light Rank", "Dark Rank", "Staff Rank"]
-        self.weapon_rank_comboboxes = []
+        class_min_rank_frame = ttk.Frame(class_tab)
+        class_min_rank_frame.grid(row=2, column=0, padx=10, pady=10, sticky='n')
 
-        for i, rank in enumerate(weapon_ranks):
-            ttk.Label(ranks_stats, text=rank).grid(row=i+1, column=0, padx=5, sticky="e")
-            combobox = ttk.Combobox(ranks_stats, values=["SS", "S", "A", "B", "C", "D", "E"], width=5)
-            combobox.grid(row=i+1, column=1, padx=5, pady=1)
-            self.weapon_rank_comboboxes.append(combobox)
-        
-        # Separator
-        ttk.Separator(ranks_stats, orient="vertical").grid(row=0, column=2, rowspan=13, sticky="ns")
+        # Min Weapon Ranks Section
+        ttk.Label(class_min_rank_frame, text="Min Weapon Ranks", font=SECTION_HEADER).grid(row=0, column=0, pady=5, columnspan=2)
 
-        # Stats Section
-        ttk.Label(ranks_stats, text="Stats").grid(row=0, column=3, pady=5, columnspan=2)
-        stats = ["Base WT", "Base Move", "Skill Capacity", "Max HP", "Max STR", "Max MAG", "Max SKL",
-                "Max SP", "Max LCK", "Max DEF", "Max RES"]
-        self.stats_entries = []
+        min_weapon_ranks = ['Min_' + i for i in CHAR_RANKS]
+        self.class_min_ranks = []
 
-        for i, stat in enumerate(stats):
-            ttk.Label(ranks_stats, text=stat).grid(row=i+1, column=3, padx=5, sticky="e")
-            entry = ttk.Entry(ranks_stats, width=5)
-            entry.grid(row=i+1, column=4, pady=1)
-            self.stats_entries.append(entry)
+        for i, rank in enumerate(min_weapon_ranks):
+            ttk.Label(class_min_rank_frame, text=rank.replace('_', ' ')).grid(row=i + 1, column=0, padx=5, sticky="e")
+            class_min_rank_combobox = ttk.Combobox(class_min_rank_frame, values=["SS", "S", "A", "B", "C", "D", "E"], width=5)
+            class_min_rank_combobox.grid(row=i + 1, column=1, pady=1)
+            self.class_min_ranks.append(class_min_rank_combobox)
 
         #endregion
 
-        # Row 3 Separator
-        ttk.Separator(class_tab, orient="horizontal").grid(row=3, column=0, columnspan=1, sticky="ew")
+        #region Max Weapon Ranks
 
-        # Row 4 Generate Button
-        generate_button = ttk.Button(class_tab, text="Generate", command=self.generate_class)
-        generate_button.grid(row=4, column=0, sticky="nsew")
+        class_max_rank_frame = ttk.Frame(class_tab)
+        class_max_rank_frame.grid(row=2, column=2, padx=10, pady=10, sticky='n')
+
+        ttk.Label(class_max_rank_frame, text="Max Weapon Ranks", font=SECTION_HEADER).grid(row=0, column=0, pady=5, columnspan=2)
+
+        max_weapon_ranks = ['Max_' + i for i in CHAR_RANKS]
+        self.class_max_ranks = []
+
+        for i, rank in enumerate(max_weapon_ranks):
+            ttk.Label(class_max_rank_frame, text=rank.replace('_', ' ')).grid(row=i + 1, column=0, padx=5, sticky="e")
+            class_max_rank_combobox = ttk.Combobox(class_max_rank_frame, values=["SS", "S", "A", "B", "C", "D", "E"], width=5)
+            class_max_rank_combobox.grid(row=i + 1, column=1, pady=1)
+            self.class_max_ranks.append(class_max_rank_combobox)
+
+        #endregion
+
+        #region Stats
+
+        class_stats_frame = ttk.Frame(class_tab)
+        class_stats_frame.grid(row=2, column=4, padx=10, pady=10, sticky='n')
+
+        ttk.Label(class_stats_frame, text="Stats", font=SECTION_HEADER).grid(row=0, column=0, pady=5, columnspan=2)
+
+        self.class_stats = []
+
+        for i, stat in enumerate(CLASS_STATS):
+            ttk.Label(class_stats_frame, text=stat.replace('_', ' ')).grid(row=i + 1, column=0, padx=5, sticky="e")
+            class_stats_entry = ttk.Entry(class_stats_frame, width=5)
+            class_stats_entry.grid(row=i + 1, column=1, pady=1)
+            self.class_stats.append(class_stats_entry)
+
+        # endregion
+
+        #region Class Description
+
+        class_desc_frame = ttk.Frame(class_tab)
+        class_desc_frame.grid(row=2, column=6, padx=10, pady=10, sticky='n')
+
+        desc = 'Notes:\n- Min Ranks only get applied on class promotion. Changing these to SS will not change the characters current rank.\n- Next Class will be the class that the selected class will promote to.'
+
+        ttk.Label(class_desc_frame, text=desc, wraplength=650, justify='left').grid(row=0, column=0)
+
+        #endregion
+
+        # Generate Button
+        class_button = ttk.Button(class_tab, text="Generate", command=self.generate_class)
+        class_button.grid(row=4, column=0, columnspan=99, sticky="nsew")
 
     def generate_class(self):
         class_data = {
             "class": self.class_select.get(),
-            "weapon_ranks": [cb.get() for cb in self.weapon_rank_comboboxes],
-            "stats": [entry.get() for entry in self.stats_entries]
+            "promote": self.class_promote.get(),
+            "ranks": [min.get() for min in self.class_min_ranks]
+            + [max.get() for max in self.class_max_ranks],
+            "stats": [stat.get() for stat in self.class_stats]
         }
 
         version = self.version.get()
@@ -1821,79 +2172,104 @@ class CodeGeneratorGUI:
         self.output_code(output)
 
     def items_tab(self):
+
         items_tab = ttk.Frame(self.notebook)
         self.notebook.add(items_tab, text="Items")
 
-        #region Row 0
-
-        # Item Select Section
-        item_frame = ttk.Frame(items_tab)
-        item_frame.grid(row=0, column=0, pady=10, sticky="nsew")
-        
-        ttk.Label(item_frame, text="Item Select:").grid(row=0, column=0, padx=5)
-        self.item_select = ttk.Combobox(item_frame, values=ITEM_LIST, width=25)
-        self.item_select.grid(row=0, column=1)
-
+        #region Separators
+        ttk.Separator(items_tab, orient="horizontal").grid(row=1, column=0, columnspan=99, sticky="ew")
+        ttk.Separator(items_tab, orient="horizontal").grid(row=3, column=0, columnspan=99, sticky="ew")
+        ttk.Separator(items_tab, orient="vertical").grid(row=2, column=1, rowspan=99, sticky="ns")
+        ttk.Separator(items_tab, orient="vertical").grid(row=2, column=3, rowspan=99, sticky="ns")
         #endregion
 
-        # Row 1 Separator
-        ttk.Separator(items_tab, orient="horizontal").grid(row=1, column=0, columnspan=5, sticky="ew")
+        #region Item
 
-        #region Row 2
+        item_frame = ttk.Frame(items_tab)
+        item_frame.grid(row=0, column=0, padx=10, pady=10, columnspan=99, sticky="nsew")
 
-        data_bonus = ttk.Frame(items_tab)
-        data_bonus.grid(row=2, column=0)
+        ttk.Label(item_frame, text="Item:", font=SECTION_HEADER).grid(row=0, column=0)
+        self.item_select = ttk.Combobox(item_frame, values=ITEM_LIST, width=25)
+        self.item_select.grid(row=0, column=1, padx=10)
 
-        # Misc Weapon Data Section
-        ttk.Label(data_bonus, text="Misc Weapon Data").grid(row=0, column=0, columnspan=2, pady=5)
-        misc_data_labels = ["Attack Type", "Weapon Rank", "EXP Gain", "Unlock", "CharUnlock", "Infinite", "Brave", "Heal"]
-        self.misc_data = {}
+        # endregion
 
-        for i, label in enumerate(misc_data_labels):
-            ttk.Label(data_bonus, text=label).grid(row=i+1, column=0, padx=5, sticky="e")
-            if label == "Attack Type":
-                self.misc_data[label] = ttk.Combobox(data_bonus, values=["STR", "MAG"], width=5)
-            elif label == "Weapon Rank":
-                self.misc_data[label] = ttk.Combobox(data_bonus, values=["SS", "S", "A", "B", "C", "D", "E"], width=5)
-            elif label in ["Unlock", "CharUnlock", "Infinite", "Brave", "Heal"]:
-                self.misc_data[label] = tk.BooleanVar()
-                ttk.Checkbutton(data_bonus, variable=self.misc_data[label]).grid(row=i+1, column=1)
+        #region Item Data
+
+        item_data_frame = ttk.Frame(items_tab)
+        item_data_frame.grid(row=2, column=0, padx=10, pady=10, sticky="n")
+
+        ttk.Label(item_data_frame, text="Weapon Data", font=SECTION_HEADER).grid(row=0, column=0, columnspan=2, pady=5)
+        
+        self.item_data = {}
+
+        for i, label in enumerate(ITEM_DATA):
+
+            ttk.Label(item_data_frame, text=label.replace('_', ' ')).grid(row=i + 1, column=0, padx=5, sticky="e")
+
+            if label == "Attack_Type":
+                self.item_data[label] = ttk.Combobox(item_data_frame, values=["STR", "MAG"], width=5)
+
+            elif label == "Weapon_Rank":
+                self.item_data[label] = ttk.Combobox(item_data_frame, values=["SS", "S", "A", "B", "C", "D", "E"], width=5)
+
+            elif label in ["Unlock", "Char_Unlock", "Infinite", "Brave", "Heal"]:
+                self.item_data[label] = tk.BooleanVar()
+                ttk.Checkbutton(item_data_frame, variable=self.item_data[label]).grid(row=i + 1, column=1)
                 continue
             else:
-                self.misc_data[label] = ttk.Entry(data_bonus, width=5)
+                self.item_data[label] = ttk.Entry(item_data_frame, width=5)
 
-            self.misc_data[label].grid(row=i+1, column=1, padx=5, pady=1)
-
-        # Separator
-        ttk.Separator(data_bonus, orient="vertical").grid(row=0, column=2, rowspan=11, sticky="ns", pady=5)
-
-        # Equip Bonuses Section
-        ttk.Label(data_bonus, text="Equip Bonuses").grid(row=0, column=3, columnspan=2, pady=5)
-        equip_bonus_labels = ["HP Increase", "STR Increase", "MAG Increase", "SKL Increase", "SP Increase",
-                                "LCK Increase", "DEF Increase", "RES Increase", "Move Increase", "CN/WT Increase"]
-        self.equip_bonus_entries = []
-
-        for i, label in enumerate(equip_bonus_labels):
-            ttk.Label(data_bonus, text=label).grid(row=i+1, column=3, padx=5, sticky="e")
-            entry = ttk.Entry(data_bonus, width=5)
-            entry.grid(row=i+1, column=4, padx=0, pady=1)
-            self.equip_bonus_entries.append(entry)
+            self.item_data[label].grid(row=i + 1, column=1, pady=1)
 
         #endregion
 
-        # Row 3 Separator
-        ttk.Separator(items_tab, orient="horizontal").grid(row=3, column=0, columnspan=5, sticky="ew")
+        #region Item Stats
 
-        # Row 4 Generate Button
-        generate_button = ttk.Button(items_tab, text="Generate", command=self.generate_item)
-        generate_button.grid(row=4, column=0, sticky="nsew")
+        item_stats_frame = ttk.Frame(items_tab)
+        item_stats_frame.grid(row=2, column=2, padx=10, pady=10, sticky="n")
+
+        ttk.Label(item_stats_frame, text="Weapon Stats", font=SECTION_HEADER).grid(row=0, column=0, columnspan=2, pady=5)
+        self.item_stats = []
+
+        for i, stat in enumerate(ITEM_STATS):
+            ttk.Label(item_stats_frame, text=stat.replace('_', ' ')).grid(row=i+1, column=0, padx=5, sticky="e")
+            item_stats_entry = ttk.Entry(item_stats_frame, width=5)
+            item_stats_entry.grid(row=i+1, column=1, pady=1)
+            self.item_stats.append(item_stats_entry)
+
+        #endregion
+
+        #region Item Equip Bonuses
+
+        item_bonus_frame = ttk.Frame(items_tab)
+        item_bonus_frame.grid(row=2, column=4, padx=10, pady=10, sticky="n")
+
+        ttk.Label(item_bonus_frame, text="Equip Bonuses", font=SECTION_HEADER).grid(row=0, column=0, columnspan=2, pady=5)
+
+        self.item_bonuses = []
+
+        for i, label in enumerate(ITEM_BONUS):
+            ttk.Label(item_bonus_frame, text=label.replace('_', ' ')).grid(row=i + 1, column=0, padx=5, sticky="e")
+            item_bonus_entry = ttk.Entry(item_bonus_frame, width=5)
+            item_bonus_entry.grid(row=i + 1, column=1, pady=1)
+            self.item_bonuses.append(item_bonus_entry)
+
+        # endregion
+
+        # Generate Button
+        item_button = ttk.Button(items_tab, text="Generate", command=self.generate_item)
+        item_button.grid(row=4, column=0, columnspan=99, sticky="nsew")
 
     def generate_item(self):
         item_data = {
             "item": self.item_select.get(),
-            "misc_data": {key: (var.get() if isinstance(var, tk.BooleanVar) else var.get())
-                        for key, var in self.misc_data.items()},
-            "equip_bonuses": [entry.get() for entry in self.equip_bonus_entries]
+            "data": {
+                key: (var.get() if isinstance(var, tk.BooleanVar) else var.get())
+                for key, var in self.item_data.items()
+            },
+            "stats": [stat.get() for stat in self.item_stats],
+            "bonuses": [bonus.get() for bonus in self.item_bonuses]
         }
 
         version = self.version.get()
@@ -1904,7 +2280,39 @@ class CodeGeneratorGUI:
         self.output_code(output)
 
     def other_tab(self):
-        pass
+        other_codes_tab = ttk.Frame(self.notebook)
+        self.notebook.add(other_codes_tab, text="Other Codes")
+    
+        r=0
+        c=0
+        for cdb, code_id in enumerate(list(CODE_DATABASE)):
+            code_id_button = ttk.Button(other_codes_tab, text=code_id, command=lambda cid=code_id: self.generate_other(cid), width=15)
+            code_id_button.grid(row=r, column=c, padx=5, pady=5)
+            if c == 7:
+                c = 0
+                r += 1
+            else:
+                c += 1
+    
+    def generate_other(self, sel_code):
+        version = self.version.get()
+        set_version(version)
+    
+        keybinds_data = {
+            "controller": self.controller.get(),
+            "keys": [key.get() for key in self.checkboxes],
+        }
+    
+        key_code = get_keybind_code(keybinds_data)
+
+        desc = CODE_DATABASE[sel_code]['DESC']
+    
+        code = CODE_DATABASE[sel_code][VERSION]
+    
+        output = '\n'.join([desc, key_code, code, 'E0000000 80008000'])
+    
+        self.output_code(output)
+
 
 # %%
 # Main
