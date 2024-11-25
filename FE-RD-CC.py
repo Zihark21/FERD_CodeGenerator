@@ -1816,7 +1816,7 @@ class CodeGeneratorGUI:
         self.character_tab()
         self.class_tab()
         self.items_tab()
-        self.other_tab()
+        self.database_tab()
 
     def copy_and_close(self, code, message_window):
         self.root.clipboard_clear()
@@ -2364,14 +2364,14 @@ class CodeGeneratorGUI:
 
         self.output_code(output)
 
-    def other_tab(self):
-        other_codes_tab = ttk.Frame(self.notebook)
-        self.notebook.add(other_codes_tab, text="Other Codes")
+    def database_tab(self):
+        database_tab = ttk.Frame(self.notebook)
+        self.notebook.add(database_tab, text="Database")
     
         r=0
         c=0
         for cdb, code_id in enumerate(list(CODE_DATABASE)):
-            code_id_button = ttk.Button(other_codes_tab, text=code_id, command=lambda cid=code_id: self.generate_other(cid), width=15)
+            code_id_button = ttk.Button(database_tab, text=code_id, command=lambda cid=code_id: self.generate_database_code(cid), width=15)
             code_id_button.grid(row=r, column=c, padx=5, pady=5)
             if c == 7:
                 c = 0
@@ -2379,7 +2379,7 @@ class CodeGeneratorGUI:
             else:
                 c += 1
 
-    def generate_other(self, sel_code):
+    def generate_database_code(self, sel_code):
         version = self.version.get()
         set_version(version)
     
