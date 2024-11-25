@@ -26,6 +26,7 @@ BASE = {
 
 CHAR = {
     "NTSC": {
+        "All": 0,
         "Nolan": 0,
         "Laura": 1,
         "Meg": 2,
@@ -98,6 +99,7 @@ CHAR = {
         "Stefan": 135,
     },
     "PAL": {
+        "All": 0,
         "Nolan": 0,
         "Laura": 1,
         "Meg": 2,
@@ -215,6 +217,7 @@ CHAR = {
 
 CLASS = {
     "ID": {
+        "All": 0,
         "Hero (Ike)": 0,
         "Vanguard (Ike)": 1,
         "Myrmidon (Edward)": 2,
@@ -434,6 +437,7 @@ CLASS = {
 
 ITEM = {
     "ID": {
+        "All": 0,
         "Slim Sword": 0,
         "Bronze Sword": 1,
         "Iron Sword": 2,
@@ -836,8 +840,9 @@ SKILL = {
 }
 
 CHAR_LIST = sorted(set(list(CHAR["NTSC"].keys()) + list(CHAR["PAL"].keys())))
-CLASS_LIST = list(CLASS["ID"])
-ITEM_LIST = list(ITEM["ID"])
+CLASS_LIST = list(CLASS["ID"])[1:]
+ITEM_LIST = list(ITEM["ID"])[1:]
+SECTION_HEADER = ("TkDefaultFont", 10, "bold")
 
 CHAR_STATS = [
     'Level',
@@ -918,8 +923,6 @@ ITEM_BONUS = [
     "CN-WT_Increase"
 ]
 
-SECTION_HEADER = ("TkDefaultFont", 10, "bold")
-
 CODE_DATABASE = {
     'Game Clear Count': {
         'DESC': 'Info:\nReplace XX below with (number desired + 1) and convert to hex.\n\nCode:',
@@ -963,7 +966,7 @@ CODE_DATABASE = {
     },
     'All Convoy': {
         'DESC': 'Info:\nAll items in convoy. All items 50 uses.\n\nCode:',
-        'NTSC': '083E92A0 80B5FE1\n21270028 00000050\n083E92A4 00000032\n01270028 00000000\n083E92A5 00000000\n01270028 00000000',
+        'NTSC': '083E92A0 80B5FE10\n21270028 00000050\n083E92A4 00000032\n01270028 00000000\n083E92A5 00000000\n01270028 00000000',
         'PAL': 'Code unknown for PAL. Please request it.'
     },
     'Blessed Convoy': {
@@ -1079,7 +1082,7 @@ def get_char_code(data, kb):
     char = data['character']
     if not char:
         return "No character selected!"
-    
+
     if VERSION == 'PAL' and char == 'Oliver':
         return "Oliver ID unknown in the PAL version of the game. Please report on my discord."
 
@@ -1095,9 +1098,11 @@ def get_char_code(data, kb):
         # Get offsets
         char_class_off = get_offset(char, 'Class', 'Char')
         class_id = get_offset(char_class, 'Class', 'Class')
-
-        # Create class code and add to output
-        char_class_code = f'04{char_class_off[-6:]} {class_id}'
+    
+        if char == 'All':
+            char_class_code = f'08{char_class_off[-6:]} {class_id}\n20A203F0 00000000'
+        else:
+            char_class_code = f'04{char_class_off[-6:]} {class_id}'
         char_output.append(char_class_code)
     
     #endregion
@@ -1126,7 +1131,10 @@ def get_char_code(data, kb):
             item_id = get_offset(item, 'Item', 'Item')
 
             # Create item code and add to output
-            char_item_code = f'04{item_off[-6:]} {item_id}'
+            if char == 'All':
+                char_item_code = f'08{item_off[-6:]} {item_id}\n20A203F0 00000000'
+            else:
+                char_item_code = f'04{item_off[-6:]} {item_id}'
             char_output.append(char_item_code)
 
         # If uses or item is populated
@@ -1146,8 +1154,10 @@ def get_char_code(data, kb):
                 if uses == 0:
                     uses = 80
 
-                # Create uses code and add to output
-                char_item_uses_code = f'00{item_uses_off[-6:]} 000000{hex(uses).replace('0x', '').zfill(2).upper()}'
+                if char == 'All':
+                    char_item_uses_code = f'08{item_uses_off[-6:]} 000000{uses}\n00A203F0 00000000'
+                else:
+                    char_item_uses_code = f'00{item_uses_off[-6:]} 000000{hex(uses).replace('0x', '').zfill(2).upper()}'
                 char_output.append(char_item_uses_code)
 
             # Error handling for uses
@@ -1168,7 +1178,10 @@ def get_char_code(data, kb):
             
             # Create status code and add to output
             status = hex(sts).replace('0x', '').zfill(2).upper()
-            char_status_code = f'00{item_status_off[-6:]} 000000{status}'
+            if char == 'All':
+                char_status_code = f'08{item_status_off[-6:]} 000000{status}\n00A203F0 00000000'
+            else:
+                char_status_code = f'00{item_status_off[-6:]} 000000{status}'
             char_output.append(char_status_code)
 
             # If forged = True
@@ -1199,17 +1212,24 @@ def get_char_code(data, kb):
                     # First set is 16 bytes, so it needs to be handled differently
                     if k == 0:
                         fname_offset = hex(int(item_off, 16) + 6).replace('0x', '').zfill(8).upper()
-                        char_fname_code = f'02{fname_offset[-6:]} 0000{fname_hex[:4]}'
+                        if char == 'All':
+                            char_fname_code = f'08{fname_offset[-6:]} 0000{fname_hex[:4]}\n10A203F0 00000000'
+                        else:
+                            char_fname_code = f'02{fname_offset[-6:]} 0000{fname_hex[:4]}'
                         char_output.append(char_fname_code)
 
                     # The rest of the sets are 32 bytes
                     else:
                         fname_offset = hex(int(item_off, 16) + 8 + j).replace('0x', '').zfill(8).upper()
-                        char_fname_code = f'04{fname_offset[-6:]} {fname_hex[4+(j*2):12+(j*2)]}'
+                        if char == 'All':
+                            char_fname_code = f'08{fname_offset[-6:]} {fname_hex[4+(j*2):12+(j*2)]}\n20A203F0 00000000'
+                            if fname_hex[4+(j*2):12+(j*2)] != '00000000':
+                                char_output.append(char_fname_code)
+                        else:
+                            char_fname_code = f'04{fname_offset[-6:]} {fname_hex[4+(j*2):12+(j*2)]}'
+                            if char_fname_code[-8:] != '00000000':
+                                char_output.append(char_fname_code)
 
-                        # Checks for when name stops and removes empty lines
-                        if char_fname_code[-8:] != '00000000':
-                            char_output.append(char_fname_code)
                         j += 4
 
                 # If mt, hit, wt, or crit is populated
@@ -1237,9 +1257,16 @@ def get_char_code(data, kb):
                             return f'Error: Stat for {item} is too high! Please enter a value between 0 and 255.'
                         
                         # Create stat codes and add to output, 16 bytes each
-                        mt_hit_code = f'02{item_forge_off[-6:]} 0000{hex(mt).replace('0x', '').zfill(2).upper()}{hex(hit).replace('0x', '').zfill(2).upper()}'
-                        crit_wt_off = hex(int(item_forge_off, 16) + 2).replace('0x', '').zfill(8).upper()
-                        crit_wt_code = f'02{crit_wt_off[-6:]} 0000{hex(crit).replace('0x', '').zfill(2).upper()}{wt}'
+                        if char == 'All':
+                            mt_hit_code = f'08{item_forge_off[-6:]} 0000{hex(mt).replace("0x", "").zfill(2).upper()}{hex(hit).replace("0x", "").zfill(2).upper()}\n10A203F0 00000000'
+                            crit_wt_off = hex(int(item_forge_off, 16) + 2).replace("0x", "").zfill(8).upper()
+                            crit_wt_code = f'08{crit_wt_off[-6:]} 0000{hex(crit).replace("0x", "").zfill(2).upper()}{wt}\n10A203F0 00000000'
+
+                        else:
+                            mt_hit_code = f'02{item_forge_off[-6:]} 0000{hex(mt).replace('0x', '').zfill(2).upper()}{hex(hit).replace('0x', '').zfill(2).upper()}'
+                            crit_wt_off = hex(int(item_forge_off, 16) + 2).replace('0x', '').zfill(8).upper()
+                            crit_wt_code = f'02{crit_wt_off[-6:]} 0000{hex(crit).replace('0x', '').zfill(2).upper()}{wt}'
+
                         char_output.append(mt_hit_code)
                         char_output.append(crit_wt_code)
                     
@@ -1256,12 +1283,9 @@ def get_char_code(data, kb):
             # Get data input
             char_stat_input = data['stats'][chstat]
             char_stat_offset = get_offset(char, char_stat, 'Char')
-    
-            # If data is populated
+
             if char_stat_input:
-                # Error handling for stats
                 try:
-                    # Validation
                     char_stat_num = int(char_stat_input)
                     if char_stat == 'Level' and char_stat_num > 20:
                         return f'Error: Stat for {char_stat.replace("_", " ")} is too high! Please enter a value between 0 and 20.'
@@ -1270,11 +1294,14 @@ def get_char_code(data, kb):
                     if char_stat_num > 255:
                         return f'Error: Stat for {char_stat.replace("_", " ")} is too high! Please enter a value between 0 and 255.'
                     
-                    # Get offset for stat name and create code
-                    char_stat_code = f'00{char_stat_offset[-6:]} 000000{hex(char_stat_num).replace("0x", "").zfill(2).upper()}'
+                    if char == 'All':
+                        char_stat_code = f'08{char_stat_offset[-6:]} 000000{hex(char_stat_num).replace("0x", "").zfill(2).upper()}\n00A203F0 00000000'
+
+                    else:
+                        char_stat_code = f'00{char_stat_offset[-6:]} 000000{hex(char_stat_num).replace("0x", "").zfill(2).upper()}'
+
                     char_output.append(char_stat_code)
                 
-                # Error handling for stats
                 except ValueError:
                     return f'Error: Stat for {char_stat} is not a number! Please enter a value between 0 and 255.'
 
@@ -1307,8 +1334,12 @@ def get_char_code(data, kb):
             else:
                 return f'Error: Invalid weapon rank for {char_rank.replace('_', ' ')}! Please select a valid rank.'
 
-            # Create weapon rank code and add to output
-            char_rank_code = f'02{char_rank_offset[-6:]} 0000{rank}'
+            if char == 'All':
+                char_rank_code = f'08{char_rank_offset[-6:]} 0000{rank}\n10A203F0 00000000'
+
+            else:
+                char_rank_code = f'02{char_rank_offset[-6:]} 0000{rank}'
+
             char_output.append(char_rank_code)
 
     #endregion
@@ -1344,8 +1375,10 @@ def get_class_code(data):
         class_promote_off = get_offset(cls, 'Next_Class', 'Class')
         class_id = get_offset(promote, 'Class', 'Class')
 
-        # Create promote class code and add to output
-        class_promote_code = f'04{class_promote_off[-6:]} {class_id}'
+        if cls == 'All':
+            class_promote_code = f'08{class_promote_off[-6:]} {class_id}\n20AB011C 00000000'
+        else:
+            class_promote_code = f'04{class_promote_off[-6:]} {class_id}'
         class_output.append(class_promote_code)
 
     #endregion
@@ -1381,8 +1414,10 @@ def get_class_code(data):
             else:
                 return f'Error: Invalid weapon rank for {class_rank.replace('_', ' ')}! Please select a valid rank.'
 
-            # Create weapon rank code and add to output
-            class_rank_code = f'02{class_rank_offset[-6:]} 0000{rank}'
+            if cls == 'All':
+                class_rank_code = f'08{class_rank_offset[-6:]} 0000{rank}\n10AB011C 00000000'
+            else:
+                class_rank_code = f'02{class_rank_offset[-6:]} 0000{rank}'
             class_output.append(class_rank_code)
     
     #endregion
@@ -1395,15 +1430,17 @@ def get_class_code(data):
         class_stat_offset = get_offset(cls, class_stat, 'Class')
 
         if class_stat_input:
-            # Error handling for stats
+
             try:
-                # Validation
+
                 class_stat_num = int(class_stat_input)
                 if class_stat_num > 255:
                     return f'Error: Stat for {class_stat.replace('_', ' ')} is too high! Please enter a value between 0 and 255.'
                 
-                # Get offset for stat name and create code
-                class_stat_code = f'00{class_stat_offset[-6:]} 000000{hex(class_stat_num).replace("0x", "").zfill(2).upper()}'
+                if cls == 'All':
+                    class_stat_code = f'08{class_stat_offset[-6:]} 000000{hex(class_stat_num).replace("0x", "").zfill(2).upper()}\n00AB011C 00000000'
+                else:
+                    class_stat_code = f'00{class_stat_offset[-6:]} 000000{hex(class_stat_num).replace("0x", "").zfill(2).upper()}'
                 class_output.append(class_stat_code)
             
             # Error handling for stats
@@ -1455,8 +1492,10 @@ def get_item_code(data):
                 else:
                     return f'Error: Invalid attack type for {item}! Please select a valid type.'
                 
-                # Create attack type code and add to output
-                item_data_code = f'00{item_data_offset[-6:]} 000000{str_mag}'
+                if item == 'All':
+                    item_data_code = f'08{item_data_offset[-6:]} 000000{str_mag}\n00CA0050 00000000'
+                else:
+                    item_data_code = f'00{item_data_offset[-6:]} 000000{str_mag}'
                 item_output.append(item_data_code)
 
             # Determine weapon rank
@@ -1478,41 +1517,58 @@ def get_item_code(data):
                 else:
                     return f'Error: Invalid weapon rank for {item}! Please select a valid rank.'
                 
-                # Create weapon rank code and add to output
-                item_data_code = f'02{item_data_offset[-6:]} 0000{rank}'
+                if item == 'All':
+                    item_data_code = f'08{item_data_offset[-6:]} 0000{rank}\n10CA0050 00000000'
+                else:
+                    item_data_code = f'02{item_data_offset[-6:]} 0000{rank}'
                 item_output.append(item_data_code)
 
             # Determine EXP gain
             elif item_data == 'EXP Gain':
-                item_data_code = f'00{item_data_offset[-6:]} 000000{hex(int(item_data_input)).replace("0x", "").zfill(2).upper()}'
+                if item == 'All':
+                    item_data_code = f'08{item_data_offset[-6:]} 000000{hex(int(item_data_input)).replace("0x", "").zfill(2).upper()}\n00CA0050 00000000'
+                else:
+                    item_data_code = f'00{item_data_offset[-6:]} 000000{hex(int(item_data_input)).replace("0x", "").zfill(2).upper()}'
                 item_output.append(item_data_code)
 
             # Determine Unlock
             elif item_data == 'Unlock':
                 if item_data_input:
                     unlock = '00'
-                    item_data_code = f'00{item_data_offset[-6:]} 000000{unlock}'
+                    if item == 'All':
+                        item_data_code = f'08{item_data_offset[-6:]} 000000{unlock}\n00CA0050 00000000'
+                    else:
+                        item_data_code = f'00{item_data_offset[-6:]} 000000{unlock}'
                     item_output.append(item_data_code)
 
             # Determine Infinite and Brave
             elif item_data in ['Infinite', 'Brave']:
                 if item_data_input:
                     inf_brave = '01'
-                    item_data_code = f'00{item_data_offset[-6:]} 000000{inf_brave}'
+                    if item == 'All':
+                        item_data_code = f'08{item_data_offset[-6:]} 000000{inf_brave}\n00CA0050 00000000'
+                    else:
+                        item_data_code = f'00{item_data_offset[-6:]} 000000{inf_brave}'
                     item_output.append(item_data_code)
 
             # Determine Char Unlock
             elif item_data == 'Char_Unlock':
                 if item_data_input:
                     c_unlock = '0000'
-                    item_data_code = f'02{item_data_offset[-6:]} 0000{c_unlock}'
+                    if item == 'All':
+                        item_data_code = f'08{item_data_offset[-6:]} 0000{c_unlock}\n10CA0050 00000000'
+                    else:
+                        item_data_code = f'02{item_data_offset[-6:]} 0000{c_unlock}'
                     item_output.append(item_data_code)
 
             # Determine Heal
             elif item_data == 'Heal':
                 if item_data_input:
                     heal = '10'
-                    item_data_code = f'00{item_data_offset[-6:]} 000000{heal}'
+                    if item == 'All':
+                        item_data_code = f'08{item_data_offset[-6:]} 000000{heal}\n00CA0050 00000000'
+                    else:
+                        item_data_code = f'00{item_data_offset[-6:]} 000000{heal}'
                     item_output.append(item_data_code)
     
     #endregion
@@ -1533,8 +1589,10 @@ def get_item_code(data):
                 if item_stat_num > 255:
                     return f'Error: Stat for {item_stat.replace("_", " ")} is too high! Please enter a value between 0 and 255.'
                 
-                # Create item stat code and add to output
-                item_stat_code = f'00{item_stat_offset[-6:]} 000000{hex(item_stat_num).replace("0x", "").zfill(2).upper()}'
+                if item == 'All':
+                    item_stat_code = f'08{item_stat_offset[-6:]} 000000{hex(item_stat_num).replace("0x", "").zfill(2).upper()}\n00CA0050 00000000'
+                else:
+                    item_stat_code = f'00{item_stat_offset[-6:]} 000000{hex(item_stat_num).replace("0x", "").zfill(2).upper()}'
                 item_output.append(item_stat_code)
 
             # Error handling for item stats
@@ -1559,8 +1617,10 @@ def get_item_code(data):
                 if bonus_num > 255:
                     return f'Error: Equip Bonus for {bonus.replace("_", " ")} is too high! Please enter a value between 0 and 255.'
                 
-                # Create equip bonus code and add to output
-                item_bonus_code = f'00{item_bonus_offset[-6:]} 000000{hex(int(item_bonus_input)).replace("0x", "").zfill(2).upper()}'
+                if item == 'All':
+                    item_bonus_code = f'08{item_bonus_offset[-6:]} 000000{hex(bonus_num).replace("0x", "").zfill(2).upper()}\n00CA0050 00000000'
+                else:
+                    item_bonus_code = f'00{item_bonus_offset[-6:]} 000000{hex(int(item_bonus_input)).replace("0x", "").zfill(2).upper()}'
                 item_output.append(item_bonus_code)
 
             # Error handling for equip bonuses
@@ -2096,7 +2156,7 @@ class CodeGeneratorGUI:
         class_frame.grid(row=0, column=0, padx=10, pady=10, columnspan=5, sticky="nsew")
 
         ttk.Label(class_frame, text="Class:", font=SECTION_HEADER).grid(row=0, column=0)
-        self.class_select = ttk.Combobox(class_frame, values=CLASS_LIST, width=40)
+        self.class_select = ttk.Combobox(class_frame, values=['All'] + CLASS_LIST, width=40)
         self.class_select.grid(row=0, column=1, padx=10)
 
         # Promotion Section
@@ -2214,7 +2274,7 @@ class CodeGeneratorGUI:
         item_frame.grid(row=0, column=0, padx=10, pady=10, columnspan=99, sticky="nsew")
 
         ttk.Label(item_frame, text="Item:", font=SECTION_HEADER).grid(row=0, column=0)
-        self.item_select = ttk.Combobox(item_frame, values=ITEM_LIST, width=25)
+        self.item_select = ttk.Combobox(item_frame, values=['All'] + ITEM_LIST, width=25)
         self.item_select.grid(row=0, column=1, padx=10)
 
         # endregion
@@ -2337,6 +2397,9 @@ class CodeGeneratorGUI:
         output = '\n'.join([desc, key_code, code, 'E0000000 80008000'])
     
         self.output_code(output)
+
+    def generate_all(self):
+        pass
 
 # %%
 # Main

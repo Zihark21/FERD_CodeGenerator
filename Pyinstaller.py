@@ -1,6 +1,6 @@
-import PyInstaller.__main__
+import PyInstaller.__main__, os
 
-path = r"C:\Users\aadai\Documents\GitHub\FERD_CodeGenerator"
+path = os.getcwd()
 
 ico = path + r"\FE-RD.ico"
 script = path + r"\FE-RD-CC.py"
