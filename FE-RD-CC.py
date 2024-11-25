@@ -2318,7 +2318,7 @@ class CodeGeneratorGUI:
                 r += 1
             else:
                 c += 1
-    
+
     def generate_other(self, sel_code):
         version = self.version.get()
         set_version(version)
