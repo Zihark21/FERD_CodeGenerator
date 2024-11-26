@@ -2400,7 +2400,10 @@ class CodeGeneratorGUI:
     
         code = CODE_DATABASE[sel_code][VERSION]
     
-        output = '\n'.join([desc, key_code, code, 'E0000000 80008000'])
+        if 'unknown' in code:
+            output = code
+        else:
+            output = '\n'.join([desc, key_code, code, 'E0000000 80008000'])
     
         self.output_code(output)
 
