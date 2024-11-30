@@ -1,0 +1,80 @@
+{
+    "CHAR_STATS": [
+        "Level",
+        "EXP",
+        "Current_HP",
+        "Weight",
+        "Move",
+        "HP",
+        "STR",
+        "MAG",
+        "SKL",
+        "SP",
+        "LCK",
+        "DEF",
+        "RES"
+    ],
+
+    "CHAR_RANKS": [
+        "Sword_Rank",
+        "Lance_Rank",
+        "Axe_Rank",
+        "Bow_Rank",
+        "Knife_Rank",
+        "Strike_Rank",
+        "Fire_Rank",
+        "Thunder_Rank",
+        "Wind_Rank",
+        "Light_Rank",
+        "Dark_Rank",
+        "Staff_Rank"
+    ],
+
+    "CLASS_STATS": [
+        "Base_WT",
+        "Base_Move",
+        "Skill_Capacity",
+        "Max_HP",
+        "Max_STR",
+        "Max_MAG",
+        "Max_SKL",
+        "Max_SP",
+        "Max_LCK",
+        "Max_DEF",
+        "Max_RES"
+        ],
+
+    "ITEM_STATS": [
+        "Weapon_Uses",
+        "Might",
+        "Hit",
+        "Weight",
+        "Crit",
+        "Min_Range",
+        "Max_Range"
+        ],
+
+    "ITEM_DATA": [
+        "Attack_Type",
+        "Weapon_Rank",
+        "EXP_Gain",
+        "Unlock",
+        "Char_Unlock",
+        "Infinite",
+        "Brave",
+        "Heal"
+    ],
+
+    "ITEM_BONUS": [
+        "HP_Increase",
+        "STR_Increase",
+        "MAG_Increase",
+        "SKL_Increase",
+        "SP_Increase",
+        "LCK_Increase",
+        "DEF_Increase",
+        "RES_Increase",
+        "Move_Increase",
+        "CN-WT_Increase"
+    ]
+}

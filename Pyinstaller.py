@@ -2,8 +2,9 @@ import PyInstaller.__main__, os
 
 path = os.getcwd()
 
-ico = path + r"\FE-RD.ico"
+ico = path + r"\Assets\FE-RD.ico"
 script = path + r"\FE-RD-CC.py"
+assets = path + r"\Assets"
 
 options = [
         '--clean',
@@ -16,7 +17,8 @@ options = [
         '--specpath=pyinstaller/spec',
         '--log-level=WARN',
         f'--ico={ico}',
-        f'--add-data={ico};.',
+        f'--add-data={ico};Assets',
+        f'--add-data={assets};Assets',
         script
     ]
 
