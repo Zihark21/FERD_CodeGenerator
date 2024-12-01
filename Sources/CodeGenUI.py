@@ -1,8 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 import re, ctypes, os, sys
-from Assets.Config import CHAR_LIST, CLASS_LIST, ITEM_LIST, SECTION_HEADER, DESC, CHAR_STATS, CHAR_RANKS, CLASS_STATS, ITEM_STATS, ITEM_DATA, ITEM_BONUS, CODE_DATABASE
-from Assets.UDF import get_char_code, get_class_code, get_item_code, get_keybind_code, set_version
+from Sources.Config import CHAR_LIST, CLASS_LIST, ITEM_LIST, SECTION_HEADER, DESC, CHAR_STATS, CHAR_RANKS, CLASS_STATS, ITEM_STATS, ITEM_DATA, ITEM_BONUS, CODE_DATABASE
+from Sources.UDF import get_char_code, get_class_code, get_item_code, get_keybind_code, set_version
 
 dpi = ctypes.windll.shcore.SetProcessDpiAwareness(True)
 

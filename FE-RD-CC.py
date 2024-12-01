@@ -1,5 +1,5 @@
 import tkinter as tk
-from Assets.CodeGenUI import CodeGeneratorGUI
+from Sources.CodeGenUI import CodeGeneratorGUI
 
 if __name__ == "__main__":
     root = tk.Tk()
