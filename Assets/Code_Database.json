@@ -7,12 +7,12 @@
     "Infinite Money": {
         "DESC": "Info:\nGold set to 50,000\n\nCode:",
         "NTSC": "083CAB50 0000C350\n20020004 00000000",
-        "PAL": ""
+        "PAL": "Code unknown for PAL. Please request it."
     },
     "Infinite BEXP": {
         "DESC": "Info:\nBEXP is set to 50,000\n\nCode:\n",
         "NTSC": "083CAB5C 47435000\n20020004 00000000",
-        "PAL": ""
+        "PAL": "Code unknown for PAL. Please request it."
     },
     "BEXP Level Cap": {
         "DESC": "Info:\nReplace XX with cap. 03 is default.\nUse 08 for all stats possible.\nUse 01 for a challenge. (:\n\nCode:",
