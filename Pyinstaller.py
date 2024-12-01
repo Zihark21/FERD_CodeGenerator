@@ -1,25 +1,28 @@
-import PyInstaller.__main__, os
+import PyInstaller.__main__
+import os
 
-path = os.getcwd()
+def get_path(relative_path):
+    return os.path.join(os.getcwd(), relative_path)
 
-ico = path + r"\Assets\FE-RD.ico"
-script = path + r"\FE-RD-CC.py"
-assets = path + r"\Assets"
+ico = get_path(r"Assets\FE-RD.ico")
+script = get_path(r"FE-RD-CC.py")
+sources = get_path(r"Sources")
+assets = get_path(r"Assets")
 
 options = [
-        '--clean',
-        '--noconfirm',
-        '--optimize=2',
-        '--onefile',
-        '--noconsole',
-        '--workpath=pyinstaller/build',
-        '--distpath=pyinstaller/dist',
-        '--specpath=pyinstaller/spec',
-        '--log-level=WARN',
-        f'--ico={ico}',
-        f'--add-data={ico};Assets',
-        f'--add-data={assets};Assets',
-        script
-    ]
+    '--clean',
+    '--noconfirm',
+    '--optimize=2',
+    '--onefile',
+    '--noconsole',
+    '--workpath=pyinstaller/build',
+    '--distpath=pyinstaller/dist',
+    '--specpath=pyinstaller/spec',
+    '--log-level=WARN',
+    f'--ico={ico}',
+    f'--add-data={sources};Sources',
+    f'--add-data={assets};Assets',
+    script
+]
 
 PyInstaller.__main__.run(options)
