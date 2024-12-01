@@ -1,4 +1,6 @@
-import json, sys, os
+import json
+import sys
+import os
 
 # Base offsets
 BASE = {
@@ -17,22 +19,24 @@ BASE = {
 }
 
 # Determine the base path
-if getattr(sys, 'frozen', False):
-    base_path = sys._MEIPASS
-else:
-    base_path = os.path.abspath(".")
+base_path = sys._MEIPASS if getattr(sys, 'frozen', False) else os.path.abspath(".")
+
+# Function to load JSON data
+def load_json(file_name):
+    with open(os.path.join(base_path, "Assets", file_name), "r") as file:
+        return json.load(file)
 
 # Pull offset data for each section
-DESC = json.load(open(os.path.join(base_path, "Assets", "Descriptions.json"), "r"))
-CHAR = json.load(open(os.path.join(base_path, "Assets", "Characters.json"), "r"))
-CLASS = json.load(open(os.path.join(base_path, "Assets", "Classes.json"), "r"))
-ITEM = json.load(open(os.path.join(base_path, "Assets", "Items.json"), "r"))
-SKILL = json.load(open(os.path.join(base_path, "Assets", "Skills.json"), "r"))
-LISTS = json.load(open(os.path.join(base_path, "Assets", "Lists.json"), "r"))
-CODE_DATABASE = json.load(open(os.path.join(base_path, "Assets", "Code_Database.json"), "r"))
+DESC = load_json("Descriptions.json")
+CHAR = load_json("Characters.json")
+CLASS = load_json("Classes.json")
+ITEM = load_json("Items.json")
+SKILL = load_json("Skills.json")
+LISTS = load_json("Lists.json")
+CODE_DATABASE = load_json("Code_Database.json")
 
 # Define lists to be used in the GUI
-CHAR_LIST = sorted(set(list(CHAR["NTSC"].keys()) + list(CHAR["PAL"].keys())))
+CHAR_LIST = sorted(set(CHAR["NTSC"].keys()).union(CHAR["PAL"].keys()))
 CLASS_LIST = list(CLASS["ID"])[1:]
 ITEM_LIST = list(ITEM["ID"])[1:]
 SECTION_HEADER = ("TkDefaultFont", 10, "bold")
