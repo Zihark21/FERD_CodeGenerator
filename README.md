@@ -6,8 +6,8 @@ This program can generate code for both NTSC and PAL.
 
 https://discord.gg/4ggsxByHxH
 
-![image](https://github.com/user-attachments/assets/66768ada-4d15-4455-823c-abce619e9f30)
-![image](https://github.com/user-attachments/assets/c3b6acdd-cf75-4860-87de-5487c3c68a4e)
-![image](https://github.com/user-attachments/assets/c07893a9-3db5-42eb-99d0-fe5692dca53a)
-![image](https://github.com/user-attachments/assets/86f98cb3-9230-4165-b1f7-01762bcd7a27)
-![image](https://github.com/user-attachments/assets/939fcf8c-152d-442d-b12f-ace99689ddc8)
+![image](https://github.com/user-attachments/assets/6b871410-0d86-49c5-ae05-423038fe36a0)
+![image](https://github.com/user-attachments/assets/96182c3a-9203-47a4-89c7-1d0dacbf2489)
+![image](https://github.com/user-attachments/assets/ab10b9b7-35cb-4073-b01b-2ed13528cc29)
+![image](https://github.com/user-attachments/assets/c5168b8a-5c58-445a-85ca-98c25c0a5827)
+![image](https://github.com/user-attachments/assets/364b5cc8-1422-46f7-a14e-712d28ed79a5)
