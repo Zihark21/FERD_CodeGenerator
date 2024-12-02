@@ -2,18 +2,18 @@ from Sources.Config import BASE, CHAR, CLASS, ITEM, CHAR_STATS, CHAR_RANKS, CLAS
 
 def set_version(ver):
     version_map = {
+        '': ('NTSC', 0),
         'NTSC 1.00': ('NTSC', -int('80', 16)),
         'NTSC 1.01': ('NTSC', 0),
-        '': ('NTSC', 0),
         'PAL': ('PAL', 0)
     }
-    global VERSION, NTSC_MOD
-    VERSION, NTSC_MOD = version_map.get(ver, (None, None))
+    global VERSION, OFFSET_MOD
+    VERSION, OFFSET_MOD = version_map.get(ver, (None, None))
     return VERSION
 
 def get_offset(name, data, opt):
     def calculate_offset(base, offset, id, additional_offset=0):
-        off = int(base, 16) + NTSC_MOD + (offset * id) + additional_offset
+        off = int(base, 16) + OFFSET_MOD + (offset * id) + additional_offset
         return hex(off).replace('0x', '').upper().zfill(8)
 
     if 'Step' in data:
@@ -51,15 +51,15 @@ def get_offset(name, data, opt):
 
     return None
 
-def get_char_code(data, kb):
+def get_char_code(data):
     char_all_code = 'A203F0 00000000'
-    char_output = [kb]
+    char_output = []
 
     char = data['character']
     if not char:
-        return "No character selected!"
+        return "Error: No character selected!"
     if CHAR[VERSION].get(char) == 'Unknown':
-        return f"{char} ID unknown in the {VERSION} version of the game. Please report on my discord."
+        return f"Error: {char} ID unknown in the {VERSION} version of the game. Please report on my discord."
 
     item_step = get_offset(char, 'Item_Step', 'Char')
     skill_step = get_offset(char, 'Skill_Step', 'Char')
@@ -144,16 +144,15 @@ def get_char_code(data, kb):
             char_rank_code = f'08{char_rank_offset[-6:]} 0000{rank}\n10{char_all_code}' if char == 'All' else f'02{char_rank_offset[-6:]} 0000{rank}'
             char_output.append(char_rank_code)
 
-    char_output.append('E0000000 80008000')
-    return "No changes made!" if len(char_output) == 2 else "\n".join(char_output)
+    return "Error: No changes made!" if len(char_output) == 0 else "\n".join(char_output)
 
 def get_class_code(data):
     class_all_code = 'AA011C 00000000'
-    class_output = ['20B54158 8070F8BC' if VERSION == 'NTSC' else '20B58CF8 80701E3C']
+    class_output = []
 
     cls = data['class']
     if not cls:
-        return "No class selected!"
+        return "Error: No class selected!"
 
     promote = data['promote']
     if promote:
@@ -187,22 +186,15 @@ def get_class_code(data):
             except ValueError:
                 return f'Error: Stat for {class_stat} is not a number! Please enter a value between 0 and 255.'
 
-    class_output.append('E0000000 80008000')
-    return "No changes made!" if len(class_output) == 2 else "\n".join(class_output)
+    return "Error: No changes made!" if len(class_output) == 0 else "\n".join(class_output)
 
 def get_item_code(data):
     item_all_code = 'CA0050 00000000'
     item_output = []
 
-    version_start_codes = {
-        'NTSC': '20B54158 8070F8BC',
-        'PAL': '20B58CF8 80701E3C'
-    }
-    item_output.append(version_start_codes.get(VERSION, ''))
-
     item = data['item']
     if not item:
-        return "No item selected!"
+        return "Error: No item selected!"
 
     def append_code(offset, value, all_code_suffix='00'):
         if item == 'All':
@@ -281,10 +273,8 @@ def get_item_code(data):
             except ValueError:
                 return f'Error: Equip Bonus for {bonus} is not a number! Please enter a value between 0 and 255.'
 
-    item_output.append('E0000000 80008000')
-
-    if len(item_output) == 2:
-        return "No changes made!"
+    if len(item_output) == 0:
+        return "Error: No changes made!"
     return "\n".join(item_output)
 
 def get_keybind_code(data):

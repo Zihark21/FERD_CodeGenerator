@@ -4,39 +4,34 @@
         "NTSC": "023CABD6 000000XX",
         "PAL": "003C3577 000000XX"
     },
+    "Universal EXP": {
+        "DESC": "Info:\nAll EXP gain increase. This works for character and weapons. Replace XX with:\n0E - 2x\n16 - 4x\n1E - 8x\n\nCode:",
+        "NTSC": "04120830 57E3XX3E",
+        "PAL": "Code unknown for PAL. Please request it."
+    },
     "Infinite Money": {
         "DESC": "Info:\nGold set to 50,000\n\nCode:",
         "NTSC": "083CAB50 0000C350\n20020004 00000000",
         "PAL": "Code unknown for PAL. Please request it."
     },
     "Infinite BEXP": {
-        "DESC": "Info:\nBEXP is set to 50,000\n\nCode:\n",
+        "DESC": "Info:\nBEXP is set to 50,000\n\nCode:",
         "NTSC": "083CAB5C 47435000\n20020004 00000000",
         "PAL": "Code unknown for PAL. Please request it."
     },
-    "BEXP Level Cap": {
+    "BEXP Cap": {
         "DESC": "Info:\nReplace XX with cap. 03 is default.\nUse 08 for all stats possible.\nUse 01 for a challenge. (:\n\nCode:",
         "NTSC": "0006D8EB 000000XX\n0006DAB7 000000XX\n0006DCD7 000000XX",
         "PAL": "000520AF 000000XX\n0005227B 000000XX\n0005249B 000000XX"
     },
     "Perfect Level Up": {
-        "DESC": "Info:\nMakes all units get all stat every level up. If used with Uncapped BEXP Level up, you can get all 8 in base as well.\n\nCode:",
+        "DESC": "Info:\nMakes all units get all stat every level up. If used with BEXP Cap Adj, you will get all 8 stats on level up when using BEXP in base.\n\nCode:",
         "NTSC": "088C361A 64646464\n216500FC 00000000\n088C361E 64646464\n216500FC 00000000",
         "PAL": "088B5B9A 64646464\n216500FC 00000000\n088B5B9E 64646464\n216500FC 00000000"
     },
     "Stat Gain Modifier": {
         "DESC": "Info:\nReplace XX with the gain you want. 02 means each stat that you get in a level up will get +2.\n\nCode:",
-        "NTSC": "0006D303 000000XX\n0006D35F 000000XX",
-        "PAL": "Code unknown for PAL. Please request it."
-    },
-    "Special Items": {
-        "DESC": "Info:\nFlorete - Uses Magic & Infinite\nEttard - Infinite\nCaladbolg - Infinite\nTarvos - Infinite\nLughnasadh - Infinite\nCymbeline - Infinite\nThani - Infinite\nCreiddylad - Infinite\n\nCode:",
-        "NTSC": "00B603C3 00000006\n00B603E9 00000001\n00B60439 00000001\n00B60259 00000001\n00B60ED9 00000001\n00B61339 00000001\n00B61C49 00000001\n00B622D9 00000001\n00B62329 00000001",
-        "PAL": "Code unknown for PAL. Please request it."
-    },
-    "Item Mods": {
-        "DESC": "Info:\nAll unlocked, infinite, usable by anyone and no weapon ranks.\nFlorete does magic damage.\n\nCode:",
-        "NTSC": "08B5FE28 00000000\n10CB0050 00000000\n08B5FE48 00010000\n21270050 00000000\n08B5FE4C 00000000\n11270050 00000000\n00B603C3 00000006",
+        "NTSC": "0006D303 000000XX",
         "PAL": "Code unknown for PAL. Please request it."
     },
     "All Convoy": {

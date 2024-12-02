@@ -18,6 +18,8 @@ BASE = {
     },
 }
 
+VER_LIST = ["", "NTSC 1.0", "NTSC 1.01", "PAL"]
+
 # Determine the base path
 base_path = sys._MEIPASS if getattr(sys, 'frozen', False) else os.path.abspath(".")
 
