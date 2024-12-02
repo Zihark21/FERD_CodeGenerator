@@ -44,7 +44,7 @@ LISTS = load_json("Lists.json")
 CODE_DATABASE = load_json("Code_Database.json")
 
 # Define lists to be used in the GUI
-CHAR_LIST = sorted(set(CHAR["NTSC"].keys()).union(CHAR["PAL"].keys()))
+CHAR_LIST = CHAR["CHAR_LIST"]
 CLASS_LIST = list(CLASS["ID"])[1:]
 ITEM_LIST = list(ITEM["ID"])[1:]
 SECTION_HEADER = ("TkDefaultFont", 10, "bold")
