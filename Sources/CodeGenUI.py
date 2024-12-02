@@ -126,7 +126,7 @@ class CodeGeneratorGUI:
         version_frame.grid(row=0, column=2, padx=10, pady=10, columnspan=99, sticky="nsew")
 
         ttk.Label(version_frame, text="Version:", font=SECTION_HEADER).grid(row=0, column=0)
-        self.version = ttk.Combobox(version_frame, values=VER_LIST)
+        self.version = ttk.Combobox(version_frame, values=VER_LIST, width=40)
         self.version.grid(row=0, column=1, padx=10)
 
     def _options_info(self, options_tab):
@@ -220,7 +220,7 @@ class CodeGeneratorGUI:
                     checkbox.grid(row=row, column=col)
                     char_item_row.append(char_item_var)
                 else:
-                    width = 20 if col == 2 else 5
+                    width = 20 if col == 2 else 6 if col == 1 else 5
                     char_item_entry = ttk.Entry(char_item_table, width=width)
                     char_item_entry.grid(row=row, column=col, padx=1, pady=1)
                     char_item_row.append(char_item_entry)

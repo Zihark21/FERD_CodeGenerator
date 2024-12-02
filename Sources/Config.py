@@ -16,9 +16,15 @@ BASE = {
         "Item": "808D2170",
         "Skill": "80701394",
     },
+    "RR": {
+        "Character": "808774AC",
+        "Class": "80B554D0",
+        "Item": "808D2230",
+        "Skill": "80701E00",
+    }
 }
 
-VER_LIST = ["", "NTSC 1.0", "NTSC 1.01", "PAL"]
+VER_LIST = ["", "NTSC 1.0", "NTSC 1.01", "PAL", "Reverse Recruitment 5.3 - ViciousSal"]
 
 # Determine the base path
 base_path = sys._MEIPASS if getattr(sys, 'frozen', False) else os.path.abspath(".")
