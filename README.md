@@ -1,6 +1,6 @@
 # FERD_CodeGenerator
 
-This is my first application I have made. That said the code may be a bit messy. The offsets I have build out myself but I wouldn't have been able to find all of these without all the existing codes out there. If you have any issues with the program please report it on my discord. If you have a code you would like added to the Database tab that can also be submitted in the Requests chat. 
+This is my first application I have made. That said the code may be a bit messy. The offsets I have build out myself but I wouldn't have been able to find all of these without all the existing codes out there. The code database are mostly codes I have found from random forums. I did make some of them but not all. If you have any issues with the program please report it on my discord. If you have a code you would like added to the Database tab that can also be submitted in the Requests chat. 
 
 This program can generate code for both NTSC and PAL.
 
