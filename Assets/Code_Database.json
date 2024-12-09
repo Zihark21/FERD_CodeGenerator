@@ -20,7 +20,7 @@
         "PAL": "Code unknown for PAL. Please request it."
     },
     "BEXP Cap": {
-        "DESC": "Info:\nReplace XX with cap. 03 is default.\nUse 08 for all stats possible.\nUse 01 for a challenge. (:\n\nCode:",
+        "DESC": "Info:\nReplace XX with cap. 03 is default.\nUse 08 for all stats possible.\n\nCode:",
         "NTSC": "0006D8EB 000000XX\n0006DAB7 000000XX\n0006DCD7 000000XX",
         "PAL": "000520AF 000000XX\n0005227B 000000XX\n0005249B 000000XX"
     },
@@ -31,7 +31,7 @@
     },
     "Stat Gain Modifier": {
         "DESC": "Info:\nReplace XX with the gain you want. 02 means each stat that you get in a level up will get +2.\n\nCode:",
-        "NTSC": "0006D303 000000XX",
+        "NTSC": "0006D303 000000XX\n0006D35F 000000XX",
         "PAL": "Code unknown for PAL. Please request it."
     },
     "All Convoy": {
@@ -62,6 +62,21 @@
     "Free Skills": {
         "DESC": "Info:\nAll skills cost 0.\n\nCode:",
         "NTSC": "0870F8AE 00000000\n0050002C 00000000",
+        "PAL": "Code unknown for PAL. Please request it."
+    },
+    "Number of Enemies Killed": {
+        "DESC": "Info:\nReplace XX with the number of enemies killed. Convert to hex. This is mostly used for Part 3 Endgame but is still a counter in all other chapters.\n\nCode:",
+        "NTSC": "043CABF8 000000XX",
+        "PAL": "Code unknown for PAL. Please request it"
+    },
+    "Infinite Movement": {
+        "DESC": "Info:\nAll units have infinite movement.\n\nCode:",
+        "NTSC": "04053508 7C601B78",
+        "PAL": "Code unknown for PAL. Please request it."
+    },
+    "Quick Chapter Win": {
+        "DESC": "Info:\nInstantly wins chapter.\n\nCode:",
+        "NTSC": "003CB07C 00000004",
         "PAL": "Code unknown for PAL. Please request it."
     }
 }
