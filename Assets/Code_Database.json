@@ -55,8 +55,8 @@
         "PAL": "Code unknown for PAL. Please request it."
     },
     "All Skills": {
-        "DESC": "Info:\nCan assign all skills in the game.\n\nCode:",
-        "NTSC": "2050002C 00000000\n0870F8B0 00000002\n0023002C 00000000\n0870F8B4 80710B04",
+        "DESC": "Info:\nCan assign all skills in the game.\nAuthor: Whai\n\nCode:",
+        "NTSC": "0870F8A8 00000000\n2050002C 00000000\n0870F8B0 00000002\n0023002C 00000000\n0870F8B4 80710B04\n2023002C 00000000",
         "PAL": "Code unknown for PAL. Please request it."
     },
     "Free Skills": {
