@@ -64,7 +64,7 @@
         "NTSC": "0870F8AE 00000000\n0050002C 00000000",
         "PAL": "Code unknown for PAL. Please request it."
     },
-    "Number of Enemies Killed": {
+    "Enemies Killed": {
         "DESC": "Info:\nReplace XX with the number of enemies killed. Convert to hex. This is mostly used for Part 3 Endgame but is still a counter in all other chapters.\n\nCode:",
         "NTSC": "043CABF8 000000XX",
         "PAL": "Code unknown for PAL. Please request it"

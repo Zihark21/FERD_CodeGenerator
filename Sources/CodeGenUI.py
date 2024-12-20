@@ -10,8 +10,8 @@ class CodeGeneratorGUI:
 
     #region GUI Setup and Output
 
-    def __init__(self, root):
-        self.root = root
+    def __init__(self):
+        self.root = tk.Tk()
         self.root.title("FE:RD Code Creator")
         self.root.resizable(False, False)
 
@@ -34,7 +34,7 @@ class CodeGeneratorGUI:
         style.configure("TCheckbutton", background="#2e2e2e", foreground="#000000")
 
         # Create Notebook
-        self.notebook = ttk.Notebook(root)
+        self.notebook = ttk.Notebook(self.root)
         self.notebook.pack(fill="both", expand=True)
 
         # Add Tabs
@@ -47,12 +47,21 @@ class CodeGeneratorGUI:
         self.center_window(self.root)
 
     def center_window(self, window):
+
+        # Update the window
         window.update_idletasks()
-        width = window.winfo_width()
-        height = window.winfo_height()
-        x = (window.winfo_screenwidth() // 2) - (width // 2)
-        y = (window.winfo_screenheight() // 2) - (height // 2)
-        window.geometry(f'{width}x{height}+{x}+{y}')
+        window.update()
+
+        # Get the screen width and height
+        screen_width = window.winfo_screenwidth()
+        screen_height = window.winfo_screenheight()
+
+        # Calculate the x and y coordinates
+        x = (screen_width - window.winfo_reqwidth()) / 2
+        y = (screen_height - window.winfo_reqheight()) / 2
+
+        # Set the window position
+        window.geometry('+%d+%d' % (x, y))
 
     def copy_and_close(self, code, message_window):
         self.root.clipboard_clear()
