@@ -24,7 +24,7 @@ BASE = {
     }
 }
 
-VER_LIST = ["", "NTSC 1.0", "NTSC 1.01", "PAL", "Reverse Recruitment 5.3 - ViciousSal"]
+VER_LIST = ["NTSC 1.0", "NTSC 1.01", "PAL", "Reverse Recruitment 5.3 - ViciousSal"]
 
 # Determine the base path
 base_path = sys._MEIPASS if getattr(sys, 'frozen', False) else os.path.abspath(".")
@@ -47,7 +47,6 @@ CODE_DATABASE = load_json("Code_Database.json")
 CHAR_LIST = sorted(set(CHAR['NTSC'].keys()))
 CLASS_LIST = list(CLASS["ID"])[1:]
 ITEM_LIST = list(ITEM["ID"])[1:]
-SECTION_HEADER = ("TkDefaultFont", 10, "bold")
 
 # Define lists that will be used for GUI and code generation
 CHAR_STATS = LISTS["CHAR_STATS"]
@@ -56,3 +55,5 @@ CLASS_STATS = LISTS["CLASS_STATS"]
 ITEM_STATS = LISTS["ITEM_STATS"]
 ITEM_DATA = LISTS["ITEM_DATA"]
 ITEM_BONUS = LISTS["ITEM_BONUS"]
+RANKS = LISTS["RANKS"]
+CHAR_INV = LISTS["CHAR_INV"]
