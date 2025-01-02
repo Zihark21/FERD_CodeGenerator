@@ -99,7 +99,7 @@ def get_char_code(data):
     char_output = []
 
     char = data['character']
-    if not char:
+    if char == 'Character':
         return "Error: No character selected!"
     if CHAR[VERSION].get(char) == 'Unknown':
         return f"Error: {char} ID unknown in the {VERSION} version of the game. Please report on my discord."
@@ -110,7 +110,7 @@ def get_char_code(data):
     #region Character Class
 
     char_class = data['class']
-    if char_class:
+    if char_class != "Class":
         char_class_off = get_offset(char, 'Class', 'Char')
         class_id = get_offset(char_class, 'Class', 'Class')
         char_class_code = code_gen(char, char_class_off, class_id, char_all_code, 8)

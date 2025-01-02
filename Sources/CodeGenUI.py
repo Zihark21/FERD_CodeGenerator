@@ -1,5 +1,4 @@
 import customtkinter, re, os, sys
-from tkinter import ttk
 from Sources.Config import CHAR_LIST, CLASS_LIST, ITEM_LIST, DESC, CHAR_STATS, CHAR_RANKS, CLASS_STATS, ITEM_STATS, ITEM_DATA, ITEM_BONUS, CODE_DATABASE, VER_LIST, RANKS, CHAR_INV
 from Sources.UDF import get_char_code, get_class_code, get_item_code, get_keybind_code, set_version
 
@@ -52,27 +51,29 @@ class CodeGeneratorGUI:
 
         window.geometry(f'{pos_x}+{pos_y}')
 
-    def copy_and_close(self, code, message_window):
+    def copy_and_close(self, code):
         self.root.clipboard_clear()
         self.root.clipboard_append(code)
-        message_window.destroy()
+        self.output_window.destroy()
 
     def output_code(self, code):
         win_name = ' '.join([self.type, "Code"])
-        message_window = customtkinter.CTkToplevel(self.root)
-        message_window.title(win_name)
+        self.output_window = customtkinter.CTkToplevel(self.root)
+        self.output_window.title(win_name)
+        self.set_icon(self.output_window)
+        self.output_window.wm_attributes('-topmost', True)
 
-        output_label = customtkinter.CTkLabel(message_window, text=code, justify="center", wraplength=400, width=40, anchor="center")
+        output_label = customtkinter.CTkLabel(self.output_window, text=code, justify="center", wraplength=400, width=40, anchor="center")
         output_label.pack(padx=10, pady=10, side="top")
 
         match = re.search(r'Code:\n((?:.*\n*)+)', code)
         code_part = match.group(1).strip() if match else code
 
         if "Error:" not in code:
-            copy_button = customtkinter.CTkButton(message_window, text="Copy to Clipboard", command=lambda: self.copy_and_close(code_part, message_window))
+            copy_button = customtkinter.CTkButton(self.output_window, text="Copy to Clipboard", command=lambda: self.copy_and_close(code_part))
             copy_button.pack(pady=5)
 
-        self.center_window(message_window)
+        self.center_window(self.output_window)
 
     def selector(self, choice, button, selection):
             
@@ -173,14 +174,14 @@ class CodeGeneratorGUI:
         base_buttons.grid(row=3, column=0, padx=5, pady=5, columnspan=2, sticky='nsew')
         base_buttons.grid_anchor('center')
 
-        self.char_button = customtkinter.CTkButton(base_buttons, text='Character', command=self.character_window)
+        self.char_button = customtkinter.CTkButton(base_buttons, text='Character', command=self.character_editor)
         self.char_button.grid(row=0, column=0, padx=5, pady=5)
 
-        class_button = customtkinter.CTkButton(base_buttons, text='Class')
-        class_button.grid(row=0, column=1, padx=5, pady=5)
+        self.class_button = customtkinter.CTkButton(base_buttons, text='Class', command=self.class_editor)
+        self.class_button.grid(row=0, column=1, padx=5, pady=5)
 
-        item_button = customtkinter.CTkButton(base_buttons, text='Item')
-        item_button.grid(row=0, column=2, padx=5, pady=5)
+        self.item_button = customtkinter.CTkButton(base_buttons, text='Item')
+        self.item_button.grid(row=0, column=2, padx=5, pady=5)
 
         all_button = customtkinter.CTkButton(base_buttons, text='Generate All Codes')
         all_button.grid(row=1, column=0, padx=5, pady=5, columnspan=3, sticky='nsew')
@@ -188,29 +189,30 @@ class CodeGeneratorGUI:
         database_button = customtkinter.CTkButton(base_buttons, text='Database')
         database_button.grid(row=2, column=0, columnspan=3, padx=5, pady=5, sticky='nsew')
 
-    def character_window(self):
+    def character_editor(self):
 
+        
         self.char_button.configure(state='disabled')
 
         try:
-            self.cw.deiconify()
+            self.character_window.deiconify()
         except:
-            self.cw = customtkinter.CTkToplevel(self.root)
-            self.cw.title('Character')
-            self.set_icon(self.cw)
-            self.cw.wm_attributes('-topmost', True)
-            self.cw.protocol('WM_DELETE_WINDOW', lambda: self.close(self.char_button, self.cw))
+            self.character_window = customtkinter.CTkToplevel(self.root)
+            self.character_window.title('Character')
+            self.set_icon(self.character_window)
+            self.character_window.wm_attributes('-topmost', True)
+            self.character_window.protocol('WM_DELETE_WINDOW', lambda: self.close(self.char_button, self.character_window))
 
             # Character
             def reset_character():
-                self.character.configure(text="Charater")
+                self.character.configure(text="Character")
                 character_button.configure(fg_color=self.default_button_color)
             
-            character_select = customtkinter.CTkFrame(self.cw, fg_color='gray17')
+            character_select = customtkinter.CTkFrame(self.character_window, fg_color='gray17')
             character_select.grid(row=0, column=0, padx=5, pady=5, sticky='nsew')
             character_select.columnconfigure(0, weight=1)
 
-            self.character = customtkinter.CTkLabel(character_select, text="Charater", fg_color='gray20', corner_radius=6)
+            self.character = customtkinter.CTkLabel(character_select, text="Character", fg_color='gray20', corner_radius=6)
             self.character.grid(padx=5, pady=5, sticky='nsew')
 
             character_button = customtkinter.CTkButton(character_select, text='Select Character', command=lambda: self.selector(0, character_button, self.character))
@@ -224,7 +226,7 @@ class CodeGeneratorGUI:
                 self.character_class.configure(text="Class")
                 character_class_button.configure(fg_color=self.default_button_color)
 
-            character_class = customtkinter.CTkFrame(self.cw, fg_color='gray17')
+            character_class = customtkinter.CTkFrame(self.character_window, fg_color='gray17')
             character_class.grid(row=0, column=1, padx=5, pady=5, sticky='nsew')
             character_class.columnconfigure(0, weight=1)
 
@@ -242,7 +244,7 @@ class CodeGeneratorGUI:
                 for entry in self.character_stats:
                     entry.delete(0, 'end')
 
-            character_stats = customtkinter.CTkFrame(self.cw, fg_color='gray17')
+            character_stats = customtkinter.CTkFrame(self.character_window, fg_color='gray17')
             character_stats.grid(row=1, column=0, padx=5, pady=5, sticky='nsew')
             character_stats.columnconfigure([0, 1], weight=1)
 
@@ -265,7 +267,7 @@ class CodeGeneratorGUI:
                 for sel in self.character_ranks:
                     sel.set('')
             
-            character_ranks = customtkinter.CTkFrame(self.cw, fg_color='gray17')
+            character_ranks = customtkinter.CTkFrame(self.character_window, fg_color='gray17')
             character_ranks.grid(row=1, column=1, padx=5, pady=5, sticky='nsew')
             character_ranks.columnconfigure([0, 1], weight=1)
 
@@ -284,74 +286,73 @@ class CodeGeneratorGUI:
             character_ranks_reset.grid(padx=5, pady=5, columnspan=2, sticky='nsew')
 
             # Buttons
-            self.character_items = customtkinter.CTkButton(self.cw, text='Items', command=self.character_items_window)
+            self.character_items = customtkinter.CTkButton(self.character_window, text='Items', command=self.character_items_editor)
             self.character_items.grid(row=2, column=0, columnspan=2, padx=5, pady=5, sticky='nsew')
 
-            char_button = customtkinter.CTkButton(self.cw, text='Generate Character Code')
+            char_button = customtkinter.CTkButton(self.character_window, text='Generate Character Code')
             char_button.grid(row=3, column=0, columnspan=2, padx=5, pady=5, sticky='nsew')
 
-            close_button = customtkinter.CTkButton(self.cw, text='Close', command=lambda: self.close(self.char_button, self.cw))
+            close_button = customtkinter.CTkButton(self.character_window, text='Close', command=lambda: self.close(self.char_button, self.character_window))
             close_button.grid(row=4, column=0, columnspan=2, padx=5, pady=5, sticky='nsew')
 
-            self.cw.resizable(False, False)
-            self.center_window(self.cw)
-            self.cw.after(100, lambda: self.cw.wm_attributes('-topmost', False))
+            self.character_window.resizable(False, False)
+            self.center_window(self.character_window)
+            self.character_window.after(100, lambda: self.character_window.wm_attributes('-topmost', False))
 
-    def character_items_window(self):
-
-        self.character_items.configure(state='disabled')
+    def character_items_editor(self):
 
         def reset_inventory():
             for row in self.character_inventory:
                 for widget in row:
                     if isinstance(widget, customtkinter.CTkEntry):
-                        # Clear text from entry widgets
                         widget.delete(0, 'end')
                     elif isinstance(widget, customtkinter.CTkButton):
-                        # Reset button text and color
                         widget.configure(text='Select Item', fg_color=self.default_button_color)
                     elif isinstance(widget, customtkinter.CTkCheckBox):
-                        # Uncheck the checkbox
                         widget.deselect()
 
         try:
-            self.ciw.deiconify()
+            self.character_items_window.deiconify()
+            self.character_items.configure(state='disabled')
         except:
-            self.ciw = customtkinter.CTkToplevel(self.root)
-            self.ciw.title('Character Items')
-            self.set_icon(self.ciw)
-            self.ciw.wm_attributes('-topmost', True)
-            self.ciw.grid_anchor('center')
-            self.ciw.columnconfigure([0,1,2,3,4,5,6], weight=1)
-            self.cw.protocol('WM_DELETE_WINDOW', lambda: self.close(self.character_items, self.ciw))
-
+            self.character_items_window = customtkinter.CTkToplevel(self.root)
+            self.character_items_window.title('Character Items')
+            self.set_icon(self.character_items_window)
+            self.character_items_window.wm_attributes('-topmost', True)
+            self.character_items_window.grid_anchor('center')
+            self.character_items_window.protocol('WM_DELETE_WINDOW', lambda: self.close(self.character_items, self.character_items_window))
+            
+            for i in range(len(CHAR_INV)):
+                self.character_items_window.columnconfigure(i, weight=1)
+            
             self.character_inventory = []
+
             for r in range(9):
                 inv_row = []
                 
                 for c, title in enumerate(CHAR_INV):
                     if r == 0:
-                        header = customtkinter.CTkLabel(self.ciw, text=title, fg_color='gray17', corner_radius=6)
+                        header = customtkinter.CTkLabel(self.character_items_window, text=title, fg_color='gray17', corner_radius=6)
                         header.grid(row=r, column=c, padx=5, pady=5, sticky='nsew')
                     elif r == 8:
-                        reset_button = customtkinter.CTkButton(self.ciw, text='Reset', command=reset_inventory)
+                        reset_button = customtkinter.CTkButton(self.character_items_window, text='Reset', command=reset_inventory)
                         reset_button.grid(row=r, column=0, columnspan=len(CHAR_INV), padx=5, pady=5, sticky='nsew')
 
-                        close_button = customtkinter.CTkButton(self.ciw, text='Close', command=lambda: self.close(self.character_items, self.ciw))
+                        close_button = customtkinter.CTkButton(self.character_items_window, text='Close', command=lambda: self.close(self.character_items, self.character_items_window))
                         close_button.grid(row=r+1, column=0, columnspan=len(CHAR_INV), padx=5, pady=5, sticky='nsew')
                         break
                     elif title == 'Item':
-                        item_button = customtkinter.CTkButton(self.ciw, text='Select Item')
+                        item_button = customtkinter.CTkButton(self.character_items_window, text='Select Item')
                         item_button.configure(command=lambda btn=item_button: self.selector(2, btn, btn))
                         item_button.grid(row=r, column=c, padx=5, pady=5, sticky='nsew')
                         inv_row.append(item_button)
                     elif title in ['Uses', 'Forge Name', 'Mt', 'Hit', 'Crit']:
                         w = 120 if title == 'Forge Name' else 40
-                        entry = customtkinter.CTkEntry(self.ciw, width=w)
+                        entry = customtkinter.CTkEntry(self.character_items_window, width=w)
                         entry.grid(row=r, column=c, padx=5, pady=5, sticky='nsew')
                         inv_row.append(entry)
                     elif title in ['Wt', 'Forged', 'Blessed']:
-                        checkbox = customtkinter.CTkCheckBox(self.ciw, text=None, width=0)
+                        checkbox = customtkinter.CTkCheckBox(self.character_items_window, text=None, width=0)
                         checkbox.grid(row=r, column=c, padx=5, pady=5, sticky='nsew')
                         inv_row.append(checkbox)
                     else:
@@ -359,6 +360,20 @@ class CodeGeneratorGUI:
 
                 self.character_inventory.append(inv_row)
         
-            self.ciw.resizable(False, False)
-            self.center_window(self.ciw)
-            self.ciw.after(100, lambda: self.ciw.wm_attributes('-topmost', False))
+            self.character_items_window.resizable(False, False)
+            self.center_window(self.character_items_window)
+            self.character_items_window.after(100, lambda: self.character_items_window.wm_attributes('-topmost', False))
+
+    def class_editor(self):
+
+        
+        self.class_button.configure(state='disabled')
+
+        try:
+            self.class_window.deiconify()
+        except:
+            self.class_window = customtkinter.CTkToplevel(self.root)
+            self.class_window.title('Class')
+            self.set_icon(self.class_window)
+            self.class_window.wm_attributes('-topmost', True)
+            self.class_window.protocol('WM_DELETE_WINDOW', lambda: self.close(self.char_button, self.class_window))
