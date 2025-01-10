@@ -1,6 +1,5 @@
 {
     "NTSC": {
-        "All": 0,
         "Micaiah": 8,
         "Edward": 9,
         "Leonardo": 10,
@@ -76,7 +75,6 @@
         "Lehran": 77
     },
     "PAL": {
-        "All": 0,
         "Micaiah": 4,
         "Edward": 5,
         "Leonardo": 6,
@@ -152,7 +150,6 @@
         "Lehran": "Unknown"
     },
     "RR": {
-        "All": 0,
         "Micaiah": 77,
         "Edward": 65,
         "Leonardo": 64,
