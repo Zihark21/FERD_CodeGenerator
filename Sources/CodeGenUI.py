@@ -1,5 +1,6 @@
 import customtkinter, re
 import Sources.Config as Config
+import Sources.UDF as UDF
 from Sources.CTkScrollableDropdown import *
 
 class CodeGeneratorGUI:
@@ -13,7 +14,6 @@ class CodeGeneratorGUI:
         self.set_icon(self.root)
 
         # Set up UI components
-        self.default_button_color = customtkinter.CTkButton(None).cget('fg_color')
         self.base_options()
         self.character_editor()
         self.character_items_editor()
@@ -69,7 +69,7 @@ class CodeGeneratorGUI:
         self.output_window.wm_attributes('-topmost', True)
 
         # Display the code in the output window
-        output_label = customtkinter.CTkLabel(self.output_window, text=code, justify="center", wraplength=400, width=40, anchor="center")
+        output_label = customtkinter.CTkLabel(self.output_window, text=code, justify="center", wraplength=400, width=40, fg_color='grey17', corner_radius=6, padx=10, pady=10, anchor="center")
         output_label.pack(padx=10, pady=10, side="top")
 
         # Extract the code part from the full text
@@ -175,8 +175,8 @@ class CodeGeneratorGUI:
         self.item_button = customtkinter.CTkButton(base_buttons, text='Item', command=lambda: self.item_window.deiconify())
         self.item_button.grid(row=0, column=2, padx=5, pady=5)
 
-        all_button = customtkinter.CTkButton(base_buttons, text='Generate All Codes')
-        all_button.grid(row=1, column=0, padx=5, pady=5, columnspan=3, sticky='nsew')
+        # all_button = customtkinter.CTkButton(base_buttons, text='Generate All Codes')
+        # all_button.grid(row=1, column=0, padx=5, pady=5, columnspan=3, sticky='nsew')
 
         database_button = customtkinter.CTkButton(base_buttons, text='Database', command=lambda: self.database_window.deiconify())
         database_button.grid(row=2, column=0, columnspan=3, padx=5, pady=5, sticky='nsew')
@@ -282,7 +282,7 @@ class CodeGeneratorGUI:
         character_items = customtkinter.CTkButton(self.character_window, text='Items', command=lambda: self.character_items_window.deiconify())
         character_items.grid(row=2, column=0, columnspan=2, padx=5, pady=5, sticky='nsew')
 
-        char_button = customtkinter.CTkButton(self.character_window, text='Generate Character Code')
+        char_button = customtkinter.CTkButton(self.character_window, text='Generate Character Code', command=lambda: self.code_creation(0))
         char_button.grid(row=3, column=0, columnspan=2, padx=5, pady=5, sticky='nsew')
 
         close_button = customtkinter.CTkButton(self.character_window, text='Close', command=lambda: self.close(self.character_window))
@@ -331,11 +331,11 @@ class CodeGeneratorGUI:
                     close_button.grid(row=r+1, column=0, columnspan=len(Config.CHAR_INV), padx=5, pady=5, sticky='nsew')
                     break
                 elif title == 'Item':
-                    item_button = customtkinter.CTkComboBox(self.character_items_window)
-                    CTkScrollableDropdown(item_button, values=Config.ITEM_LIST, autocomplete=True)
-                    item_button.grid(row=r, column=c, padx=5, pady=5, sticky='nsew')
-                    inv_row.append(item_button)
-                    item_button.set('')
+                    combobox = customtkinter.CTkComboBox(self.character_items_window)
+                    CTkScrollableDropdown(combobox, values=Config.ITEM_LIST, autocomplete=True)
+                    combobox.grid(row=r, column=c, padx=5, pady=5, sticky='nsew')
+                    inv_row.append(combobox)
+                    combobox.set('')
                 elif title in ['Uses', 'Forge Name', 'Mt', 'Hit', 'Crit']:
                     w = 120 if title == 'Forge Name' else 40
                     entry = customtkinter.CTkEntry(self.character_items_window, width=w)
@@ -389,7 +389,7 @@ class CodeGeneratorGUI:
         class_promote_label.grid(padx=5, pady=5, sticky='nsew')
 
         self.class_promote = customtkinter.CTkComboBox(class_promote_select)
-        CTkScrollableDropdown(self.class_promote, values=Config.CLASS_LIST, autocomplete=True)
+        CTkScrollableDropdown(self.class_promote, values=Config.CLASS_LIST, autocomplete=True, width=400)
         self.class_promote.set('')
         self.class_promote.grid(padx=5, pady=5, sticky='nsew')
 
@@ -472,7 +472,7 @@ class CodeGeneratorGUI:
 
         # Buttons
 
-        class_button = customtkinter.CTkButton(self.class_window, text='Generate Character Code')
+        class_button = customtkinter.CTkButton(self.class_window, text='Generate Character Code', command=lambda: self.code_creation(1))
         class_button.grid(columnspan=2, padx=5, pady=5, sticky='nsew')
 
         close_button = customtkinter.CTkButton(self.class_window, text='Close', command=lambda: self.close(self.class_window))
@@ -594,7 +594,7 @@ class CodeGeneratorGUI:
 
         # Buttons
 
-        item_button = customtkinter.CTkButton(self.item_window, text='Generate Item Code')
+        item_button = customtkinter.CTkButton(self.item_window, text='Generate Item Code', command=lambda: self.code_creation(2))
         item_button.grid(columnspan=3, padx=5, pady=5, sticky='nsew')
 
         item_close = customtkinter.CTkButton(self.item_window, text='Close', command=lambda: self.close(self.item_window))
@@ -618,7 +618,7 @@ class CodeGeneratorGUI:
         # Create add buttons for each code
         for i, code in enumerate(Config.CODE_DATABASE):
             self.database_window.grid_columnconfigure(i, weight=1)
-            code_button = customtkinter.CTkButton(self.database_window, text=code)
+            code_button = customtkinter.CTkButton(self.database_window, text=code, command=lambda cd=code: self.generate_database_code(cd))
             code_button.grid(row=i // num_per_row, column=i % num_per_row, padx=5, pady=5, sticky='nsew')
 
         database_close = customtkinter.CTkButton(self.database_window, text='Close', command=lambda: self.close(self.database_window))
@@ -627,3 +627,103 @@ class CodeGeneratorGUI:
         # Set the window size and position
         self.database_window.resizable(False, False)
         self.center_window(self.database_window)
+
+    def append_keycode(self, code):
+        key_code = UDF.get_keybind_code(self._get_keybinds_data())
+        output = '\n'.join([key_code, code, 'E0000000 80008000'])
+        self.output_code(output)
+
+    def code_verification(self, code):
+        if 'Error:' in code:
+            self.output_code(code)
+        else:
+            self.append_keycode(code)
+
+    def code_creation(self, option):
+        UDF.set_version(self.version.get())
+
+        if option == 0 or option == 'All':
+            self._create_char_code()
+        if option == 1 or option == 'All':
+            self._create_class_code()
+        if option == 2 or option == 'All':
+            self._create_item_code()
+
+    def _create_char_code(self):
+        self.type = 'Character'
+        character_data = self._get_character_data()
+        char_code = UDF.get_char_code(character_data)
+        self.code_verification(char_code)
+
+    def _create_class_code(self):
+        self.type = 'Class'
+        class_data = self._get_class_data()
+        class_code = UDF.get_class_code(class_data)
+        self.code_verification(class_code)
+
+    def _create_item_code(self):
+        self.type = 'Item'
+        item_data = self._get_item_data()
+        item_code = UDF.get_item_code(item_data)
+        self.code_verification(item_code)
+
+    def _get_character_data(self):
+
+        def get_inventory():
+            inv_list = ['item', 'uses', 'forge_name', 'mt', 'hit', 'crit', 'wt', 'forged', 'blessed']
+            inv_data = []
+            for row in self.character_inventory:
+                row_data = {}
+                if row:
+                    for widget, header in zip(row, inv_list):
+                        row_data[header] = widget.get()
+                    inv_data.append(row_data)
+            
+            return inv_data
+
+        return {
+            "character": self.character_sel.get(),
+            "class": self.character_class.get(),
+            "stats": [stat.get() for stat in self.character_stats],
+            "ranks": [rank.get() for rank in self.character_ranks],
+            "items": get_inventory()
+        }
+
+    def _get_class_data(self):
+        return {
+            "class": self.class_sel.get(),
+            "promote": self.class_promote.get(),
+            "ranks": [min.get() for min in self.class_min_ranks] + [max.get() for max in self.class_max_ranks],
+            "stats": [stat.get() for stat in self.class_stats]
+        }
+
+    def _get_item_data(self):
+
+        def get_item_attrs():
+            item_data = {}
+            for data, field in zip(self.item_data, Config.ITEM_DATA):
+                item_data[field] = data.get()
+            
+            return item_data
+
+        return {
+            "item": self.item_sel.get(),
+            "data": get_item_attrs(),
+            "stats": [stat.get() for stat in self.item_stats],
+            "bonuses": [bonus.get() for bonus in self.item_equip]
+        }
+
+    def _get_keybinds_data(self):
+        return {
+            "controller": self.controller.get(),
+            "keys": [key.get() for key in self.checkboxes],
+        }
+
+    def generate_database_code(self, sel_code):
+        self.type = 'Database'
+        version = UDF.set_version(self.version.get())
+        desc = Config.CODE_DATABASE[sel_code]['DESC']
+        key_code = UDF.get_keybind_code(self._get_keybinds_data())
+        code = Config.CODE_DATABASE[sel_code][version]
+        output = '\n'.join([desc, key_code, code, 'E0000000 80008000'])
+        self.output_code(output)
