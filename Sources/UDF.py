@@ -381,21 +381,21 @@ def get_keybind_code(data):
         'Wiimote+Nunchuck': [
             '1', '2', '8', '4', '800', '400', '4000', '2000', '200', '100', '10', '1000'
         ],
-        'Classic Controller': [
+        'Classic': [
             '2', '8000', '1', '4000', '10', '40', '8', '20', '80', '4', '2000', '200', '400', '1000'
         ],
-        'GameCube Controller': [
+        'GameCube': [
             '1', '2', '8', '4', '100', '200', '400', '800', '10', '40', '20', '1000'
         ]
     }
 
     version_mappings = {
         'Wiimote+Nunchuck': '28',
-        'Classic Controller': (
+        'Classic': (
             '283D79BA' if VERSION == 'NTSC' and OFFSET_MOD == 0 else
             '283D793A' if VERSION == 'NTSC' and OFFSET_MOD != 0 else
             '283D035A'),
-        'GameCube Controller': (
+        'GameCube': (
             '283D7928' if VERSION == 'NTSC' and OFFSET_MOD == 0 else
             '283D78A8' if VERSION == 'NTSC' and OFFSET_MOD != 0 else
             '283D02C8')
