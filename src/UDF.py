@@ -1,4 +1,4 @@
-from Sources.Config import BASE, CHAR, CLASS, ITEM, CHAR_STATS, CHAR_RANKS, CLASS_STATS, ITEM_STATS, ITEM_DATA, ITEM_EQUIP_BONUS
+from src.Config import BASE, CHAR, CLASS, ITEM, CHAR_STATS, CHAR_RANKS, CLASS_STATS, ITEM_STATS, ITEM_DATA, ITEM_EQUIP_BONUS
 
 def set_version(ver):
     version_map = {
@@ -71,19 +71,28 @@ def get_offset(name, data, opt):
     additional_offset = 0
 
     if opt == 'Char':
-        id = CHAR[VERSION][name]
+        if name == 'All':
+            id = 0
+        else:
+            id = CHAR[VERSION][name]
         base = BASE[VERSION]['Character']
         offset = CHAR['OFFSET']['Character']
         if data != 'Character':
             additional_offset = CHAR['OFFSET'][data]
     elif opt == 'Class':
-        id = CLASS['ID'][name]
+        if name == 'All':
+            id = 0
+        else:
+            id = CLASS['ID'][name]
         base = BASE[VERSION]['Class']
         offset = CLASS['OFFSET']['Class']
         if data != 'Class':
             additional_offset = CLASS['OFFSET'][data]
     elif opt == 'Item':
-        id = ITEM['ID'][name]
+        if name == 'All':
+            id = 0
+        else:
+            id = ITEM['ID'][name]
         base = BASE[VERSION]['Item']
         offset = ITEM['OFFSET']['Item']
         if data != 'Item':

@@ -1,7 +1,7 @@
 import customtkinter, re
-import Sources.Config as Config
-import Sources.UDF as UDF
-from Sources.CTkScrollableDropdown import *
+import src.Config as Config
+import src.UDF as UDF
+from src.CTkScrollableDropdown import *
 
 class CodeGeneratorGUI:
 
