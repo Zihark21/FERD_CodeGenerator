@@ -1,16 +1,25 @@
-from Sources.Config import BASE, CHAR, CLASS, ITEM, CHAR_STATS, CHAR_RANKS, CLASS_STATS, ITEM_STATS, ITEM_DATA, ITEM_BONUS
+from src.Config import BASE, CHAR, CLASS, ITEM, CHAR_STATS, CHAR_RANKS, CLASS_STATS, ITEM_STATS, ITEM_DATA, ITEM_EQUIP_BONUS
 
 def set_version(ver):
     version_map = {
-        '': ('NTSC', 0),
-        'NTSC 1.00': ('NTSC', -int('80', 16)),
+        'NTSC 1.0': ('NTSC', -int('80', 16)),
         'NTSC 1.01': ('NTSC', 0),
         'PAL': ('PAL', 0),
         'Reverse Recruitment 5.3 - ViciousSal': ('RR', 0)
     }
     global VERSION, OFFSET_MOD
-    VERSION, OFFSET_MOD = version_map.get(ver, (None, None))
+    VERSION, OFFSET_MOD = version_map.get(ver, ('NTSC', 0))
     return VERSION
+
+def set_difficulty(diff):
+    diff_map = {
+        'Easy': 0,
+        'Medium/Hard': 1
+    }
+    global DIFFICULTY, DIFF_MOD
+    DIFFICULTY = diff
+    DIFF_MOD = diff_map.get(diff, 1)
+    return DIFFICULTY
 
 def code_gen(data, off, val, all_code, code_type):
     if data == 'All':
@@ -71,19 +80,31 @@ def get_offset(name, data, opt):
     additional_offset = 0
 
     if opt == 'Char':
-        id = CHAR[VERSION][name]
+        if name == 'All':
+            id = 0
+        else:
+            if isinstance(CHAR[VERSION][name], int):
+                id = CHAR[VERSION][name]
+            else:
+                id = CHAR[VERSION][name][DIFF_MOD]
         base = BASE[VERSION]['Character']
         offset = CHAR['OFFSET']['Character']
         if data != 'Character':
             additional_offset = CHAR['OFFSET'][data]
     elif opt == 'Class':
-        id = CLASS['ID'][name]
+        if name == 'All':
+            id = 0
+        else:
+            id = CLASS['ID'][name]
         base = BASE[VERSION]['Class']
         offset = CLASS['OFFSET']['Class']
         if data != 'Class':
             additional_offset = CLASS['OFFSET'][data]
     elif opt == 'Item':
-        id = ITEM['ID'][name]
+        if name == 'All':
+            id = 0
+        else:
+            id = ITEM['ID'][name]
         base = BASE[VERSION]['Item']
         offset = ITEM['OFFSET']['Item']
         if data != 'Item':
@@ -95,6 +116,7 @@ def get_offset(name, data, opt):
     return None
 
 def get_char_code(data):
+
     char_all_code = '0A203F0 00000000'
     char_output = []
 
@@ -119,74 +141,75 @@ def get_char_code(data):
     #endregion
 
     #region Character Items
+    items = data['items']
+    if items:
+        for i in range(7):
+            item = items[i]['item']
+            fname = items[i]['forge_name']
+            uses = items[i]['uses']
+            blessed = items[i]['blessed']
+            forged = items[i]['forged']
+            mt = items[i]['mt']
+            hit = items[i]['hit']
+            crit = items[i]['crit']
+            wt = items[i]['wt']
 
-    for i in range(7):
-        item = data['items'][i]['item']
-        fname = data['items'][i]['forge_name']
-        uses = data['items'][i]['uses']
-        blessed = data['items'][i]['blessed']
-        forged = data['items'][i]['forged']
-        mt = data['items'][i]['mt']
-        hit = data['items'][i]['hit']
-        crit = data['items'][i]['crit']
-        wt = data['items'][i]['wt']
+            item_off = hex(int(get_offset(char, 'Item', 'Char'), 16) + (item_step * i)).replace('0x', '').upper().zfill(8)
+            item_uses_off = hex(int(get_offset(char, 'Item_Uses', 'Char'), 16) + (item_step * i)).replace('0x', '').upper().zfill(8)
+            item_status_off = hex(int(get_offset(char, 'Item_Status', 'Char'), 16) + (item_step * i)).replace('0x', '').upper().zfill(8)
+            item_forge_off = hex(int(get_offset(char, 'Item_Forge', 'Char'), 16) + (item_step * i)).replace('0x', '').upper().zfill(8)
 
-        item_off = hex(int(get_offset(char, 'Item', 'Char'), 16) + (item_step * i)).replace('0x', '').upper().zfill(8)
-        item_uses_off = hex(int(get_offset(char, 'Item_Uses', 'Char'), 16) + (item_step * i)).replace('0x', '').upper().zfill(8)
-        item_status_off = hex(int(get_offset(char, 'Item_Status', 'Char'), 16) + (item_step * i)).replace('0x', '').upper().zfill(8)
-        item_forge_off = hex(int(get_offset(char, 'Item_Forge', 'Char'), 16) + (item_step * i)).replace('0x', '').upper().zfill(8)
+            if item:
+                item_id = get_offset(item, 'Item', 'Item')
+                char_item_code = code_gen(char, item_off, item_id, char_all_code, 8)
+                char_output.append(char_item_code)
 
-        if item:
-            item_id = get_offset(item, 'Item', 'Item')
-            char_item_code = code_gen(char, item_off, item_id, char_all_code, 8)
-            char_output.append(char_item_code)
-
-        if uses or item:
-            uses = 80 if uses == '' else uses
-            ucheck = int_check(uses)
-            if ucheck:
-                uses = int(uses)
-                uses = hex(uses).replace('0x', '').zfill(2).upper()
-                char_item_uses_code = code_gen(char, item_uses_off, uses, char_all_code, 2)
-                char_output.append(char_item_uses_code)
-            else:
-                return error_output(item, 'Uses', 0, 255)
-
-        if blessed or forged or item:
-            sts = (int('10', 16) if blessed else 0) + (int('20', 16) if forged else 0)
-            status = hex(sts).replace('0x', '').zfill(2).upper()
-            char_status_code = code_gen(char, item_status_off, status, char_all_code, 2)
-            char_output.append(char_status_code)
-
-            if forged:
-                if item:
-                    fname_hex = ''.join([format(ord(c), "x").zfill(2) for c in (fname if fname and 0 < len(fname) <= 26 else item)]).ljust(52, '0').upper()
-                    for k in range(7):
-                        fname_offset = hex(int(item_off, 16) + (6 if k == 0 else 8 + (k - 1) * 4)).replace('0x', '').zfill(8).upper()
-                        if k == 0:
-                            char_fname_code = code_gen(char, fname_offset, fname_hex[:4], char_all_code, 4)
-                        else:
-                            if fname_hex[4 + (k - 1) * 8:12 + (k - 1) * 8] == '00000000':
-                                break
-                            char_fname_code = code_gen(char, fname_offset, fname_hex[4 + (k - 1) * 8:12 + (k - 1) * 8], char_all_code, 8)
-                        char_output.append(char_fname_code)
+            if uses or item:
+                uses = 80 if uses == '' else uses
+                ucheck = int_check(uses)
+                if ucheck:
+                    uses = int(uses)
+                    uses = hex(uses).replace('0x', '').zfill(2).upper()
+                    char_item_uses_code = code_gen(char, item_uses_off, uses, char_all_code, 2)
+                    char_output.append(char_item_uses_code)
                 else:
-                    pass
+                    return error_output(item, 'Uses', 0, 255)
 
-                for stat in [mt, hit, crit]:
-                    if stat:
-                        scheck = int_check(stat)
-                        if scheck:
-                            stat = hex(int(stat)).replace("0x", "").zfill(2).upper()
-                            forge_stat_code = code_gen(char, item_forge_off, stat, char_all_code, 2)
-                            char_output.append(forge_stat_code)
-                        else:
-                            return error_output(item, 'Forge Stat', 0, 255)
-                    item_forge_off = hex(int(item_forge_off, 16) + 1).replace("0x", "").zfill(8).upper()
-                
-                if wt:
-                    forge_wt_code = code_gen(char, item_forge_off, 'E0', char_all_code, 2)
-                    char_output.append(forge_wt_code)
+            if blessed or forged or item:
+                sts = (int('10', 16) if blessed else 0) + (int('20', 16) if forged else 0)
+                status = hex(sts).replace('0x', '').zfill(2).upper()
+                char_status_code = code_gen(char, item_status_off, status, char_all_code, 2)
+                char_output.append(char_status_code)
+
+                if forged:
+                    if item:
+                        fname_hex = ''.join([format(ord(c), "x").zfill(2) for c in (fname if fname and 0 < len(fname) <= 26 else item)]).ljust(52, '0').upper()
+                        for k in range(7):
+                            fname_offset = hex(int(item_off, 16) + (6 if k == 0 else 8 + (k - 1) * 4)).replace('0x', '').zfill(8).upper()
+                            if k == 0:
+                                char_fname_code = code_gen(char, fname_offset, fname_hex[:4], char_all_code, 4)
+                            else:
+                                if fname_hex[4 + (k - 1) * 8:12 + (k - 1) * 8] == '00000000':
+                                    break
+                                char_fname_code = code_gen(char, fname_offset, fname_hex[4 + (k - 1) * 8:12 + (k - 1) * 8], char_all_code, 8)
+                            char_output.append(char_fname_code)
+                    else:
+                        pass
+
+                    for stat in [mt, hit, crit]:
+                        if stat:
+                            scheck = int_check(stat)
+                            if scheck:
+                                stat = hex(int(stat)).replace("0x", "").zfill(2).upper()
+                                forge_stat_code = code_gen(char, item_forge_off, stat, char_all_code, 2)
+                                char_output.append(forge_stat_code)
+                            else:
+                                return error_output(item, 'Forge Stat', 0, 255)
+                        item_forge_off = hex(int(item_forge_off, 16) + 1).replace("0x", "").zfill(8).upper()
+                    
+                    if wt:
+                        forge_wt_code = code_gen(char, item_forge_off, 'E0', char_all_code, 2)
+                        char_output.append(forge_wt_code)
 
     #endregion
 
@@ -341,7 +364,7 @@ def get_item_code(data):
 
     #region Item Equip Bonuses
 
-    for ibonus, bonus in enumerate(ITEM_BONUS):
+    for ibonus, bonus in enumerate(ITEM_EQUIP_BONUS):
         item_bonus_input = data['bonuses'][ibonus]
         item_bonus_offset = get_offset(item, bonus, 'Item')
 
@@ -364,9 +387,12 @@ def get_keybind_code(data):
     def calculate_val(keys, mapping):
         return sum(int(mapping[i], 16) for i, key in enumerate(keys) if key)
 
-    if data['controller'] == '':
+    if data['controller'] == 'None - Always On':
         if VERSION == 'NTSC':
-            return '20B54158 8070F8BC'
+            if OFFSET_MOD == 0:
+                return '20B54158 8070F8BC'
+            else:
+                return '20B540D8 8070F83C'
         elif VERSION == 'PAL':
             return '20B58CF8 80701E3C'
         elif VERSION == 'RR':
@@ -376,18 +402,24 @@ def get_keybind_code(data):
         'Wiimote+Nunchuck': [
             '1', '2', '8', '4', '800', '400', '4000', '2000', '200', '100', '10', '1000'
         ],
-        'Classic Controller': [
+        'Classic': [
             '2', '8000', '1', '4000', '10', '40', '8', '20', '80', '4', '2000', '200', '400', '1000'
         ],
-        'GameCube Controller': [
+        'GameCube': [
             '1', '2', '8', '4', '100', '200', '400', '800', '10', '40', '20', '1000'
         ]
     }
 
     version_mappings = {
         'Wiimote+Nunchuck': '28',
-        'Classic Controller': '283D79BA' if VERSION == 'NTSC' else '283D035A',
-        'GameCube Controller': '283D7928' if VERSION == 'NTSC' else '283D02C8'
+        'Classic': (
+            '283D79BA' if VERSION == 'NTSC' and OFFSET_MOD == 0 else
+            '283D793A' if VERSION == 'NTSC' and OFFSET_MOD != 0 else
+            '283D035A'),
+        'GameCube': (
+            '283D7928' if VERSION == 'NTSC' and OFFSET_MOD == 0 else
+            '283D78A8' if VERSION == 'NTSC' and OFFSET_MOD != 0 else
+            '283D02C8')
     }
 
     controller = data['controller']

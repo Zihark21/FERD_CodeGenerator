@@ -1,6 +1,4 @@
-import json
-import sys
-import os
+import json, sys, os
 
 # Base offsets
 BASE = {
@@ -24,10 +22,22 @@ BASE = {
     }
 }
 
-VER_LIST = ["", "NTSC 1.0", "NTSC 1.01", "PAL", "Reverse Recruitment 5.3 - ViciousSal"]
+VER_LIST = ["NTSC 1.0", "NTSC 1.01", "PAL", "Reverse Recruitment 5.3 - ViciousSal"]
+
+KEYBINDS = {
+            "None - Always On": "",
+            "Classic": [
+                "Left", "Right", "Up", "Down", "A", "B", "X", "Y", "ZL", "ZR", "L", "R", "+", "-"
+            ],
+            "GameCube": [
+                "Left", "Right", "Up", "Down", "A", "B", "X", "Y", "Z", "L", "R", "Start"
+            ],
+        }
 
 # Determine the base path
 base_path = sys._MEIPASS if getattr(sys, 'frozen', False) else os.path.abspath(".")
+
+ICO_PATH = os.path.join(base_path, "Assets", "FE-RD.ico")
 
 # Function to load JSON data
 def load_json(file_name):
@@ -42,12 +52,12 @@ ITEM = load_json("Items.json")
 SKILL = load_json("Skills.json")
 LISTS = load_json("Lists.json")
 CODE_DATABASE = load_json("Code_Database.json")
+HELP = load_json("Help.json")
 
 # Define lists to be used in the GUI
 CHAR_LIST = sorted(set(CHAR['NTSC'].keys()))
-CLASS_LIST = list(CLASS["ID"])[1:]
-ITEM_LIST = list(ITEM["ID"])[1:]
-SECTION_HEADER = ("TkDefaultFont", 10, "bold")
+CLASS_LIST = list(CLASS["ID"])
+ITEM_LIST = list(ITEM["ID"])
 
 # Define lists that will be used for GUI and code generation
 CHAR_STATS = LISTS["CHAR_STATS"]
@@ -55,4 +65,6 @@ CHAR_RANKS = LISTS["CHAR_RANKS"]
 CLASS_STATS = LISTS["CLASS_STATS"]
 ITEM_STATS = LISTS["ITEM_STATS"]
 ITEM_DATA = LISTS["ITEM_DATA"]
-ITEM_BONUS = LISTS["ITEM_BONUS"]
+ITEM_EQUIP_BONUS = LISTS["ITEM_EQUIP_BONUS"]
+RANKS = LISTS["RANKS"]
+CHAR_INV = LISTS["CHAR_INV"]

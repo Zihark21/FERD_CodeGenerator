@@ -65,7 +65,7 @@
         "Heal"
     ],
 
-    "ITEM_BONUS": [
+    "ITEM_EQUIP_BONUS": [
         "HP_Increase",
         "STR_Increase",
         "MAG_Increase",
@@ -76,5 +76,25 @@
         "RES_Increase",
         "Move_Increase",
         "CN-WT_Increase"
+    ],
+    "RANKS": [
+        "SS",
+        "S",
+        "A",
+        "B",
+        "C",
+        "D",
+        "E"
+    ],
+    "CHAR_INV": [
+        "Item",
+        "Uses",
+        "Forge Name",
+        "Mt",
+        "Hit",
+        "Crit",
+        "Wt",
+        "Forged",
+        "Blessed"
     ]
 }
