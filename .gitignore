@@ -1,5 +1,3 @@
 /pyinstaller
 __pycache__
 *.zip
-.vscode
-.venv
