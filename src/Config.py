@@ -52,6 +52,7 @@ ITEM = load_json("Items.json")
 SKILL = load_json("Skills.json")
 LISTS = load_json("Lists.json")
 CODE_DATABASE = load_json("Code_Database.json")
+HELP = load_json("Help.json")
 
 # Define lists to be used in the GUI
 CHAR_LIST = sorted(set(CHAR['NTSC'].keys()))

@@ -2,15 +2,24 @@ from src.Config import BASE, CHAR, CLASS, ITEM, CHAR_STATS, CHAR_RANKS, CLASS_ST
 
 def set_version(ver):
     version_map = {
-        '': ('NTSC', 0),
         'NTSC 1.0': ('NTSC', -int('80', 16)),
         'NTSC 1.01': ('NTSC', 0),
         'PAL': ('PAL', 0),
         'Reverse Recruitment 5.3 - ViciousSal': ('RR', 0)
     }
     global VERSION, OFFSET_MOD
-    VERSION, OFFSET_MOD = version_map.get(ver, (None, None))
+    VERSION, OFFSET_MOD = version_map.get(ver, ('NTSC', 0))
     return VERSION
+
+def set_difficulty(diff):
+    diff_map = {
+        'Easy': 0,
+        'Medium/Hard': 1
+    }
+    global DIFFICULTY, DIFF_MOD
+    DIFFICULTY = diff
+    DIFF_MOD = diff_map.get(diff, 1)
+    return DIFFICULTY
 
 def code_gen(data, off, val, all_code, code_type):
     if data == 'All':
@@ -74,7 +83,10 @@ def get_offset(name, data, opt):
         if name == 'All':
             id = 0
         else:
-            id = CHAR[VERSION][name]
+            if isinstance(CHAR[VERSION][name], int):
+                id = CHAR[VERSION][name]
+            else:
+                id = CHAR[VERSION][name][DIFF_MOD]
         base = BASE[VERSION]['Character']
         offset = CHAR['OFFSET']['Character']
         if data != 'Character':

@@ -10,18 +10,18 @@ options = [
     f'--ico=Assets/FE-RD.ico',
     f'--add-data=src;src',
     f'--add-data=Assets;Assets',
-    'FE-RD-CC.py'
+    'RDCW.py'
 ]
 
 PyInstaller.__main__.run(options)
 
 shutil.copy("LICENSE", "dist")
 shutil.copy("README.md", "dist")
-shutil.make_archive("Radiant Dawn Code Wizard", 'zip', "dist")
+shutil.make_archive("RDCW", 'zip', "dist")
 
 for folder in ['dist', 'build']:
     if os.path.exists(folder):
         shutil.rmtree(folder)
 
-if os.path.exists('FE-RD-CC.spec'):
-    os.remove('FE-RD-CC.spec')
+if os.path.exists('RDCW.spec'):
+    os.remove('RDCW.spec')

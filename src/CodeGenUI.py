@@ -20,6 +20,7 @@ class CodeGeneratorGUI:
         self.class_editor()
         self.items_editor()
         self.code_database()
+        self.help_window()
 
         # Set the window size and position
         self.root.resizable(False, False)
@@ -67,7 +68,7 @@ class CodeGeneratorGUI:
         self.output_window.title(win_name)
         self.set_icon(self.output_window)
         self.output_window.wm_attributes('-topmost', True)
-
+        
         # Display the code in the output window
         output_label = customtkinter.CTkLabel(self.output_window, text=code, justify="center", wraplength=400, width=40, fg_color='grey17', corner_radius=6, padx=10, pady=10, anchor="center")
         output_label.pack(padx=10, pady=10, side="top")
@@ -83,6 +84,8 @@ class CodeGeneratorGUI:
 
         # Set the window size and position
         self.center_window(self.output_window)
+        self.output_window.focus_force()
+        self.output_window.focus_set()
 
     def output_error(self, error_message):
         
@@ -135,51 +138,66 @@ class CodeGeneratorGUI:
                 for col in range(c):
                     self.button_select.grid_columnconfigure(col, weight=1)
 
-        # Create Controller Frame
-        controller_select = customtkinter.CTkFrame(self.root, fg_color='gray17')
-        controller_select.grid(row=0, column=0, padx=5, pady=5)
+        dropdown_frame = customtkinter.CTkFrame(self.root, fg_color='gray17')
+        dropdown_frame.grid(row=0, column=0, padx=5, pady=5)
 
-        controller_label = customtkinter.CTkLabel(controller_select, text='Controller', fg_color="gray20", corner_radius=6)
+        # Create Controller Frame
+
+        controller_label = customtkinter.CTkLabel(dropdown_frame, text='Controller', fg_color="gray20", corner_radius=6)
         controller_label.grid(row=0, column=0, padx=5, pady=5, sticky='nsew')
-        self.controller = customtkinter.CTkOptionMenu(controller_select, values=list(Config.KEYBINDS), dynamic_resizing=False, width=option_box_width/2, command=update_buttons)
+        self.controller = customtkinter.CTkOptionMenu(dropdown_frame, values=list(Config.KEYBINDS), dynamic_resizing=False, width=option_box_width/2, command=update_buttons)
         self.controller.grid(row=1, column=0, padx=5, pady=5)
 
-        # Create Version Frame
-        version_select = customtkinter.CTkFrame(self.root, fg_color='gray17')
-        version_select.grid(row=0, column=1, padx=5, pady=5)
+        # Create Difficulty Frame
 
-        version_label = customtkinter.CTkLabel(version_select, text='Version', fg_color="gray20", corner_radius=6)
-        version_label.grid(row=0, column=0, padx=5, pady=5, sticky='nsew')
-        self.version = customtkinter.CTkOptionMenu(version_select, values=Config.VER_LIST, dynamic_resizing=False, width=option_box_width)
+        difficulty_label = customtkinter.CTkLabel(dropdown_frame, text='Difficulty', fg_color="gray20", corner_radius=6)
+        difficulty_label.grid(row=0, column=1, padx=5, pady=5, sticky='nsew')
+        self.difficulty = customtkinter.CTkOptionMenu(dropdown_frame, values=['Easy', 'Medium/Hard'], dynamic_resizing=False, width=option_box_width/2)
+        self.difficulty.set('')
+        self.difficulty.grid(row=1, column=1, padx=5, pady=5)
+
+        # Create Version Frame
+
+        version_label = customtkinter.CTkLabel(dropdown_frame, text='Version', fg_color="gray20", corner_radius=6)
+        version_label.grid(row=0, column=2, padx=5, pady=5, sticky='nsew')
+        self.version = customtkinter.CTkOptionMenu(dropdown_frame, values=Config.VER_LIST, dynamic_resizing=False, width=option_box_width)
         self.version.set("NTSC 1.01")
-        self.version.grid(row=1, column=0, padx=5, pady=5)
+        self.version.grid(row=1, column=2, padx=5, pady=5)
 
         # Create Checkbox Frame
         self.checkboxes = []
         self.button_select = customtkinter.CTkFrame(self.root, height=box_frame_height, fg_color='gray17')
         customtkinter.CTkLabel(self.button_select, text='Button Selection will appear here when a valid controller is selected.').pack()
-        self.button_select.grid(row=1, column=0, padx=5, pady=5, columnspan=2, sticky='nsew')
+        self.button_select.grid(row=1, column=0, padx=5, pady=5, sticky='nsew')
         self.button_select.grid_anchor(anchor='center')
 
         # Create Buttons
         base_buttons = customtkinter.CTkFrame(self.root)
-        base_buttons.grid(row=3, column=0, padx=5, pady=5, columnspan=2, sticky='nsew')
+        base_buttons.grid(row=3, column=0, padx=5, pady=5, sticky='nsew')
         base_buttons.grid_anchor('center')
 
-        self.char_button = customtkinter.CTkButton(base_buttons, text='Character', command=lambda: self.character_window.deiconify())
+        button_width = 175
+
+        self.char_button = customtkinter.CTkButton(base_buttons, text='Character', width=button_width, command=lambda: self.character_window.deiconify())
         self.char_button.grid(row=0, column=0, padx=5, pady=5)
 
-        self.class_button = customtkinter.CTkButton(base_buttons, text='Class', command=lambda: self.class_window.deiconify())
+        self.class_button = customtkinter.CTkButton(base_buttons, text='Class', width=button_width, command=lambda: self.class_window.deiconify())
         self.class_button.grid(row=0, column=1, padx=5, pady=5)
 
-        self.item_button = customtkinter.CTkButton(base_buttons, text='Item', command=lambda: self.item_window.deiconify())
+        self.item_button = customtkinter.CTkButton(base_buttons, text='Item', width=button_width, command=lambda: self.item_window.deiconify())
         self.item_button.grid(row=0, column=2, padx=5, pady=5)
 
         # all_button = customtkinter.CTkButton(base_buttons, text='Generate All Codes')
         # all_button.grid(row=1, column=0, padx=5, pady=5, columnspan=3, sticky='nsew')
 
-        database_button = customtkinter.CTkButton(base_buttons, text='Database', command=lambda: self.database_window.deiconify())
-        database_button.grid(row=2, column=0, columnspan=3, padx=5, pady=5, sticky='nsew')
+        database_button = customtkinter.CTkButton(base_buttons, text='Database', width=button_width, command=lambda: self.database_window.deiconify())
+        database_button.grid(row=2, column=0, padx=5, pady=5, sticky='nsew')
+
+        help_button = customtkinter.CTkButton(base_buttons, text='Help', width=button_width, command=lambda: self.help_win.deiconify())
+        help_button.grid(row=2, column=1, padx=5, pady=5, sticky='nsew')
+
+        discord_button = customtkinter.CTkButton(base_buttons, text='Discord', width=button_width, command=self.show_discord)
+        discord_button.grid(row=2, column=2, padx=5, pady=5, sticky='nsew')
 
     def character_editor(self):
 
@@ -628,6 +646,29 @@ class CodeGeneratorGUI:
         self.database_window.resizable(False, False)
         self.center_window(self.database_window)
 
+    def help_window(self):
+
+        self.help_win = customtkinter.CTkToplevel(self.root)
+        self.help_win.withdraw()
+        self.help_win.title('Help')
+        self.help_win.geometry('600x600')
+        self.set_icon(self.help_win)
+        self.help_win.grid_anchor('center')
+        self.help_win.protocol('WM_DELETE_WINDOW', lambda: self.close(self.help_win))
+
+        # Help Options
+        self.help_menu = customtkinter.CTkOptionMenu(self.help_win, values=['App', 'Controller', 'Difficulty', 'Version', 'Character', 'Class', 'Item', 'Database'], command=self.get_help_data)
+        self.help_menu.pack(padx=10, pady=10, fill='x')
+
+        help_details = customtkinter.CTkScrollableFrame(self.help_win)
+        help_details.pack(padx=10, pady=(0,10), expand=True, fill='both')
+
+        self.help_details = customtkinter.CTkLabel(help_details, text=Config.HELP['App'], wraplength=500, justify='left')
+        self.help_details.pack(padx=10, pady=(0,10), expand=True, fill='both')
+
+        self.help_win.resizable(False, False)
+        self.center_window(self.help_win)
+
     def append_keycode(self, code):
         key_code = UDF.get_keybind_code(self._get_keybinds_data())
         output = '\n'.join([key_code, code, 'E0000000 80008000'])
@@ -641,6 +682,8 @@ class CodeGeneratorGUI:
 
     def code_creation(self, option):
         UDF.set_version(self.version.get())
+        UDF.set_difficulty(self.difficulty.get())
+
 
         if option == 0 or option == 'All':
             self._create_char_code()
@@ -727,3 +770,12 @@ class CodeGeneratorGUI:
         code = Config.CODE_DATABASE[sel_code][version]
         output = '\n'.join([desc, key_code, code, 'E0000000 80008000'])
         self.output_code(output)
+
+    def get_help_data(self, opt):
+        self.help_details.configure(text=Config.HELP[opt])
+
+    def show_discord(self):
+        self.type = 'Discord'
+        server = 'https://discord.gg/dE5zRznC'
+
+        self.output_code(server)
