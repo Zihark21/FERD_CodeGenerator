@@ -22,6 +22,7 @@ BASE = {
     }
 }
 
+DIFF_LIST = ['Easy', 'Medium/Hard']
 VER_LIST = ["NTSC 1.0", "NTSC 1.01", "PAL", "Reverse Recruitment 5.3 - ViciousSal"]
 
 KEYBINDS = {
