@@ -634,8 +634,8 @@ class CodeGeneratorGUI:
                     entry.delete(0, 'end')
                 elif isinstance(entry, ttk.Combobox):
                     entry.set('')
-                elif isinstance(entry, ttk.Checkbutton):
-                    entry.deselect()
+                elif isinstance(entry, tk.BooleanVar):
+                    entry.set(False)
 
         item_data_frame = ttk.Frame(self.item_window)
         item_data_frame.grid(row=1, column=0, padx=5, pady=5, sticky='nsew')
@@ -662,9 +662,11 @@ class CodeGeneratorGUI:
                 entry.grid(row=i, column=1, padx=5, pady=5, sticky='ew')
                 self.item_data.append(entry)
             elif data in ['Unlock', 'Char_Unlock', 'Infinite', 'Brave', 'Heal']:
-                checkbox = ttk.Checkbutton(item_data_frame, text=None, width=0)
+                var = tk.BooleanVar()
+                var.set(False)
+                checkbox = ttk.Checkbutton(item_data_frame, text=None, width=0, variable=var)
                 checkbox.grid(row=i, column=1, padx=5, pady=5, sticky='ns')
-                self.item_data.append(checkbox)
+                self.item_data.append(var)
 
         item_data_reset = ttk.Button(item_data_frame, text='Reset', command=reset_data)
         item_data_reset.grid(columnspan=2, padx=5, pady=5, sticky='ew')
@@ -764,10 +766,10 @@ class CodeGeneratorGUI:
         self.help_menu = ttk.Combobox(self.help_win, values=['App', 'Controller', 'Difficulty', 'Version', 'Character', 'Class', 'Item', 'Database'])
         self.help_menu.set('App')
         self.help_menu.bind("<<ComboboxSelected>>", lambda event: self.get_help_data())
-        self.help_menu.pack(padx=10, pady=10, fill='x')
+        self.help_menu.pack(expand=True, fill='x')
 
         self.help_details = tk.Text(self.help_win, wrap='word', background=self.bg_color, foreground=self.fg_color)
-        self.help_details.pack(side='left', padx=10, pady=(0,10), expand=True, fill='both')
+        self.help_details.pack(expand=True, fill='both')
         self.get_help_data()
 
         self.help_win.resizable(False, False)

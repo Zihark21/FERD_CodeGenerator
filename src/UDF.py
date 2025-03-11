@@ -309,7 +309,7 @@ def get_item_code(data):
 
         if item_data_input:
             if item_data == 'Attack_Type':
-                str_mag = {'STR': '00', 'MAG': '06'}.get(item_data_input)
+                str_mag = {'ATK': '00', 'MAG': '06'}.get(item_data_input)
                 str_mag_code = code_gen(item, item_data_offset, str_mag, item_all_code, 2)
                 item_output.append(str_mag_code)
 
