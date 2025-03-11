@@ -35,14 +35,19 @@ KEYBINDS = {
             ],
         }
 
-# Determine the base path
-base_path = sys._MEIPASS if getattr(sys, 'frozen', False) else os.path.abspath(".")
+# Determine the base path depending on whether the app is running in a frozen state or not
+if getattr(sys, 'frozen', False):  # Running in a frozen state (standalone executable)
+    base_path = os.path.dirname(sys.executable)
+else:  # Running as a regular Python script
+    base_path = os.path.abspath(".")
 
+# Define the path to the icon and JSON files inside the Assets folder
 ICO_PATH = os.path.join(base_path, "Assets", "FE-RD.ico")
 
 # Function to load JSON data
 def load_json(file_name):
-    with open(os.path.join(base_path, "Assets", file_name), "r") as file:
+    json_path = os.path.join(base_path, "Assets", file_name)
+    with open(json_path, "r") as file:
         return json.load(file)
 
 # Pull offset data for each section
