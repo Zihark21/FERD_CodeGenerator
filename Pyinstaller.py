@@ -24,17 +24,7 @@ options = [
     '--optimize=2',
     '--onefile',
     '--noconsole',
-    '--workpath=pyinstaller/build',
-    '--distpath=pyinstaller/dist',
-    '--specpath=pyinstaller/spec',
-    '--workpath=pyinstaller/build',
-    '--distpath=pyinstaller/dist',
-    '--specpath=pyinstaller/spec',
     '--log-level=WARN',
-    f'--ico={ico}',
-    f'--add-data={sources};Sources',
-    f'--add-data={assets};Assets',
-    script
     f'--ico={ico}',
     f'--add-data={sources};Sources',
     f'--add-data={assets};Assets',
@@ -43,8 +33,8 @@ options = [
 
 PyInstaller.__main__.run(options)
 
-shutil.copy("LICENSE", "pyinstaller/dist")
-shutil.copy("README.md", "pyinstaller/dist")
-shutil.make_archive("RDCW", 'zip', "pyinstaller/dist")
+shutil.copy("LICENSE", "dist")
+shutil.copy("README.md", "dist")
+shutil.make_archive("RDCW", 'zip', "dist")
 
 clean()
