@@ -3,7 +3,7 @@ from cx_Freeze import setup, Executable
 build_options = {
     "build_exe": {
         "build_exe": 'RDCW',
-        "include_files": ['Assets', 'src'],
+        "include_files": ['Assets'],
         "optimize": 2,
         'silent': 1
     }
