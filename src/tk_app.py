@@ -1,10 +1,9 @@
 import re, ctypes
 import tkinter as tk
 from tkinter import ttk
-import src.Config as Config
-import src.UDF as UDF
+from . import config, functions
 
-class CodeGeneratorGUI:
+class App:
 
     def __init__(self):
 
@@ -50,7 +49,7 @@ class CodeGeneratorGUI:
         style.configure("TCombobox", background=self.bg_color)
 
     def set_icon(self, window):
-        window.after(250, lambda: window.iconbitmap(Config.ICO_PATH))
+        window.after(250, lambda: window.iconbitmap(config.ICO_PATH))
 
     def get_screen_info(self):
         user32 = ctypes.windll.user32
@@ -171,9 +170,9 @@ class CodeGeneratorGUI:
     def base_options(self):
 
         # Define values used in this function
-        controller_width = len(max(list(Config.KEYBINDS), key=len))
-        difficulty_width = len(max(Config.DIFF_LIST, key=len))
-        version_width = len(max(Config.VER_LIST, key=len))
+        controller_width = len(max(list(config.KEYBINDS), key=len))
+        difficulty_width = len(max(config.DIFF_LIST, key=len))
+        version_width = len(max(config.VER_LIST, key=len))
         button_width = int((controller_width + difficulty_width + version_width) / 3)
         
         # Create function to update the buttons based on the selected controller
@@ -193,7 +192,7 @@ class CodeGeneratorGUI:
             if choice == "None - Always On":
                 ttk.Label(self.button_select, text='Button Selection will appear here when a valid controller is selected.').pack()
             else:
-                for i, option in enumerate(Config.KEYBINDS[choice]):
+                for i, option in enumerate(config.KEYBINDS[choice]):
                     c = i // 4
                     r = i % 4  # This avoids manual subtraction
 
@@ -218,8 +217,8 @@ class CodeGeneratorGUI:
         controller_label.config(font=self.app_font + ('underline',), justify='center', anchor='center')
         controller_label.grid(row=0, column=0, padx=5, pady=5, sticky='ew')
 
-        self.controller = ttk.Combobox(dropdown_frame, values=list(Config.KEYBINDS), width=controller_width)
-        self.controller.set(list(Config.KEYBINDS)[0])
+        self.controller = ttk.Combobox(dropdown_frame, values=list(config.KEYBINDS), width=controller_width)
+        self.controller.set(list(config.KEYBINDS)[0])
         self.controller.bind("<<ComboboxSelected>>", lambda event: update_buttons())
         self.controller.grid(row=1, column=0, padx=5, pady=5)
 
@@ -229,8 +228,8 @@ class CodeGeneratorGUI:
         difficulty_label.config(font=self.app_font + ('underline',), justify='center', anchor='center')
         difficulty_label.grid(row=0, column=1, padx=5, pady=5, sticky='ew')
 
-        self.difficulty = ttk.Combobox(dropdown_frame, values=Config.DIFF_LIST, width=difficulty_width)
-        self.difficulty.set(Config.DIFF_LIST[1])
+        self.difficulty = ttk.Combobox(dropdown_frame, values=config.DIFF_LIST, width=difficulty_width)
+        self.difficulty.set(config.DIFF_LIST[1])
         self.difficulty.grid(row=1, column=1, padx=5, pady=5)
 
         # Create Version Frame
@@ -239,8 +238,8 @@ class CodeGeneratorGUI:
         version_label.config(font=self.app_font + ('underline',), justify='center', anchor='center')
         version_label.grid(row=0, column=2, padx=5, pady=5, sticky='ew')
 
-        self.version = ttk.Combobox(dropdown_frame, values=Config.VER_LIST, width=version_width)
-        self.version.set(Config.VER_LIST[1])
+        self.version = ttk.Combobox(dropdown_frame, values=config.VER_LIST, width=version_width)
+        self.version.set(config.VER_LIST[1])
         self.version.grid(row=1, column=2, padx=5, pady=5)
 
         # Create Checkbox Frame
@@ -278,8 +277,8 @@ class CodeGeneratorGUI:
 
     def character_editor(self):
 
-        character_width = len(max(Config.CHAR_LIST, key=len))
-        class_width = len(max(Config.CLASS_LIST, key=len))
+        character_width = len(max(config.CHAR_LIST, key=len))
+        class_width = len(max(config.CLASS_LIST, key=len))
         stat_width = 5
         rank_width = 5
 
@@ -300,7 +299,7 @@ class CodeGeneratorGUI:
         character_label.config(font=self.app_font + ('underline',), justify='center', anchor='center')
         character_label.grid(padx=5, pady=5, sticky='nsew')
 
-        self.character_sel = ttk.Combobox(character_select, values=['All']+Config.CHAR_LIST, width=character_width)
+        self.character_sel = ttk.Combobox(character_select, values=['All']+config.CHAR_LIST, width=character_width)
         self.character_sel.set('')
         self.character_sel.grid(padx=5, pady=5, sticky='nsew')
 
@@ -317,7 +316,7 @@ class CodeGeneratorGUI:
         class_label.config(font=self.app_font + ('underline',), justify='center', anchor='center')
         class_label.grid(padx=5, pady=5, sticky='nsew')
 
-        self.character_class = ttk.Combobox(character_class, values=Config.CLASS_LIST, width=class_width)
+        self.character_class = ttk.Combobox(character_class, values=config.CLASS_LIST, width=class_width)
         self.character_class.set('')
         self.character_class.grid(padx=5, pady=5, sticky='nsew')
 
@@ -339,7 +338,7 @@ class CodeGeneratorGUI:
         stats_label.grid(padx=5, pady=5, columnspan=2, sticky='nsew')
 
         self.character_stats = []
-        for i, stat in enumerate(Config.CHAR_STATS):
+        for i, stat in enumerate(config.CHAR_STATS):
             i +=1
             entry_label = ttk.Label(character_stats, text=stat.replace("_", " "))
             entry_label.grid(row=i, column=0, padx=5, pady=5)
@@ -365,12 +364,12 @@ class CodeGeneratorGUI:
         ranks_label.grid(row=0, column=0, columnspan=2, padx=5, pady=5, sticky='nsew')
 
         self.character_ranks = []
-        for i, rank in enumerate(Config.CHAR_RANKS):
+        for i, rank in enumerate(config.CHAR_RANKS):
             i += 1
             character_ranks.grid_rowconfigure(i, weight=1)
             entry_label = ttk.Label(character_ranks, text=rank.replace("_", " "))
             entry_label.grid(row=i, column=0, padx=5, pady=5)
-            entry = ttk.Combobox(character_ranks, values=['']+Config.RANKS, width=rank_width)
+            entry = ttk.Combobox(character_ranks, values=['']+config.RANKS, width=rank_width)
             entry.grid(row=i, column=1, padx=5, pady=5)
             self.character_ranks.append(entry)
         
@@ -393,7 +392,7 @@ class CodeGeneratorGUI:
 
     def character_items_editor(self):
 
-        item_width = len(max(Config.ITEM_LIST, key=len))
+        item_width = len(max(config.ITEM_LIST, key=len))
         num_width = 5
         name_width = 20
 
@@ -415,7 +414,7 @@ class CodeGeneratorGUI:
         self.character_items_window.grid_anchor('center')
         self.character_items_window.protocol('WM_DELETE_WINDOW', lambda: self.close(self.character_items_window))
         
-        for i in range(len(Config.CHAR_INV)):
+        for i in range(len(config.CHAR_INV)):
             self.character_items_window.columnconfigure(i, weight=1)
         
         self.character_inventory = []
@@ -423,7 +422,7 @@ class CodeGeneratorGUI:
         for r in range(9):
             inv_row = []
             
-            for c, title in enumerate(Config.CHAR_INV):
+            for c, title in enumerate(config.CHAR_INV):
                 self.character_items_window.grid_columnconfigure(c, weight=1)
                 if r == 0:
                     header = ttk.Label(self.character_items_window, text=title)
@@ -431,13 +430,13 @@ class CodeGeneratorGUI:
                     header.grid(row=r, column=c, padx=5, pady=5, sticky='nsew')
                 elif r == 8:
                     reset_button = ttk.Button(self.character_items_window, text='Reset', command=reset_inventory)
-                    reset_button.grid(row=r, column=0, columnspan=len(Config.CHAR_INV), padx=5, pady=5, sticky='nsew')
+                    reset_button.grid(row=r, column=0, columnspan=len(config.CHAR_INV), padx=5, pady=5, sticky='nsew')
 
                     close_button = ttk.Button(self.character_items_window, text='Close', command=lambda: self.close(self.character_items_window))
-                    close_button.grid(row=r+1, column=0, columnspan=len(Config.CHAR_INV), padx=5, pady=5, sticky='nsew')
+                    close_button.grid(row=r+1, column=0, columnspan=len(config.CHAR_INV), padx=5, pady=5, sticky='nsew')
                     break
                 elif title == 'Item':
-                    combobox = ttk.Combobox(self.character_items_window, values=Config.ITEM_LIST, width=item_width)
+                    combobox = ttk.Combobox(self.character_items_window, values=config.ITEM_LIST, width=item_width)
                     combobox.grid(row=r, column=c, padx=5, pady=5, sticky='nsew')
                     inv_row.append(combobox)
                     combobox.set('')
@@ -463,7 +462,7 @@ class CodeGeneratorGUI:
 
     def class_editor(self):
 
-        class_width = len(max(Config.CLASS_LIST, key=len))
+        class_width = len(max(config.CLASS_LIST, key=len))
         stat_width = 5
         rank_width = 5
 
@@ -482,7 +481,7 @@ class CodeGeneratorGUI:
         class_label.config(font=self.app_font + ('underline',), justify='center', anchor='center')
         class_label.grid(padx=5, pady=5, sticky='nsew')
 
-        self.class_sel = ttk.Combobox(class_select, values=['All']+Config.CLASS_LIST, width=class_width)
+        self.class_sel = ttk.Combobox(class_select, values=['All']+config.CLASS_LIST, width=class_width)
         self.class_sel.set('')
         self.class_sel.grid(padx=5, pady=5, sticky='nsew')
 
@@ -499,7 +498,7 @@ class CodeGeneratorGUI:
         class_promote_label.config(font=self.app_font + ('underline',), justify='center', anchor='center')
         class_promote_label.grid(padx=5, pady=5, sticky='nsew')
 
-        self.class_promote = ttk.Combobox(class_promote_select, values=Config.CLASS_LIST, width=class_width)
+        self.class_promote = ttk.Combobox(class_promote_select, values=config.CLASS_LIST, width=class_width)
         self.class_promote.set('')
         self.class_promote.grid(padx=5, pady=5, sticky='nsew')
 
@@ -523,7 +522,7 @@ class CodeGeneratorGUI:
         class_stats_label.config(font=self.app_font + ('underline',), justify='center', anchor='center')
         class_stats_label.grid(padx=5, pady=5, columnspan=2, sticky='nsew')
 
-        for i, stat in enumerate(Config.CLASS_STATS):
+        for i, stat in enumerate(config.CLASS_STATS):
             i += 1
             class_stats_entries.grid_rowconfigure(i, weight=1)
             entry_label = ttk.Label(class_stats_entries, text=stat.replace("_", " "))
@@ -562,16 +561,16 @@ class CodeGeneratorGUI:
         class_ranks_max_label.config(font=self.app_font + ('underline',), justify='center', anchor='center')
         class_ranks_max_label.grid(row=0, column=2, padx=5, pady=5, sticky='nsew')
 
-        for i, rank in enumerate(Config.CHAR_RANKS):
+        for i, rank in enumerate(config.CHAR_RANKS):
             i += 1
             entry_label = ttk.Label(class_ranks_selections, text=rank.replace("_", " "))
             entry_label.grid(row=i, column=0, padx=5, pady=5)
 
-            min_entry = ttk.Combobox(class_ranks_selections, values=['']+Config.RANKS, width=rank_width)
+            min_entry = ttk.Combobox(class_ranks_selections, values=['']+config.RANKS, width=rank_width)
             min_entry.grid(row=i, column=1, padx=5, pady=5)
             self.class_min_ranks.append(min_entry)
 
-            max_entry = ttk.Combobox(class_ranks_selections, values=['']+Config.RANKS, width=rank_width)
+            max_entry = ttk.Combobox(class_ranks_selections, values=['']+config.RANKS, width=rank_width)
             max_entry.grid(row=i, column=2, padx=5, pady=5)
             self.class_max_ranks.append(max_entry)
 
@@ -619,7 +618,7 @@ class CodeGeneratorGUI:
         item_label.config(font=self.app_font + ('underline',), justify='center', anchor='center')
         item_label.grid(padx=5, pady=5, sticky='nsew')
 
-        self.item_sel = ttk.Combobox(item_select, values=['All']+Config.ITEM_LIST, width=item_width)
+        self.item_sel = ttk.Combobox(item_select, values=['All']+config.ITEM_LIST, width=item_width)
         self.item_sel.set('')
         self.item_sel.grid(padx=5, pady=5, sticky='nsew')
 
@@ -647,12 +646,12 @@ class CodeGeneratorGUI:
         item_data_label.grid(columnspan=2, padx=5, pady=5, sticky='nsew')
         
         self.item_data = []
-        for i, data in enumerate(Config.ITEM_DATA):
+        for i, data in enumerate(config.ITEM_DATA):
             i += 1
             item_data_frame.grid_rowconfigure(i, weight=1)
             ttk.Label(item_data_frame, text=data.replace("_", " ")).grid(row=i, column=0, padx=5, pady=5, sticky='nsew')
             if data in ['Attack_Type', 'Weapon_Rank']:
-                opt_list = ['ATK', 'MAG'] if data == 'Attack_Type' else Config.RANKS
+                opt_list = ['ATK', 'MAG'] if data == 'Attack_Type' else config.RANKS
                 option_menu = ttk.Combobox(item_data_frame, values=opt_list, width=item_data_width)
                 option_menu.grid(row=i, column=1, padx=5, pady=5, sticky='ew')
                 option_menu.set('')
@@ -684,7 +683,7 @@ class CodeGeneratorGUI:
         item_stat_label.config(font=self.app_font + ('underline',), justify='center', anchor='center')
         item_stat_label.grid(columnspan=2, padx=5, pady=5, sticky='nsew')
 
-        for i, stat in enumerate(Config.ITEM_STATS):
+        for i, stat in enumerate(config.ITEM_STATS):
             i += 1
             item_stats_frame.grid_rowconfigure(i, weight=1)
             ttk.Label(item_stats_frame, text=stat.replace("_", " ")).grid(row=i, column=0, padx=5, pady=5, sticky='nsew')
@@ -705,7 +704,7 @@ class CodeGeneratorGUI:
         item_bonus_label.grid(columnspan=2, padx=5, pady=5, sticky='nsew')
 
         self.item_equip = []
-        for i, bonus in enumerate(Config.ITEM_EQUIP_BONUS):
+        for i, bonus in enumerate(config.ITEM_EQUIP_BONUS):
             i += 1
             ttk.Label(item_equip_frame, text=bonus.replace("_", " ")).grid(row=i, column=0, padx=5, pady=5, sticky='nsew')
             entry = ttk.Entry(item_equip_frame, width=item_bonus_width, justify='center')
@@ -739,7 +738,7 @@ class CodeGeneratorGUI:
         num_per_row = 5
 
         # Create add buttons for each code
-        for i, code in enumerate(Config.CODE_DATABASE):
+        for i, code in enumerate(config.CODE_DATABASE):
             if i < num_per_row:
                 self.database_window.grid_columnconfigure(i, weight=1, uniform='equal')
             code_button = ttk.Button(self.database_window, text=code, command=lambda cd=code: self.generate_database_code(cd))
@@ -776,7 +775,7 @@ class CodeGeneratorGUI:
         self.center_window(self.help_win)
 
     def append_keycode(self, code):
-        key_code = UDF.get_keybind_code(self._get_keybinds_data())
+        key_code = functions.get_keybind_code(self._get_keybinds_data())
         output = '\n'.join([key_code, code, 'E0000000 80008000'])
         self.output_code(output)
 
@@ -787,8 +786,8 @@ class CodeGeneratorGUI:
             self.append_keycode(code)
 
     def code_creation(self, option):
-        UDF.set_version(self.version.get())
-        UDF.set_difficulty(self.difficulty.get())
+        functions.set_version(self.version.get())
+        functions.set_difficulty(self.difficulty.get())
 
 
         if option == 0 or option == 'All':
@@ -801,19 +800,19 @@ class CodeGeneratorGUI:
     def _create_char_code(self):
         self.type = 'Character'
         character_data = self._get_character_data()
-        char_code = UDF.get_char_code(character_data)
+        char_code = functions.get_char_code(character_data)
         self.code_verification(char_code)
 
     def _create_class_code(self):
         self.type = 'Class'
         class_data = self._get_class_data()
-        class_code = UDF.get_class_code(class_data)
+        class_code = functions.get_class_code(class_data)
         self.code_verification(class_code)
 
     def _create_item_code(self):
         self.type = 'Item'
         item_data = self._get_item_data()
-        item_code = UDF.get_item_code(item_data)
+        item_code = functions.get_item_code(item_data)
         self.code_verification(item_code)
 
     def _get_character_data(self):
@@ -850,7 +849,7 @@ class CodeGeneratorGUI:
 
         def get_item_attrs():
             item_data = {}
-            for data, field in zip(self.item_data, Config.ITEM_DATA):
+            for data, field in zip(self.item_data, config.ITEM_DATA):
                 item_data[field] = data.get()
             
             return item_data
@@ -870,10 +869,10 @@ class CodeGeneratorGUI:
 
     def generate_database_code(self, sel_code):
         self.type = 'Database'
-        version = UDF.set_version(self.version.get())
-        desc = Config.CODE_DATABASE[sel_code]['DESC']
-        key_code = UDF.get_keybind_code(self._get_keybinds_data())
-        code = Config.CODE_DATABASE[sel_code][version]
+        version = functions.set_version(self.version.get())
+        desc = config.CODE_DATABASE[sel_code]['DESC']
+        key_code = functions.get_keybind_code(self._get_keybinds_data())
+        code = config.CODE_DATABASE[sel_code][version]
         output = '\n'.join([desc, key_code, code, 'E0000000 80008000'])
         self.output_code(output)
 
@@ -887,7 +886,7 @@ class CodeGeneratorGUI:
         except:
             pass
 
-        self.help_details.insert(1.0, Config.HELP[opt])
+        self.help_details.insert(1.0, config.HELP[opt])
         self.help_details.config(state='disabled')
 
     def show_discord(self):

@@ -1,4 +1,3 @@
-from src.CodeGenUI import CodeGeneratorGUI
+from src.ctk_app import App
 
-if __name__ == "__main__":
-    CodeGeneratorGUI().root.mainloop()
+App().root.mainloop()

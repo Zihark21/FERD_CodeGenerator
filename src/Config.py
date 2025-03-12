@@ -42,7 +42,7 @@ else:  # Running as a regular Python script
     base_path = os.path.abspath(".")
 
 # Define the path to the icon and JSON files inside the Assets folder
-ICO_PATH = os.path.join(base_path, "Assets", "FE-RD.ico")
+ICO_PATH = os.path.join(base_path, "Assets", "RD_Custom.ico")
 
 # Function to load JSON data
 def load_json(file_name):
