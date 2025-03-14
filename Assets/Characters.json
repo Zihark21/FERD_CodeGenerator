@@ -226,6 +226,7 @@
     },
     "OFFSET": {
         "Character": 1008,
+        "Model": 16,
         "Class": 20,
         "Control": 24,
         "Affiliation": 32,
@@ -265,6 +266,7 @@
         "Light_Rank": 522,
         "Dark_Rank": 524,
         "Staff_Rank": 526,
+        "Support": 544,
         "Biorhythm": 670
     }
 }

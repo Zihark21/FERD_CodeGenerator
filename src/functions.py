@@ -129,7 +129,7 @@ def get_char_code(data):
     item_step = get_offset(char, 'Item_Step', 'Char')
     skill_step = get_offset(char, 'Skill_Step', 'Char')
 
-    #region Character Class
+    # Character Class
 
     char_class = data['class']
     if char_class:
@@ -138,9 +138,7 @@ def get_char_code(data):
         char_class_code = code_gen(char, char_class_off, class_id, char_all_code, 8)
         char_output.append(char_class_code)
 
-    #endregion
-
-    #region Character Items
+    # Character Items
     items = data['items']
     if items:
         for i in range(7):
@@ -211,9 +209,7 @@ def get_char_code(data):
                         forge_wt_code = code_gen(char, item_forge_off, 'E0', char_all_code, 2)
                         char_output.append(forge_wt_code)
 
-    #endregion
-
-    #region Character Stats
+    # Character Stats
 
     for chstat, char_stat in enumerate(CHAR_STATS):
         char_stat_input = data['stats'][chstat]
@@ -227,9 +223,7 @@ def get_char_code(data):
             else:
                 return error_output(char_stat.replace("_", " "), 'Stat', 0, 20 if char_stat == "Level" else 99 if char_stat == "EXP" else 255)
 
-    #endregion
-
-    #region Character Ranks
+    # Character Ranks
 
     for chwr, char_rank in enumerate(CHAR_RANKS):
         char_rank_input = data['ranks'][chwr]
@@ -238,8 +232,6 @@ def get_char_code(data):
             rank = {'SS': '014B', 'S': '00FB', 'A': '00B5', 'B': '0079', 'C': '0047', 'D': '001F', 'E': '0001'}.get(char_rank_input)
             char_rank_code = code_gen(char, char_rank_offset, rank, char_all_code, 4)
             char_output.append(char_rank_code)
-
-    #endregion
 
     return "Error: No changes made!" if len(char_output) == 0 else "\n".join(char_output)
 
@@ -251,7 +243,7 @@ def get_class_code(data):
     if not cls:
         return "Error: No class selected!"
 
-    #region Promote
+    # Promote
 
     promote = data['promote']
     if promote:
@@ -260,9 +252,7 @@ def get_class_code(data):
         class_promote_code = code_gen(cls, class_promote_off, class_id, class_all_code, len(class_id))
         class_output.append(class_promote_code)
 
-    #endregion
-
-    #region Class Ranks
+    # Class Ranks
 
     class_ranks = ['Min_' + i for i in CHAR_RANKS] + ['Max_' + i for i in CHAR_RANKS]
     for clwr, class_rank in enumerate(class_ranks):
@@ -273,9 +263,7 @@ def get_class_code(data):
             class_rank_code = code_gen(cls, class_rank_offset, rank, class_all_code, 4)
             class_output.append(class_rank_code)
 
-    #endregion
-
-    #region Class Stats
+    # Class Stats
 
     for clstat, class_stat in enumerate(CLASS_STATS):
         class_stat_input = data['stats'][clstat]
@@ -288,8 +276,6 @@ def get_class_code(data):
                 class_output.append(class_stat_code)
             else:
                 return error_output(class_stat, 'Stat', 0, 255)
-    
-    #endregion
 
     return "Error: No changes made!" if len(class_output) == 0 else "\n".join(class_output)
 
@@ -301,7 +287,7 @@ def get_item_code(data):
     if not item:
         return "Error: No item selected!"
 
-    #region Item Data
+    # Item Data
 
     for item_data in ITEM_DATA:
         item_data_input = data['data'][item_data]
@@ -343,9 +329,7 @@ def get_item_code(data):
                 heal_code = code_gen(item, item_data_offset, '10', item_all_code, 2)
                 item_output.append(heal_code)
 
-    #endregion
-
-    #region Item Stats
+    # Item Stats
 
     for istat, item_stat in enumerate(ITEM_STATS):
         item_stat_input = data['stats'][istat]
@@ -360,9 +344,7 @@ def get_item_code(data):
             else:
                 return error_output(item_stat, "Stat", 0, 255)
 
-    #endregion
-
-    #region Item Equip Bonuses
+    # Item Equip Bonuses
 
     for ibonus, bonus in enumerate(ITEM_EQUIP_BONUS):
         item_bonus_input = data['bonuses'][ibonus]
@@ -376,8 +358,6 @@ def get_item_code(data):
                 item_output.append(item_bonus_code)
             else:
                 return error_output(bonus, "Equip Bonus", 0, 255)
-
-    #endregion
 
     if len(item_output) == 0:
         return "Error: No changes made!"
