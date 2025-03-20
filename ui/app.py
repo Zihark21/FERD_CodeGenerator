@@ -1,13 +1,13 @@
 import customtkinter
 from src import config, handler
-from .elements.base import base
-from .elements.character_editor import character_editor
-from .elements.inventory_editor import inventory_editor
-from .elements.class_editor import class_editor
-from .elements.item_editor import item_editor
-from .elements.database_win import database
-from .elements.help_win import help
-from .elements.code_display import code_display
+from .elements import base
+from .elements import character_editor
+from .elements import inventory_editor
+from .elements import class_editor
+from .elements import item_editor
+from .elements import database
+from .elements import help
+from .elements import code_display
 
 class App(customtkinter.CTk):
 

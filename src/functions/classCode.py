@@ -16,8 +16,8 @@ def handleClass(data) -> str:
         return "Error: No class selected!"
     
     output.extend(_promote(data))
-    output.extend(_ranks(data))
     output.extend(_stats(data))
+    output.extend(_ranks(data))
     
     return "Error: No changes made!" if len(output) == 0 else "\n".join(output)
 

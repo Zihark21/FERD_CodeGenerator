@@ -25,8 +25,8 @@ def handleCharacter(data) -> list[str]:
 
     # output.extend(_model(data))
     output.extend(_class(data))
-    output.extend(_items(data, item_step))
     output.extend(_stats(data))
+    output.extend(_items(data, item_step))
     output.extend(_ranks(data))
     # output.extend(_support(data))
 
