@@ -6,4 +6,4 @@ Connect with me on discord for support!
 
 https://discord.gg/4ggsxByHxH
 
-![image](https://github.com/user-attachments/assets/16964bcd-149a-4d4e-9eaa-da719caa942a)
+![image](https://github.com/user-attachments/assets/fb13a490-51a6-4fd9-abc3-6d7ce2fcfbba)
