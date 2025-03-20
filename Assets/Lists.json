@@ -1,5 +1,16 @@
 {
-    "CHAR_STATS": [
+
+    "difficulties": [
+        "Easy", 
+        "Medium/Hard"
+    ],
+    "versions": [
+        "NTSC 1.0",
+        "NTSC 1.01",
+        "PAL",
+        "Reverse Recruitment 5.3 - ViciousSal"
+    ],
+    "character_stats": [
         "Level",
         "EXP",
         "Current_HP",
@@ -15,7 +26,7 @@
         "RES"
     ],
 
-    "CHAR_RANKS": [
+    "character_ranks": [
         "Sword_Rank",
         "Lance_Rank",
         "Axe_Rank",
@@ -30,7 +41,7 @@
         "Staff_Rank"
     ],
 
-    "CLASS_STATS": [
+    "class_stats": [
         "Base_WT",
         "Base_Move",
         "Skill_Capacity",
@@ -42,9 +53,9 @@
         "Max_LCK",
         "Max_DEF",
         "Max_RES"
-        ],
+    ],
 
-    "ITEM_STATS": [
+    "item_stats": [
         "Weapon_Uses",
         "Might",
         "Hit",
@@ -52,9 +63,9 @@
         "Crit",
         "Min_Range",
         "Max_Range"
-        ],
+    ],
 
-    "ITEM_DATA": [
+    "item_data": [
         "Attack_Type",
         "Weapon_Rank",
         "EXP_Gain",
@@ -65,19 +76,20 @@
         "Heal"
     ],
 
-    "ITEM_EQUIP_BONUS": [
-        "HP_Increase",
-        "STR_Increase",
-        "MAG_Increase",
-        "SKL_Increase",
-        "SP_Increase",
-        "LCK_Increase",
-        "DEF_Increase",
-        "RES_Increase",
-        "Move_Increase",
-        "CN-WT_Increase"
+    "item_bonus": [
+        "HP",
+        "STR",
+        "MAG",
+        "SKL",
+        "SPD",
+        "LCK",
+        "DEF",
+        "RES",
+        "Move",
+        "CN-WT"
     ],
-    "RANKS": [
+
+    "weapon_ranks": [
         "SS",
         "S",
         "A",
@@ -86,7 +98,8 @@
         "D",
         "E"
     ],
-    "CHAR_INV": [
+
+    "character_inventory": [
         "Item",
         "Uses",
         "Forge Name",
@@ -96,5 +109,26 @@
         "Wt",
         "Forged",
         "Blessed"
-    ]
+    ],
+
+    "support_ranks": [
+        "A",
+        "B",
+        "C"
+    ],
+
+    "attack_type": [
+        "STR",
+        "MAG"
+    ],
+
+    "rank_map": {
+        "SS": "014B", 
+        "S": "00FB", 
+        "A": "00B5", 
+        "B": "0079", 
+        "C": "0047", 
+        "D": "001F", 
+        "E": "0001"
+    }
 }

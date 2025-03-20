@@ -1,5 +1,5 @@
 import customtkinter, re
-from . import config, functions
+from src import config, functions
 from .CTkScrollableDropdown import *
 
 class App:
@@ -26,7 +26,7 @@ class App:
         self.center_window(self.root)
 
     def set_icon(self, window):
-        window.after(250, lambda: window.iconbitmap(config.ICO_PATH))
+        window.after(250, lambda: window.iconbitmap(config.icon_path))
 
     def center_window(self, window):
 
@@ -126,7 +126,7 @@ class App:
             if choice == "None - Always On":
                 customtkinter.CTkLabel(self.button_select, text='Button Selection will appear here when a valid controller is selected.').pack()
             else:
-                for i, option in enumerate(config.KEYBINDS[choice]):
+                for i, option in enumerate(config.keybinds[choice]):
                     c = i // 4
                     r = i - (c*4)
                     var = customtkinter.BooleanVar()
@@ -144,14 +144,14 @@ class App:
 
         controller_label = customtkinter.CTkLabel(dropdown_frame, text='Controller', fg_color="gray20", corner_radius=6)
         controller_label.grid(row=0, column=0, padx=5, pady=5, sticky='nsew')
-        self.controller = customtkinter.CTkOptionMenu(dropdown_frame, values=list(config.KEYBINDS), dynamic_resizing=False, width=option_box_width/2, command=update_buttons)
+        self.controller = customtkinter.CTkOptionMenu(dropdown_frame, values=list(config.keybinds), dynamic_resizing=False, width=option_box_width/2, command=update_buttons)
         self.controller.grid(row=1, column=0, padx=5, pady=5)
 
         # Create Difficulty Frame
 
         difficulty_label = customtkinter.CTkLabel(dropdown_frame, text='Difficulty', fg_color="gray20", corner_radius=6)
         difficulty_label.grid(row=0, column=1, padx=5, pady=5, sticky='nsew')
-        self.difficulty = customtkinter.CTkOptionMenu(dropdown_frame, values=['Easy', 'Medium/Hard'], dynamic_resizing=False, width=option_box_width/2)
+        self.difficulty = customtkinter.CTkOptionMenu(dropdown_frame, values=config.difficulties, dynamic_resizing=False, width=option_box_width/2)
         self.difficulty.set('Medium/Hard')
         self.difficulty.grid(row=1, column=1, padx=5, pady=5)
 
@@ -159,7 +159,7 @@ class App:
 
         version_label = customtkinter.CTkLabel(dropdown_frame, text='Version', fg_color="gray20", corner_radius=6)
         version_label.grid(row=0, column=2, padx=5, pady=5, sticky='nsew')
-        self.version = customtkinter.CTkOptionMenu(dropdown_frame, values=config.VER_LIST, dynamic_resizing=False, width=option_box_width)
+        self.version = customtkinter.CTkOptionMenu(dropdown_frame, values=config.versions, dynamic_resizing=False, width=option_box_width)
         self.version.set("NTSC 1.01")
         self.version.grid(row=1, column=2, padx=5, pady=5)
 
@@ -219,7 +219,7 @@ class App:
         character_label.grid(padx=5, pady=5, sticky='nsew')
 
         self.character_sel = customtkinter.CTkComboBox(character_select, width=combobox_width/3)
-        CTkScrollableDropdown(self.character_sel, values=['All']+config.CHAR_LIST, autocomplete=True)
+        CTkScrollableDropdown(self.character_sel, values=['All']+config.character_list, autocomplete=True)
         self.character_sel.set('')
         self.character_sel.grid(padx=5, pady=5, sticky='nsew')
 
@@ -236,12 +236,46 @@ class App:
         class_label.grid(padx=5, pady=5, sticky='nsew')
 
         self.character_class = customtkinter.CTkComboBox(character_class, width=combobox_width)
-        CTkScrollableDropdown(self.character_class, values=config.CLASS_LIST, autocomplete=True)
+        CTkScrollableDropdown(self.character_class, values=config.class_list, autocomplete=True)
         self.character_class.set('')
         self.character_class.grid(padx=5, pady=5, sticky='nsew')
 
         character_class_reset = customtkinter.CTkButton(character_class, text='Reset', command=lambda: self.character_class.set(''))
         character_class_reset.grid(padx=5, pady=5, sticky='nsew')
+
+        # Character Model
+
+        chatacter_model = customtkinter.CTkFrame(self.character_window, fg_color='gray17')
+        chatacter_model.grid(row=1, column=0, padx=5, pady=5, sticky='nsew')
+        chatacter_model.columnconfigure(0, weight=1)
+
+        model_label = customtkinter.CTkLabel(chatacter_model, text='Model', fg_color='gray20', corner_radius=6)
+        model_label.grid(padx=5, pady=5, sticky='nsew')
+
+        self.chatacter_model = customtkinter.CTkComboBox(chatacter_model, width=combobox_width)
+        CTkScrollableDropdown(self.chatacter_model, values=config.character_model_list, autocomplete=True)
+        self.chatacter_model.set('')
+        self.chatacter_model.grid(padx=5, pady=5, sticky='nsew')
+
+        character_model_reset = customtkinter.CTkButton(chatacter_model, text='Reset', command=lambda: self.chatacter_model.set(''))
+        character_model_reset.grid(padx=5, pady=5, sticky='nsew')
+
+        # Character Support
+
+        chatacter_support = customtkinter.CTkFrame(self.character_window, fg_color='gray17')
+        chatacter_support.grid(row=1, column=1, padx=5, pady=5, sticky='nsew')
+        chatacter_support.columnconfigure(0, weight=1)
+
+        support_label = customtkinter.CTkLabel(chatacter_support, text='Support', fg_color='gray20', corner_radius=6)
+        support_label.grid(padx=5, pady=5, sticky='nsew')
+
+        self.chatacter_support = customtkinter.CTkComboBox(chatacter_support, width=combobox_width)
+        CTkScrollableDropdown(self.chatacter_support, values=config.character_list, autocomplete=True)
+        self.chatacter_support.set('')
+        self.chatacter_support.grid(padx=5, pady=5, sticky='nsew')
+
+        character_support_reset = customtkinter.CTkButton(chatacter_support, text='Reset', command=lambda: self.chatacter_support.set(''))
+        character_support_reset.grid(padx=5, pady=5, sticky='nsew')
 
         # Character Stats Entries
 
@@ -250,14 +284,15 @@ class App:
                 entry.delete(0, 'end')
 
         character_stats = customtkinter.CTkFrame(self.character_window, fg_color='gray17')
-        character_stats.grid(row=1, column=0, padx=5, pady=5, sticky='nsew')
+        character_stats.grid(row=2, column=0, padx=5, pady=5, sticky='nsew')
         character_stats.columnconfigure(0, weight=1)
+        character_stats.columnconfigure(1, weight=1)
 
         stats_label = customtkinter.CTkLabel(character_stats, text='Stats', fg_color='gray20', corner_radius=6)
         stats_label.grid(padx=5, pady=5, columnspan=2, sticky='nsew')
 
         self.character_stats = []
-        for i, stat in enumerate(config.CHAR_STATS):
+        for i, stat in enumerate(config.character_stats):
             i +=1
             entry_label = customtkinter.CTkLabel(character_stats, text=stat.replace("_", " "))
             entry_label.grid(row=i, column=0, padx=5, pady=5)
@@ -275,19 +310,19 @@ class App:
                 sel.set('')
         
         character_ranks = customtkinter.CTkFrame(self.character_window, fg_color='gray17')
-        character_ranks.grid(row=1, column=1, padx=5, pady=5, sticky='nsew')
+        character_ranks.grid(row=2, column=1, padx=5, pady=5, sticky='nsew')
         character_ranks.grid_columnconfigure([0, 1], weight=1)
 
         ranks_header = customtkinter.CTkLabel(character_ranks, text='Ranks', fg_color='gray20', corner_radius=6)
         ranks_header.grid(row=0, column=0, columnspan=2, padx=5, pady=5, sticky='nsew')
 
         self.character_ranks = []
-        for i, rank in enumerate(config.CHAR_RANKS):
+        for i, rank in enumerate(config.character_ranks):
             i += 1
             character_ranks.grid_rowconfigure(i, weight=1)
             entry_label = customtkinter.CTkLabel(character_ranks, text=rank.replace("_", " "))
             entry_label.grid(row=i, column=0, padx=5, pady=5)
-            entry = customtkinter.CTkOptionMenu(character_ranks, values=['']+config.RANKS, dynamic_resizing=False, width=80)
+            entry = customtkinter.CTkOptionMenu(character_ranks, values=['']+config.weapon_ranks, dynamic_resizing=False, width=80)
             entry.grid(row=i, column=1, padx=5, pady=5)
             self.character_ranks.append(entry)
         
@@ -297,13 +332,13 @@ class App:
         # Buttons
 
         character_items = customtkinter.CTkButton(self.character_window, text='Items', command=lambda: self.character_items_window.deiconify())
-        character_items.grid(row=2, column=0, columnspan=2, padx=5, pady=5, sticky='nsew')
+        character_items.grid(row=100, column=0, columnspan=2, padx=5, pady=5, sticky='nsew')
 
         char_button = customtkinter.CTkButton(self.character_window, text='Generate Character Code', command=lambda: self.code_creation(0))
-        char_button.grid(row=3, column=0, columnspan=2, padx=5, pady=5, sticky='nsew')
+        char_button.grid(row=101, column=0, columnspan=2, padx=5, pady=5, sticky='nsew')
 
         close_button = customtkinter.CTkButton(self.character_window, text='Close', command=lambda: self.close(self.character_window))
-        close_button.grid(row=4, column=0, columnspan=2, padx=5, pady=5, sticky='nsew')
+        close_button.grid(row=102, column=0, columnspan=2, padx=5, pady=5, sticky='nsew')
 
         self.character_window.resizable(False, False)
         self.center_window(self.character_window)
@@ -327,7 +362,7 @@ class App:
         self.character_items_window.grid_anchor('center')
         self.character_items_window.protocol('WM_DELETE_WINDOW', lambda: self.close(self.character_items_window))
         
-        for i in range(len(config.CHAR_INV)):
+        for i in range(len(config.character_inventory)):
             self.character_items_window.columnconfigure(i, weight=1)
         
         self.character_inventory = []
@@ -335,21 +370,21 @@ class App:
         for r in range(9):
             inv_row = []
             
-            for c, title in enumerate(config.CHAR_INV):
+            for c, title in enumerate(config.character_inventory):
                 self.character_items_window.grid_columnconfigure(c, weight=1)
                 if r == 0:
                     header = customtkinter.CTkLabel(self.character_items_window, text=title, fg_color='gray17', corner_radius=6)
                     header.grid(row=r, column=c, padx=5, pady=5, sticky='nsew')
                 elif r == 8:
                     reset_button = customtkinter.CTkButton(self.character_items_window, text='Reset', command=reset_inventory)
-                    reset_button.grid(row=r, column=0, columnspan=len(config.CHAR_INV), padx=5, pady=5, sticky='nsew')
+                    reset_button.grid(row=r, column=0, columnspan=len(config.character_inventory), padx=5, pady=5, sticky='nsew')
 
                     close_button = customtkinter.CTkButton(self.character_items_window, text='Close', command=lambda: self.close(self.character_items_window))
-                    close_button.grid(row=r+1, column=0, columnspan=len(config.CHAR_INV), padx=5, pady=5, sticky='nsew')
+                    close_button.grid(row=r+1, column=0, columnspan=len(config.character_inventory), padx=5, pady=5, sticky='nsew')
                     break
                 elif title == 'Item':
                     combobox = customtkinter.CTkComboBox(self.character_items_window)
-                    CTkScrollableDropdown(combobox, values=config.ITEM_LIST, autocomplete=True)
+                    CTkScrollableDropdown(combobox, values=config.item_list, autocomplete=True)
                     combobox.grid(row=r, column=c, padx=5, pady=5, sticky='nsew')
                     inv_row.append(combobox)
                     combobox.set('')
@@ -389,7 +424,7 @@ class App:
         class_label.grid(padx=5, pady=5, sticky='nsew')
 
         self.class_sel = customtkinter.CTkComboBox(class_select, width=combobox_width)
-        CTkScrollableDropdown(self.class_sel, values=['All']+config.CLASS_LIST, autocomplete=True)
+        CTkScrollableDropdown(self.class_sel, values=['All']+config.class_list, autocomplete=True)
         self.class_sel.set('')
         self.class_sel.grid(padx=5, pady=5, sticky='nsew')
 
@@ -406,7 +441,7 @@ class App:
         class_promote_label.grid(padx=5, pady=5, sticky='nsew')
 
         self.class_promote = customtkinter.CTkComboBox(class_promote_select)
-        CTkScrollableDropdown(self.class_promote, values=config.CLASS_LIST, autocomplete=True, width=400)
+        CTkScrollableDropdown(self.class_promote, values=config.class_list, autocomplete=True, width=400)
         self.class_promote.set('')
         self.class_promote.grid(padx=5, pady=5, sticky='nsew')
 
@@ -429,7 +464,7 @@ class App:
         class_stats_label = customtkinter.CTkLabel(class_stats_entries, text='Stats', fg_color='gray20', corner_radius=6)
         class_stats_label.grid(padx=5, pady=5, columnspan=2, sticky='nsew')
 
-        for i, stat in enumerate(config.CLASS_STATS):
+        for i, stat in enumerate(config.class_stats):
             i += 1
             class_stats_entries.grid_rowconfigure(i, weight=1)
             entry_label = customtkinter.CTkLabel(class_stats_entries, text=stat.replace("_", " "))
@@ -465,16 +500,18 @@ class App:
         class_ranks_max_header = customtkinter.CTkLabel(class_ranks_selections, text='Max Ranks', fg_color='gray20', corner_radius=6)
         class_ranks_max_header.grid(row=0, column=2, padx=5, pady=5, sticky='nsew')
 
-        for i, rank in enumerate(config.CHAR_RANKS):
+        for i, rank in enumerate(config.character_ranks):
             i += 1
             entry_label = customtkinter.CTkLabel(class_ranks_selections, text=rank.replace("_", " "))
             entry_label.grid(row=i, column=0, padx=5, pady=5)
 
-            min_entry = customtkinter.CTkOptionMenu(class_ranks_selections, values=['']+config.RANKS, dynamic_resizing=False, width=80)
+            min_entry = customtkinter.CTkOptionMenu(class_ranks_selections, values=config.weapon_ranks, dynamic_resizing=False, width=80)
+            min_entry.set('')
             min_entry.grid(row=i, column=1, padx=5, pady=5)
             self.class_min_ranks.append(min_entry)
 
-            max_entry = customtkinter.CTkOptionMenu(class_ranks_selections, values=['']+config.RANKS, dynamic_resizing=False, width=80)
+            max_entry = customtkinter.CTkOptionMenu(class_ranks_selections, values=config.weapon_ranks, dynamic_resizing=False, width=80)
+            max_entry.set('')
             max_entry.grid(row=i, column=2, padx=5, pady=5)
             self.class_max_ranks.append(max_entry)
 
@@ -517,7 +554,7 @@ class App:
         item_label.grid(padx=5, pady=5, sticky='nsew')
 
         self.item_sel = customtkinter.CTkComboBox(item_select)
-        CTkScrollableDropdown(self.item_sel, values=['All']+config.ITEM_LIST, autocomplete=True, width=300)
+        CTkScrollableDropdown(self.item_sel, values=['All']+config.item_list, autocomplete=True, width=300)
         self.item_sel.set('')
         self.item_sel.grid(padx=5, pady=5, sticky='nsew')
 
@@ -544,12 +581,12 @@ class App:
 
         item_data_width = 80
         self.item_data = []
-        for i, data in enumerate(config.ITEM_DATA):
+        for i, data in enumerate(config.item_data):
             i += 1
             item_data_frame.grid_rowconfigure(i, weight=1)
             customtkinter.CTkLabel(item_data_frame, text=data.replace("_", " ")).grid(row=i, column=0, padx=5, pady=5, sticky='nsew')
             if data in ['Attack_Type', 'Weapon_Rank']:
-                opt_list = ['ATK', 'MAG'] if data == 'Attack_Type' else config.RANKS
+                opt_list = config.attack_type if data == 'Attack_Type' else config.weapon_ranks
                 option_menu = customtkinter.CTkOptionMenu(item_data_frame, values=opt_list, dynamic_resizing=False, width=item_data_width)
                 option_menu.grid(row=i, column=1, padx=5, pady=5, sticky='ew')
                 option_menu.set('')
@@ -578,7 +615,7 @@ class App:
 
         customtkinter.CTkLabel(item_stats_frame, text='Item Stats', fg_color='gray20', corner_radius=6).grid(columnspan=2, padx=5, pady=5, sticky='nsew')
 
-        for i, stat in enumerate(config.ITEM_STATS):
+        for i, stat in enumerate(config.item_stats):
             i += 1
             item_stats_frame.grid_rowconfigure(i, weight=1)
             customtkinter.CTkLabel(item_stats_frame, text=stat.replace("_", " ")).grid(row=i, column=0, padx=5, pady=5, sticky='nsew')
@@ -599,7 +636,7 @@ class App:
         customtkinter.CTkLabel(item_equip_frame, text='Equip Bonuses', fg_color='gray20', corner_radius=6).grid(columnspan=2, padx=5, pady=5, sticky='nsew')
 
         self.item_equip = []
-        for i, bonus in enumerate(config.ITEM_EQUIP_BONUS):
+        for i, bonus in enumerate(config.item_bonus):
             i += 1
             customtkinter.CTkLabel(item_equip_frame, text=bonus.replace("_", " ")).grid(row=i, column=0, padx=5, pady=5, sticky='nsew')
             entry = customtkinter.CTkEntry(item_equip_frame, width=item_equip_width, justify='center')
@@ -632,7 +669,7 @@ class App:
         num_per_row = 5
 
         # Create add buttons for each code
-        for i, code in enumerate(config.CODE_DATABASE):
+        for i, code in enumerate(config.code_database):
             self.database_window.grid_columnconfigure(i, weight=1)
             code_button = customtkinter.CTkButton(self.database_window, text=code, command=lambda cd=code: self.generate_database_code(cd))
             code_button.grid(row=i // num_per_row, column=i % num_per_row, padx=5, pady=5, sticky='nsew')
@@ -655,13 +692,13 @@ class App:
         self.help_win.protocol('WM_DELETE_WINDOW', lambda: self.close(self.help_win))
 
         # Help Options
-        self.help_menu = customtkinter.CTkOptionMenu(self.help_win, values=['App', 'Controller', 'Difficulty', 'Version', 'Character', 'Class', 'Item', 'Database'], command=self.get_help_data)
+        self.help_menu = customtkinter.CTkOptionMenu(self.help_win, values=config.help_list, command=self.get_help_data)
         self.help_menu.pack(padx=10, pady=10, fill='x')
 
         help_details = customtkinter.CTkScrollableFrame(self.help_win)
         help_details.pack(padx=10, pady=(0,10), expand=True, fill='both')
 
-        self.help_details = customtkinter.CTkLabel(help_details, text=config.HELP['App'], wraplength=500, justify='left')
+        self.help_details = customtkinter.CTkLabel(help_details, text=config.descriptions['App'], wraplength=500, justify='left')
         self.help_details.pack(padx=10, pady=(0,10), expand=True, fill='both')
 
         self.help_win.resizable(False, False)
@@ -681,7 +718,7 @@ class App:
     def code_creation(self, option):
         functions.set_version(self.version.get())
         functions.set_difficulty(self.difficulty.get())
-
+        functions.set_char_version_list()
 
         if option == 0 or option == 'All':
             self._create_char_code()
@@ -742,7 +779,7 @@ class App:
 
         def get_item_attrs():
             item_data = {}
-            for data, field in zip(self.item_data, config.ITEM_DATA):
+            for data, field in zip(self.item_data, config.item_data):
                 item_data[field] = data.get()
             
             return item_data
@@ -763,14 +800,14 @@ class App:
     def generate_database_code(self, sel_code):
         self.type = 'Database'
         version = functions.set_version(self.version.get())
-        desc = config.CODE_DATABASE[sel_code]['DESC']
+        desc = config.code_database[sel_code]['DESC']
         key_code = functions.get_keybind_code(self._get_keybinds_data())
-        code = config.CODE_DATABASE[sel_code][version]
+        code = config.code_database[sel_code][version]
         output = '\n'.join([desc, key_code, code, 'E0000000 80008000'])
         self.output_code(output)
 
     def get_help_data(self, opt):
-        self.help_details.configure(text=config.HELP[opt])
+        self.help_details.configure(text=config.descriptions[opt])
 
     def show_discord(self):
         self.type = 'Discord'

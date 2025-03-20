@@ -6,12 +6,4 @@ Connect with me on discord for support!
 
 https://discord.gg/4ggsxByHxH
 
-Two UI styles to choose from:
-
-Old:
-
-![image](https://github.com/user-attachments/assets/379db5b6-103f-4911-bbeb-b6e6f9d09ecd)
-
-New:
-
 ![image](https://github.com/user-attachments/assets/16964bcd-149a-4d4e-9eaa-da719caa942a)

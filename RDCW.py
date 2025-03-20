@@ -1,3 +1,3 @@
-from src.ctk_app import App
+from ui.app import App
 
-App().root.mainloop()
+App().mainloop()
