@@ -1,5 +1,6 @@
 import customtkinter
 from ui import app
+from .custom_combobox import CustomCombobox
 from src import config
 
 class ItemEditor(customtkinter.CTkToplevel):
@@ -32,7 +33,7 @@ class ItemEditor(customtkinter.CTkToplevel):
 
         def _reset():
             self.item_sel.set('')
-            self.item_sel.configure(values=_values)
+            self.item_sel.update_text(self)
 
         _values = ['All']+config.item_list
 
@@ -43,9 +44,7 @@ class ItemEditor(customtkinter.CTkToplevel):
 
         customtkinter.CTkLabel(frame, text='Item', fg_color='gray20', corner_radius=6).grid(padx=5, pady=5, sticky='nsew')
 
-        self.item_sel = customtkinter.CTkComboBox(frame, values=_values)
-        self.item_sel.bind("<KeyRelease>", lambda event: app.update_text(event, self.item_sel, _values))
-        self.item_sel.set('')
+        self.item_sel = CustomCombobox(frame, values=_values)
         self.item_sel.grid(padx=5, pady=5, sticky='nsew')
 
         customtkinter.CTkButton(frame, text='Reset', command=_reset).grid(columnspan=3, padx=5, pady=5, sticky='nsew')

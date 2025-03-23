@@ -168,17 +168,3 @@ def center_window(window: customtkinter.CTkToplevel):
     pos_y = int(sh - (h // 2))
 
     window.geometry(f'{pos_x}+{pos_y}')
-
-def update_text(event, parent: customtkinter.CTkComboBox, values: list[str]):
-        
-        if event.keysym == 'BackSpace':
-            return
-        
-        current_text = parent.get()
-        if current_text == "":
-            filtered_values = values
-            parent.configure(values=filtered_values)
-        else:
-            filtered_values = [val for val in values if current_text.lower() in val.lower()]
-            parent.configure(values=filtered_values)
-            parent._clicked(None)

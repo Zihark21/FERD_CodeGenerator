@@ -1,5 +1,6 @@
 import customtkinter
 from ui import app
+from .custom_combobox import CustomCombobox
 from src import config
 
 class ClassEditor(customtkinter.CTkToplevel):
@@ -32,7 +33,7 @@ class ClassEditor(customtkinter.CTkToplevel):
 
         def _reset():
             self.class_sel.set('')
-            self.class_sel.configure(values=_values)
+            self.class_sel.update_text(self)
 
         _values = ['All']+config.class_list
         _width = len(max(_values, key=len)) * 8
@@ -42,9 +43,7 @@ class ClassEditor(customtkinter.CTkToplevel):
 
         customtkinter.CTkLabel(frame, text='Class', fg_color='gray20', corner_radius=6).grid(padx=5, pady=5, sticky='nsew')
 
-        self.class_sel = customtkinter.CTkComboBox(frame, values=_values, width=_width)
-        self.class_sel.bind("<KeyRelease>", lambda event: app.update_text(event, self.class_sel, _values))
-        self.class_sel.set('')
+        self.class_sel = CustomCombobox(frame, values=_values, width=_width)
         self.class_sel.grid(padx=5, pady=5, sticky='nsew')
 
         customtkinter.CTkButton(frame, text='Reset', command=_reset).grid(padx=5, pady=5, sticky='nsew')
@@ -53,7 +52,7 @@ class ClassEditor(customtkinter.CTkToplevel):
 
         def _reset():
             self.class_promote.set('')
-            self.class_promote.configure(values=_values)
+            self.class_promote.update_text(self, open=False)
 
         self.col += 1
 
@@ -66,9 +65,7 @@ class ClassEditor(customtkinter.CTkToplevel):
 
         customtkinter.CTkLabel(frame, text='Promote', fg_color='gray20', corner_radius=6).grid(padx=5, pady=5, sticky='nsew')
 
-        self.class_promote = customtkinter.CTkComboBox(frame, values=_values, width=_width)
-        self.class_promote.bind("<KeyRelease>", lambda event: app.update_text(event, self.class_promote, _values))
-        self.class_promote.set('')
+        self.class_promote = CustomCombobox(frame, values=_values, width=_width)
         self.class_promote.grid(padx=5, pady=5, sticky='nsew')
 
         customtkinter.CTkButton(frame, text='Reset', command=_reset).grid(padx=5, pady=5, sticky='nsew')

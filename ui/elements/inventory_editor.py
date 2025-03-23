@@ -1,5 +1,6 @@
 import customtkinter
 from ui import app
+from .custom_combobox import CustomCombobox
 from src import config
 
 class InventoryEditor(customtkinter.CTkToplevel):
@@ -35,7 +36,7 @@ class InventoryEditor(customtkinter.CTkToplevel):
                         widget.deselect()
                     elif isinstance(widget, customtkinter.CTkComboBox):
                         widget.set('')
-                        widget.configure(values=_values)
+                        widget.update_text(self, open=False)
                     else:
                         continue
 
@@ -60,11 +61,9 @@ class InventoryEditor(customtkinter.CTkToplevel):
                     customtkinter.CTkButton(self, text='Close', command=self._close).grid(row=r+1, column=0, columnspan=len(headers), padx=5, pady=5, sticky='nsew')
                     break
                 elif title == 'Item':
-                    combobox = customtkinter.CTkComboBox(self, values=_values, width=_width)
-                    combobox.bind("<KeyRelease>", lambda event, cb=combobox: app.update_text(event, cb, _values))
+                    combobox = CustomCombobox(self, values=_values, width=_width)
                     combobox.grid(row=r, column=c, padx=5, pady=5, sticky='nsew')
                     inv_row.append(combobox)
-                    combobox.set('')
                 elif title in ['Uses', 'Forge Name', 'Mt', 'Hit', 'Crit']:
                     _width = config.text_entry_width if title == 'Forge Name' else config.num_entry_width
                     entry = customtkinter.CTkEntry(self, width=_width)

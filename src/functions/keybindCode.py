@@ -8,11 +8,11 @@ def handleKeybind(data):
     if data['controller'] == 'None - Always On':
         if version == 'NTSC':
             if off_mod == 0:
-                return '20B54158 8070F8BC'
+                return '203CD870 80CEB860'
             else:
-                return '20B540D8 8070F83C'
+                return '203CD7F0 80CEB7E0'
         elif version == 'PAL':
-            return '20B58CF8 80701E3C'
+            return '203C6210 80CE6C20'
         elif version == 'RR':
             return '20B58B58 80701E2C'
 
