@@ -6,7 +6,6 @@ from .code import code_gen
 def handleClass(data) -> str:
 
     global ALL, CLS
-
     ALL = '0AA011C 00000000'
     CLS = data['class']
 
@@ -26,8 +25,8 @@ def _promote(data) -> str:
     code: list[str] = []
 
     if data['promote']:
-        offset = offset(CLS, 'Next_Class', 'Class')
-        id = offset(data['promote'], 'Class', 'Class')
+        offset = handleOffset(CLS, 'Next_Class', 'Class')
+        id = handleOffset(data['promote'], 'Class', 'Class')
         code.append(code_gen(CLS, offset, id, ALL, 8))
 
     return code
