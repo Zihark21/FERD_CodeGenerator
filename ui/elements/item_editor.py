@@ -78,8 +78,9 @@ class ItemEditor(customtkinter.CTkToplevel):
             frame.grid_rowconfigure(i, weight=1)
             customtkinter.CTkLabel(frame, text=data.replace("_", " ")).grid(row=i, column=0, padx=5, pady=5, sticky='nsew')
             if data in ['Attack_Type', 'Weapon_Rank']:
-                opt_list = config.attack_type if data == 'Attack_Type' else config.weapon_ranks
-                option_menu = customtkinter.CTkOptionMenu(frame, values=opt_list, dynamic_resizing=False, width=config.option_width)
+                _width = config.option_width if data == "Weapon_Rank" else config.option_width*2
+                opt_list = list(config.attack_type) if data == 'Attack_Type' else config.weapon_ranks
+                option_menu = customtkinter.CTkOptionMenu(frame, values=opt_list, dynamic_resizing=False, width=_width)
                 option_menu.grid(row=i, column=1, padx=5, pady=5)
                 option_menu.set('')
                 self.item_data.append(option_menu)

@@ -31,7 +31,7 @@ def _data(data) -> list[str]:
 
         if input:
             if header == 'Attack_Type':
-                str_mag = {'ATK': '00', 'MAG': '06'}.get(input)
+                str_mag = config.attack_type.get(input)
                 code.append(code_gen(ITEM, offset, str_mag, ALL, 2))
 
             elif header == 'Weapon_Rank':

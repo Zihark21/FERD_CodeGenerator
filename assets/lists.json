@@ -117,10 +117,20 @@
         "C"
     ],
 
-    "attack_type": [
-        "STR",
-        "MAG"
-    ],
+    "attack_type": {
+        "STR - Sword": "00",
+        "STR - Lance": "01",
+        "STR - Axe": "02",
+        "STR - Bow": "03",
+        "STR - Knife": "04",
+        "STR - Strike": "05",
+        "MAG - Fire": "06",
+        "MAG - Thunder": "07",
+        "MAG - Wind": "08",
+        "MAG - Light": "09",
+        "MAG - Dark": "0A",
+        "MAG - Card": "10"
+    },
 
     "rank_map": {
         "SS": "014B", 
