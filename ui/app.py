@@ -143,7 +143,7 @@ class App(customtkinter.CTk):
     def handleDiscord(self):
 
         title='Discord'
-        message='https://discord.gg/dE5zRznC'
+        message='https://discord.gg/AjSmXddnXk'
 
         code_display.CodeDisplay(master=self, title=title, message=message)
 
