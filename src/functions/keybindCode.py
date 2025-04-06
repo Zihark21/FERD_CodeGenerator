@@ -42,7 +42,7 @@ def handleKeybind(data):
 
     controller = data['controller']
     val = getKeyVal(data['keys'], controller_mappings[controller])
-    return f"{version_mappings[controller]} {hex(val).replace('0x', '').zfill(8)}"
+    return f"{version_mappings[controller]} {hex(val).replace('0x', '').upper().zfill(8)}"
 
 def getKeyVal(keys, mapping):
     return sum(int(mapping[i], 16) for i, key in enumerate(keys) if key)
