@@ -13,12 +13,20 @@ class CodeDisplay(customtkinter.CTkToplevel):
         self.resizable(False, False)
         self.wm_attributes('-topmost', True)
 
+        message = self._unknown_code(message)
         self._output_code(message)
 
         app.set_icon(self)
         app.center_window(self)
         self.lift()
         self.focus_force()
+
+    def _unknown_code(self, message: str):
+
+        if "Unknown" in message:
+            message = 'This code is unknown for this version of the game.\nPlease request it from me on Discord.'
+
+        return message
 
     def _output_code(self, message):
 

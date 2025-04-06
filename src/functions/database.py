@@ -1,8 +1,4 @@
-def handleDatabase(data):
-
-    from .globals import getGlobals
-    glb = getGlobals()
-    version = glb[0]
+def handleDatabase(data, version):
 
     desc = data['DESC']
     code = data[version]

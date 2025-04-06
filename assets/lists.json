@@ -4,12 +4,13 @@
         "Easy", 
         "Medium/Hard"
     ],
+
     "versions": [
         "NTSC 1.0",
         "NTSC 1.01",
-        "PAL",
-        "Reverse Recruitment 5.3 - ViciousSal"
+        "PAL"
     ],
+
     "character_stats": [
         "Level",
         "EXP",

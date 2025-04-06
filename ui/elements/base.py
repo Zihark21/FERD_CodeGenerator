@@ -22,26 +22,19 @@ class Base(customtkinter.CTkFrame):
         button_frame = customtkinter.CTkFrame(self.root)
         button_frame.grid(row=3, column=0, padx=5, pady=5, sticky='nsew')
 
-        widths = self._setWidth()
-        self._controller(dropdown_frame, controller_frame, keybinds, widths[0])
-        self._difficulty(dropdown_frame, difficulties, widths[1])
-        self._version(dropdown_frame, versions, widths[2])
-        self._buttons(button_frame, widths[3])
+        _width = 150
 
-    def _setWidth(self):
-
-        controller_width = 150
-        difficulty_width = 125
-        version_width = 260
-        button_width = (controller_width + difficulty_width + version_width) / 3
-
-        return [controller_width, difficulty_width, version_width, button_width]
+        self._controller(dropdown_frame, controller_frame, keybinds, _width)
+        self._difficulty(dropdown_frame, difficulties, _width)
+        self._version(dropdown_frame, versions, _width)
+        self._buttons(button_frame, _width)
 
     def _controller(self, frame: customtkinter.CTkFrame, buttons: customtkinter.CTkFrame, keybinds, width: int):
         
         def _update_buttons(choice):
 
             self.checkboxes = []
+            checkbox: customtkinter.CTkCheckBox
             for checkbox in buttons.winfo_children():
                 checkbox.destroy()
 
@@ -55,9 +48,9 @@ class Base(customtkinter.CTkFrame):
                     checkbox = customtkinter.CTkCheckBox(buttons, text=option, variable=var)
                     checkbox.grid(row=r, column=c, pady=5)
                     self.checkboxes.append(var)
-            
-                for col in range(c):
-                    buttons.grid_columnconfigure(col, weight=1)
+
+                for col in range(len(keybinds[choice]) // 4):
+                    buttons.grid_columnconfigure(col, uniform="equal", weight=1)
 
         _update_buttons("None - Always On")
 

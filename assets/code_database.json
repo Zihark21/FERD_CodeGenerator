@@ -1,82 +1,98 @@
 {
     "Game Clear Count": {
         "DESC": "Info:\nReplace XX below with (number desired + 1) and convert to hex.\n\nCode:",
-        "NTSC": "023CABD6 000000XX",
+        "NTSC 1.0": "023CAB56 000000XX",
+        "NTSC 1.01": "023CABD6 000000XX",
         "PAL": "003C3577 000000XX"
+    },
+    "Quick Chapter Win": {
+        "DESC": "Info:\nInstantly wins chapter.\n\nCode:",
+        "NTSC 1.0": "003CAFFC 00000004",
+        "NTSC 1.01": "003CB07C 00000004",
+        "PAL": "Unknown"
+    },
+    "Enemies Killed": {
+        "DESC": "Info:\nReplace XX with the number of enemies killed. Convert to hex. This is mostly used for Part 3 Endgame but is still a counter in all other chapters.\n\nCode:",
+        "NTSC 1.0": "043CAB78 000000XX",
+        "NTSC 1.01": "043CABF8 000000XX",
+        "PAL": "Unknown"
+    },
+    "Infinite Movement": {
+        "DESC": "Info:\nAll units have infinite movement.\n\nCode:",
+        "NTSC 1.0": "04053488 7C601B78",
+        "NTSC 1.01": "04053508 7C601B78",
+        "PAL": "Unknown"
     },
     "Universal EXP": {
         "DESC": "Info:\nAll EXP gain increase. This works for character and weapons. Replace XX with:\n0E - 2x\n16 - 4x\n1E - 8x\n\nCode:",
-        "NTSC": "04120830 57E3XX3E",
-        "PAL": "Code unknown for PAL. Please request it."
+        "NTSC 1.0": "041207B0 57E3XX3E",
+        "NTSC 1.01": "04120830 57E3XX3E",
+        "PAL": "Unknown"
     },
     "Infinite Money": {
         "DESC": "Info:\nGold set to 50,000\n\nCode:",
-        "NTSC": "083CAB50 0000C350\n20020004 00000000",
-        "PAL": "Code unknown for PAL. Please request it."
+        "NTSC 1.0": "083CAAD0 0000C350\n20020004 00000000",
+        "NTSC 1.01": "083CAB50 0000C350\n20020004 00000000",
+        "PAL": "Unknown"
     },
     "Infinite BEXP": {
         "DESC": "Info:\nBEXP is set to 50,000\n\nCode:",
-        "NTSC": "083CAB5C 47435000\n20020004 00000000",
-        "PAL": "Code unknown for PAL. Please request it."
+        "NTSC 1.0": "083CAADC 47435000\n20020004 00000000",
+        "NTSC 1.01": "083CAB5C 47435000\n20020004 00000000",
+        "PAL": "Unknown"
     },
     "BEXP Cap": {
-        "DESC": "Info:\nReplace XX with cap. 03 is default.\nUse 08 for all stats possible.\n\nCode:",
-        "NTSC": "0006D8EB 000000XX\n0006DAB7 000000XX\n0006DCD7 000000XX",
+        "DESC": "Info:\nReplace XX in first line with max number and XX in second line with min number. 03 is default for both.\nUse 08 on both to get all stats every level up.\n\nCode:",
+        "NTSC 1.0": "0006D86B 000000XX\n0006DA37 000000XX",
+        "NTSC 1.01": "0006D8EB 000000XX\n0006DAB7 000000XX",
         "PAL": "000520AF 000000XX\n0005227B 000000XX\n0005249B 000000XX"
     },
     "Perfect Level Up": {
         "DESC": "Info:\nMakes all units get all stat every level up. If used with BEXP Cap Adj, you will get all 8 stats on level up when using BEXP in base.\n\nCode:",
-        "NTSC": "088C361A 64646464\n216500FC 00000000\n088C361E 64646464\n216500FC 00000000",
+        "NTSC 1.0": "088C359A 64646464\n216500FC 00000000\n088C359E 64646464\n216500FC 00000000",
+        "NTSC 1.01": "088C361A 64646464\n216500FC 00000000\n088C361E 64646464\n216500FC 00000000",
         "PAL": "088B5B9A 64646464\n216500FC 00000000\n088B5B9E 64646464\n216500FC 00000000"
     },
     "Stat Gain Modifier": {
         "DESC": "Info:\nReplace XX with the gain you want. 02 means each stat that you get in a level up will get +2.\n\nCode:",
-        "NTSC": "0006D303 000000XX\n0006D35F 000000XX",
-        "PAL": "Code unknown for PAL. Please request it."
+        "NTSC 1.0": "0006D2DF 000000XX",
+        "NTSC 1.01": "0006D35F 000000XX",
+        "PAL": "Unknown"
     },
     "All Convoy": {
         "DESC": "Info:\nAll items in convoy. All items 50 uses.\n\nCode:",
-        "NTSC": "083E92A0 80B5FE10\n21270028 00000050\n083E92A4 00000032\n01270028 00000000\n083E92A5 00000000\n01270028 00000000",
-        "PAL": "Code unknown for PAL. Please request it."
+        "NTSC 1.0": "083E9220 80B5FD90\n21270028 00000050\n083E9224 00000032\n01270028 00000000\n083E9225 00000000\n01270028 00000000",
+        "NTSC 1.01": "083E92A0 80B5FE10\n21270028 00000050\n083E92A4 00000032\n01270028 00000000\n083E92A5 00000000\n01270028 00000000",
+        "PAL": "Unknown"
     },
     "Blessed Convoy": {
         "DESC": "Info:\nAll items in convoy. All items are blessed. Use with Clear Convoy to remove all items.\n\nCode:",
-        "NTSC": "083E92A0 80B5FE10\n21270028 00000050\n083E92A4 00000050\n01270028 00000000\n083E92A5 00000010\n01270028 00000000",
-        "PAL": "Code unknown for PAL. Please request it."
+        "NTSC 1.0": "083E9220 80B5FD90\n21270028 00000050\n083E9224 00000050\n01270028 00000000\n083E9225 00000010\n01270028 00000000",
+        "NTSC 1.01": "083E92A0 80B5FE10\n21270028 00000050\n083E92A4 00000050\n01270028 00000000\n083E92A5 00000010\n01270028 00000000",
+        "PAL": "Unknown"
     },
     "Clear Convoy": {
         "DESC": "Info:\nClears all items in convoy. Use with Blessed Convoy to remove all items.\n\nCode:",
-        "NTSC": "083E92A0 00000000\n2BC10004 00000000",
-        "PAL": "Code unknown for PAL. Please request it."
+        "NTSC 1.0": "083E9220 00000000\n2BC10004 00000000",
+        "NTSC 1.01": "083E92A0 00000000\n2BC10004 00000000",
+        "PAL": "Unknown"
     },
     "Convoy 300": {
         "DESC": "Info:\nEnables max convoy capacity for all teams and chapters to allow use for all items codes.\n\nCode:",
-        "NTSC": "024CB75A 0000012C\n024CB762 0000012C\n024CB766 000092A0\n024CB76A 0000012C\n024CB76E 000092A0\n024CB772 0000012C\n024CB776 000092A0",
-        "PAL": "Code unknown for PAL. Please request it."
+        "NTSC 1.0": "024CB6DA 0000012C\n024CB6E2 0000012C\n024CB6E6 000092A0\n024CB6EA 0000012C\n024CB6EE 000092A0\n024CB6F2 0000012C\n024CB6F6 000092A0",
+        "NTSC 1.01": "024CB75A 0000012C\n024CB762 0000012C\n024CB766 000092A0\n024CB76A 0000012C\n024CB76E 000092A0\n024CB772 0000012C\n024CB776 000092A0",
+        "PAL": "Unknown"
     },
     "All Skills": {
         "DESC": "Info:\nCan assign all skills in the game.\nAuthor: Whai\n\nCode:",
-        "NTSC": "0870F8A8 00000000\n2050002C 00000000\n0870F8B0 00000002\n0023002C 00000000\n0870F8B4 80710B04\n2023002C 00000000",
-        "PAL": "Code unknown for PAL. Please request it."
+        "NTSC 1.0": "0870F828 00000000\n2050002C 00000000\n0870F830 00000002\n0023002C 00000000\n0870F834 80710A84\n2023002C 00000000",
+        "NTSC 1.01": "0870F8A8 00000000\n2050002C 00000000\n0870F8B0 00000002\n0023002C 00000000\n0870F8B4 80710B04\n2023002C 00000000",
+        "PAL": "Unknown"
     },
     "Free Skills": {
         "DESC": "Info:\nAll skills cost 0.\n\nCode:",
-        "NTSC": "0870F8AE 00000000\n0050002C 00000000",
-        "PAL": "Code unknown for PAL. Please request it."
-    },
-    "Enemies Killed": {
-        "DESC": "Info:\nReplace XX with the number of enemies killed. Convert to hex. This is mostly used for Part 3 Endgame but is still a counter in all other chapters.\n\nCode:",
-        "NTSC": "043CABF8 000000XX",
-        "PAL": "Code unknown for PAL. Please request it"
-    },
-    "Infinite Movement": {
-        "DESC": "Info:\nAll units have infinite movement.\n\nCode:",
-        "NTSC": "04053508 7C601B78",
-        "PAL": "Code unknown for PAL. Please request it."
-    },
-    "Quick Chapter Win": {
-        "DESC": "Info:\nInstantly wins chapter.\n\nCode:",
-        "NTSC": "003CB07C 00000004",
-        "PAL": "Code unknown for PAL. Please request it."
+        "NTSC 1.0": "0870F82E 00000000\n0050002C 00000000",
+        "NTSC 1.01": "0870F8AE 00000000\n0050002C 00000000",
+        "PAL": "Unknown"
     }
 }

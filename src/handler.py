@@ -19,7 +19,7 @@ def code_handler(base, data, opt: str):
         code = handleItem(data)
 
     elif opt == 'database':
-        code = handleDatabase(data)
+        code = handleDatabase(data, base['version'])
 
     else:
         pass
