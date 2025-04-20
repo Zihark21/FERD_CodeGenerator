@@ -23,9 +23,10 @@ class InventoryEditor(customtkinter.CTkToplevel):
     def _close(self):
         self.withdraw()
 
-    
-
     def _inventory(self, headers):
+
+        frame = customtkinter.CTkFrame(self, fg_color='gray17', bg_color='transparent')
+        frame.grid(row=0, column=0, sticky='nsew', padx=5, pady=5)
 
         def _reset_inventory():
             for row in self.character_inventory:
@@ -50,28 +51,39 @@ class InventoryEditor(customtkinter.CTkToplevel):
 
         for r in range(9):
             inv_row = []
-            
+
             for c, title in enumerate(headers):
+
+                if r == 0:
+                    _pady=0
+                else:
+                    _pady=(5,0)
+
+                if c == 0:
+                    _padx=0
+                else:
+                    _padx=(5,0)
+
                 self.grid_columnconfigure(c, weight=1)
                 if r == 0:
-                    customtkinter.CTkLabel(self, text=title, fg_color='gray17', corner_radius=6).grid(row=r, column=c, padx=5, pady=5, sticky='nsew')
+                    customtkinter.CTkLabel(frame, text=title, fg_color='gray20', corner_radius=6).grid(row=r, column=c, padx=_padx, pady=_pady, sticky='nsew')
                 elif r == 8:
-                    customtkinter.CTkButton(self, text='Reset', command=_reset_inventory).grid(row=r, column=0, columnspan=len(headers), padx=5, pady=5, sticky='nsew')
+                    customtkinter.CTkButton(frame, text='Reset', command=_reset_inventory).grid(row=r, column=0, columnspan=len(headers), padx=_padx, pady=_pady, sticky='nsew')
 
-                    customtkinter.CTkButton(self, text='Close', command=self._close).grid(row=r+1, column=0, columnspan=len(headers), padx=5, pady=5, sticky='nsew')
+                    customtkinter.CTkButton(frame, text='Close', command=self._close).grid(row=r+1, column=0, columnspan=len(headers), padx=_padx, pady=_pady, sticky='nsew')
                     break
                 elif title == 'Item':
-                    combobox = CustomCombobox(self, values=_values, width=_width)
-                    combobox.grid(row=r, column=c, padx=5, pady=5, sticky='nsew')
+                    combobox = CustomCombobox(frame, values=_values, width=_width)
+                    combobox.grid(row=r, column=c, padx=_padx, pady=_pady, sticky='nsew')
                     inv_row.append(combobox)
                 elif title in ['Uses', 'Forge Name', 'Mt', 'Hit', 'Crit']:
                     _width = config.text_entry_width if title == 'Forge Name' else config.num_entry_width
-                    entry = customtkinter.CTkEntry(self, width=_width)
-                    entry.grid(row=r, column=c, padx=5, pady=5, sticky='nsew')
+                    entry = customtkinter.CTkEntry(frame, width=_width)
+                    entry.grid(row=r, column=c, padx=_padx, pady=_pady, sticky='nsew')
                     inv_row.append(entry)
                 elif title in ['Wt', 'Forged', 'Blessed']:
-                    checkbox = customtkinter.CTkCheckBox(self, text=None, width=0)
-                    checkbox.grid(row=r, column=c, padx=5, pady=5, sticky='ns')
+                    checkbox = customtkinter.CTkCheckBox(frame, text=None, width=0)
+                    checkbox.grid(row=r, column=c, padx=_padx, pady=_pady, sticky='ns')
                     inv_row.append(checkbox)
                 else:
                     raise "Error in character inventory."

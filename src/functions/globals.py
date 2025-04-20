@@ -52,7 +52,6 @@ def int_check(num) -> bool:
 def error_output(data, type, min, max) -> str:
     return f'Error: {data} {type}! Please enter a value between {min} and {max}.'
 
-
 def getGlobals():
 
     return VERSION, OFF_MOD, CHARACTER_LIST, DIFFICULTY, DIFF_MOD

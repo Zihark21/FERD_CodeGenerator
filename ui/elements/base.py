@@ -13,14 +13,15 @@ class Base(customtkinter.CTkFrame):
         difficulties = config.difficulties
         versions = config.versions
 
-        dropdown_frame = customtkinter.CTkFrame(self.root, fg_color='gray17')
-        dropdown_frame.grid(row=0, column=0, padx=5, pady=5)
+        dropdown_frame = customtkinter.CTkFrame(self.root, fg_color='transparent', bg_color='transparent')
+        dropdown_frame.grid_columnconfigure([0,1,2], weight=1, uniform="equal")
+        dropdown_frame.pack(padx=5, pady=5, fill='x')
 
-        controller_frame = customtkinter.CTkFrame(self.root, height=75, fg_color='gray17')
-        controller_frame.grid(row=1, column=0, padx=5, pady=5, sticky='nsew')
+        controller_frame = customtkinter.CTkFrame(self.root, height=75, fg_color='gray20', bg_color='transparent')
+        controller_frame.pack(padx=5, pady=0, fill='x')
 
-        button_frame = customtkinter.CTkFrame(self.root)
-        button_frame.grid(row=3, column=0, padx=5, pady=5, sticky='nsew')
+        button_frame = customtkinter.CTkFrame(self.root, fg_color='transparent', bg_color='transparent')
+        button_frame.pack(padx=5, pady=5, fill='x')
 
         _width = 150
 
@@ -54,37 +55,52 @@ class Base(customtkinter.CTkFrame):
 
         _update_buttons("None - Always On")
 
-        customtkinter.CTkLabel(frame, text='Controller', fg_color="gray20", corner_radius=6).grid(row=0, column=0, padx=5, pady=5, sticky='nsew')
+        customtkinter.CTkLabel(frame, text='Controller', fg_color="gray20", corner_radius=6).grid(row=0, column=0, sticky='ew')
 
         self.controller = customtkinter.CTkOptionMenu(frame, values=list(keybinds), dynamic_resizing=False, width=width, command=_update_buttons)
-        self.controller.grid(row=1, column=0, padx=5, pady=5)
+        self.controller.grid(row=1, column=0, sticky='ew', pady=(5,0))
 
     def _difficulty(self, frame: customtkinter.CTkFrame, difficulties, width: int):
 
-        customtkinter.CTkLabel(frame, text='Difficulty', fg_color="gray20", corner_radius=6).grid(row=0, column=1, padx=5, pady=5, sticky='nsew')
+        customtkinter.CTkLabel(frame, text='Difficulty', fg_color="gray20", corner_radius=6).grid(row=0, column=1, sticky='ew', padx=5)
 
         self.difficulty = customtkinter.CTkOptionMenu(frame, values=difficulties, dynamic_resizing=False, width=width)
         self.difficulty.set(difficulties[-1])
-        self.difficulty.grid(row=1, column=1, padx=5, pady=5)
+        self.difficulty.grid(row=1, column=1, sticky='ew', padx=5, pady=(5,0))
 
     def _version(self, frame: customtkinter.CTkFrame, versions, width: int):
 
-        customtkinter.CTkLabel(frame, text='Version', fg_color="gray20", corner_radius=6).grid(row=0, column=2, padx=5, pady=5, sticky='nsew')
+        customtkinter.CTkLabel(frame, text='Version', fg_color="gray20", corner_radius=6).grid(row=0, column=2, sticky='ew')
 
         self.version = customtkinter.CTkOptionMenu(frame, values=versions, dynamic_resizing=False, width=width)
         self.version.set(versions[1])
-        self.version.grid(row=1, column=2, padx=5, pady=5)
+        self.version.grid(row=1, column=2, sticky='ew', pady=(5,0))
 
     def _buttons(self, frame: customtkinter.CTkFrame, width: int):
 
-        customtkinter.CTkButton(frame, text='Character', width=width, command=lambda: app.App._show(self.root, 'character')).grid(row=0, column=0, padx=5, pady=5)
+        row1 = customtkinter.CTkFrame(frame, fg_color='transparent', bg_color='transparent')
+        row1.grid_columnconfigure([0,1,2], weight=1, uniform="equal")
 
-        customtkinter.CTkButton(frame, text='Class', width=width, command=lambda: app.App._show(self.root, 'class')).grid(row=0, column=1, padx=5, pady=5)
+        customtkinter.CTkButton(row1, text='Character', width=width, command=lambda: app.App._show(self.root, 'character')).grid(row=0, column=0, sticky='ew')
 
-        customtkinter.CTkButton(frame, text='Item', width=width, command=lambda: app.App._show(self.root, 'item')).grid(row=0, column=2, padx=5, pady=5)
+        customtkinter.CTkButton(row1, text='Class', width=width, command=lambda: app.App._show(self.root, 'class')).grid(row=0, column=1, sticky='ew', padx=5)
 
-        customtkinter.CTkButton(frame, text='Database', width=width, command=lambda: app.App._show(self.root, 'database')).grid(row=2, column=0, padx=5, pady=5, sticky='nsew')
+        customtkinter.CTkButton(row1, text='Item', width=width, command=lambda: app.App._show(self.root, 'item')).grid(row=0, column=2, sticky='ew')
 
-        customtkinter.CTkButton(frame, text='Help', width=width, command=lambda: app.App._show(self.root, 'help')).grid(row=2, column=1, padx=5, pady=5, sticky='nsew')
+        row2 = customtkinter.CTkFrame(frame, fg_color='transparent', bg_color='transparent')
+        row2.grid_columnconfigure([0,1], weight=1, uniform="equal")
 
-        customtkinter.CTkButton(frame, text='Discord', width=width, command=lambda: app.App.handleDiscord(self.root)).grid(row=2, column=2, padx=5, pady=5, sticky='nsew')
+        customtkinter.CTkButton(row2, text='Selected', width=width, command=lambda: app.App._show(self.root, 'selected')).grid(row=0, column=0, sticky='ew')
+
+        customtkinter.CTkButton(row2, text='Database', width=width, command=lambda: app.App._show(self.root, 'database')).grid(row=0, column=1, sticky='ew', padx=(5,0))
+
+        row3 = customtkinter.CTkFrame(frame, fg_color='transparent', bg_color='transparent')
+        row3.grid_columnconfigure([0,1], weight=1, uniform="equal")
+
+        customtkinter.CTkButton(row3, text='Help', width=width, command=lambda: app.App._show(self.root, 'help')).grid(row=0, column=0, sticky='ew')
+
+        customtkinter.CTkButton(row3, text='Discord', width=width, command=lambda: app.App.handleDiscord(self.root)).grid(row=0, column=1, sticky='ew', padx=(5,0))
+
+        row1.pack(fill='x')
+        row2.pack(fill='x', pady=5)
+        row3.pack(fill='x')

@@ -30,13 +30,13 @@ class CodeDisplay(customtkinter.CTkToplevel):
 
     def _output_code(self, message):
 
-        customtkinter.CTkLabel(self, text=message, justify="center", wraplength=400, width=40, fg_color='grey17', corner_radius=6, padx=10, pady=10, anchor="center").pack(padx=10, pady=10, side="top")
+        customtkinter.CTkLabel(self, text=message, justify="center", wraplength=400, width=40, fg_color='grey17', corner_radius=6, padx=5, pady=5, anchor="center").pack(padx=5, pady=5, side="top")
 
         match = re.search(r'Code:\n((?:.*\n*)+)', message)
         code_part = match.group(1).strip() if match else message
 
         if "Error:" not in message:
-            customtkinter.CTkButton(self, text="Copy to Clipboard", command=lambda: self._copy_code(code_part)).pack(padx=5, pady=5, fill='x')
+            customtkinter.CTkButton(self, text="Copy to Clipboard", command=lambda: self._copy_code(code_part)).pack(padx=5, pady=(0,5), fill='x')
 
     def _copy_code(self, code):
 

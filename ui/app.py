@@ -5,6 +5,7 @@ from .elements import character_editor
 from .elements import inventory_editor
 from .elements import class_editor
 from .elements import item_editor
+from .elements import selected_editor
 from .elements import database
 from .elements import help
 from .elements import code_display
@@ -25,6 +26,7 @@ class App(customtkinter.CTk):
         self.inventory_editor = inventory_editor.InventoryEditor(master=self)
         self.class_editor = class_editor.ClassEditor(master=self)
         self.item_editor = item_editor.ItemEditor(master=self)
+        self.selected_editor = selected_editor.SelectedEditor(master=self)
         self.database = database.Database(master=self)
         self.help = help.Help(master=self)
 
@@ -43,6 +45,8 @@ class App(customtkinter.CTk):
             window = self.class_editor
         elif option == 'item':
             window = self.item_editor
+        elif option == 'selected':
+            window = self.selected_editor
         elif option == 'database':
             window = self.database
         elif option == 'help':
@@ -66,6 +70,9 @@ class App(customtkinter.CTk):
         elif option == 'item':
             data = self.handleItem()
             code = handler.code_handler(base_data, data, 'item')
+        elif option == 'selected':
+            data = self.handleSelected()
+            code = handler.code_handler(base_data, data, 'selected')
         elif option == 'database':
             data = self.handleDatabase(code_name)
             code = handler.code_handler(base_data, data, 'database')
@@ -134,6 +141,27 @@ class App(customtkinter.CTk):
             "data": get_item_attrs(),
             "stats": [stat.get() for stat in self.item_editor.item_stats],
             "bonuses": [bonus.get() for bonus in self.item_editor.item_bonus]
+        }
+    
+    def handleSelected(self):
+
+        # def get_inventory():
+
+        #     inv_data = []
+        #     for row in self.inventory_editor.character_inventory:
+        #         row_data = {}
+        #         if row:
+        #             for widget, header in zip(row, config.character_inventory):
+        #                 row_data[header] = widget.get()
+        #             inv_data.append(row_data)
+            
+        #     return inv_data
+
+        return {
+            "class": self.selected_editor.selected_class.get(),
+            "stats": [stat.get() for stat in self.selected_editor.selected_stats],
+            "ranks": [rank.get() for rank in self.selected_editor.selected_ranks],
+            # "items": get_inventory()
         }
     
     def handleDatabase(self, sel_code):

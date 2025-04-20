@@ -41,12 +41,12 @@ class ClassEditor(customtkinter.CTkToplevel):
         frame = customtkinter.CTkFrame(self, fg_color='gray17')
         frame.grid(row=self.row, column=self.col, padx=5, pady=5, sticky='nsew')
 
-        customtkinter.CTkLabel(frame, text='Class', fg_color='gray20', corner_radius=6).grid(padx=5, pady=5, sticky='nsew')
+        customtkinter.CTkLabel(frame, text='Class', fg_color='gray20', corner_radius=6).grid(sticky='ew')
 
         self.class_sel = CustomCombobox(frame, values=_values, width=_width)
-        self.class_sel.grid(padx=5, pady=5, sticky='nsew')
+        self.class_sel.grid(sticky='ew', pady=5)
 
-        customtkinter.CTkButton(frame, text='Reset', command=_reset).grid(padx=5, pady=5, sticky='nsew')
+        customtkinter.CTkButton(frame, text='Reset', command=_reset).grid(sticky='ew')
 
     def _class_promote(self):
 
@@ -60,15 +60,15 @@ class ClassEditor(customtkinter.CTkToplevel):
         _width = len(max(_values, key=len)) * 8
 
         frame = customtkinter.CTkFrame(self, fg_color='gray17')
-        frame.grid(row=self.row, column=self.col, padx=5, pady=5, sticky='nsew')
+        frame.grid(row=self.row, column=self.col, padx=(0,5), pady=5, sticky='nsew')
         frame.columnconfigure(0, weight=1)
 
-        customtkinter.CTkLabel(frame, text='Promote', fg_color='gray20', corner_radius=6).grid(padx=5, pady=5, sticky='nsew')
+        customtkinter.CTkLabel(frame, text='Promote', fg_color='gray20', corner_radius=6).grid(sticky='ew')
 
         self.class_promote = CustomCombobox(frame, values=_values, width=_width)
-        self.class_promote.grid(padx=5, pady=5, sticky='nsew')
+        self.class_promote.grid(sticky='ew', pady=5)
 
-        customtkinter.CTkButton(frame, text='Reset', command=_reset).grid(padx=5, pady=5, sticky='nsew')
+        customtkinter.CTkButton(frame, text='Reset', command=_reset).grid(sticky='nsew')
 
     def _class_stats(self):
 
@@ -83,22 +83,22 @@ class ClassEditor(customtkinter.CTkToplevel):
         self.class_stats = []
 
         frame = customtkinter.CTkFrame(self, fg_color='gray17')
-        frame.grid(row=self.row, column=self.col, padx=5, pady=5, sticky='nsew')
+        frame.grid(row=self.row, column=self.col, padx=5, pady=(0,5), sticky='nsew')
         frame.grid_anchor('n')
         frame.grid_columnconfigure([0,1], weight=1)
 
-        customtkinter.CTkLabel(frame, text='Stats', fg_color='gray20', corner_radius=6).grid(padx=5, pady=5, columnspan=2, sticky='nsew')
+        customtkinter.CTkLabel(frame, text='Stats', fg_color='gray20', corner_radius=6).grid(columnspan=2, sticky='ew', pady=(0,5))
 
         for i, stat in enumerate(config.class_stats):
             i += 1
             frame.grid_rowconfigure(i, weight=1)
-            customtkinter.CTkLabel(frame, text=stat.replace("_", " ")).grid(row=i, column=0, padx=5, pady=5)
+            customtkinter.CTkLabel(frame, text=stat.replace("_", " ")).grid(row=i, column=0, padx=3, pady=(0,5))
             entry = customtkinter.CTkEntry(frame, width=config.num_entry_width, justify='center')
-            entry.grid(row=i, column=1, padx=5, pady=5)
+            entry.grid(row=i, column=1, pady=(0,5))
 
             self.class_stats.append(entry)
 
-        customtkinter.CTkButton(frame, text='Reset', command=reset_class_stats).grid(padx=5, pady=5, columnspan=2, sticky='nsew')
+        customtkinter.CTkButton(frame, text='Reset', command=reset_class_stats).grid(columnspan=2, sticky='ew')
 
     def _class_ranks(self):
 
@@ -113,38 +113,38 @@ class ClassEditor(customtkinter.CTkToplevel):
         self.class_max_ranks = []
 
         frame = customtkinter.CTkFrame(self, fg_color='gray17')
-        frame.grid(row=self.row, column=self.col, padx=5, pady=5, sticky='nsew')
+        frame.grid(row=self.row, column=self.col, padx=(0,5), pady=(0,5), sticky='nsew')
         frame.grid_anchor('center')
         frame.columnconfigure([0,1,2], weight=1)
 
-        customtkinter.CTkLabel(frame, text='Ranks', fg_color='gray20', corner_radius=6).grid(row=0, column=0, padx=5, pady=5, sticky='nsew')
+        customtkinter.CTkLabel(frame, text='Ranks', fg_color='gray20', corner_radius=6).grid(row=0, column=0, sticky='ew', pady=(0,5))
 
-        customtkinter.CTkLabel(frame, text='Min Ranks', fg_color='gray20', corner_radius=6).grid(row=0, column=1, padx=5, pady=5, sticky='nsew')
+        customtkinter.CTkLabel(frame, text='Min Ranks', fg_color='gray20', corner_radius=6).grid(row=0, column=1, sticky='ew', padx=5, pady=(0,5))
 
-        customtkinter.CTkLabel(frame, text='Max Ranks', fg_color='gray20', corner_radius=6).grid(row=0, column=2, padx=5, pady=5, sticky='nsew')
+        customtkinter.CTkLabel(frame, text='Max Ranks', fg_color='gray20', corner_radius=6).grid(row=0, column=2, sticky='ew', pady=(0,5))
 
         for i, rank in enumerate(config.character_ranks):
             i += 1
-            customtkinter.CTkLabel(frame, text=rank.replace("_", " ")).grid(row=i, column=0, padx=5, pady=5)
+            customtkinter.CTkLabel(frame, text=rank.replace("_", " ")).grid(row=i, column=0, padx=3, pady=(0,5))
 
             min_entry = customtkinter.CTkOptionMenu(frame, values=config.weapon_ranks, dynamic_resizing=False, width=config.option_width)
             min_entry.set('')
-            min_entry.grid(row=i, column=1, padx=5, pady=5)
+            min_entry.grid(row=i, column=1, pady=(0,5))
             self.class_min_ranks.append(min_entry)
 
             max_entry = customtkinter.CTkOptionMenu(frame, values=config.weapon_ranks, dynamic_resizing=False, width=config.option_width)
             max_entry.set('')
-            max_entry.grid(row=i, column=2, padx=5, pady=5)
+            max_entry.grid(row=i, column=2, pady=(0,5))
             self.class_max_ranks.append(max_entry)
 
-        customtkinter.CTkButton(frame, text='Reset All', command=lambda: reset_class_ranks(self.class_min_ranks + self.class_max_ranks)).grid(row=len(self.class_max_ranks)+1, column=0, padx=5, pady=5, sticky='nsew')
+        customtkinter.CTkButton(frame, text='Reset All', command=lambda: reset_class_ranks(self.class_min_ranks + self.class_max_ranks)).grid(row=len(self.class_max_ranks)+1, column=0, sticky='ew')
 
-        customtkinter.CTkButton(frame, text='Reset Min', command=lambda: reset_class_ranks(self.class_min_ranks)).grid(row=len(self.class_min_ranks)+1, column=1, padx=5, pady=5, sticky='nsew')
+        customtkinter.CTkButton(frame, text='Reset Min', command=lambda: reset_class_ranks(self.class_min_ranks)).grid(row=len(self.class_min_ranks)+1, column=1, sticky='ew', padx=5)
 
-        customtkinter.CTkButton(frame, text='Reset Max', command=lambda: reset_class_ranks(self.class_max_ranks)).grid(row=len(self.class_max_ranks)+1, column=2, padx=5, pady=5, sticky='nsew')
+        customtkinter.CTkButton(frame, text='Reset Max', command=lambda: reset_class_ranks(self.class_max_ranks)).grid(row=len(self.class_max_ranks)+1, column=2, sticky='ew')
 
     def _class_buttons(self):
 
-        customtkinter.CTkButton(self, text='Generate Character Code', command=lambda: app.App.handleCode(self.root, 'class')).grid(columnspan=2, padx=5, pady=5, sticky='nsew')
+        customtkinter.CTkButton(self, text='Generate Character Code', command=lambda: app.App.handleCode(self.root, 'class')).grid(columnspan=2, padx=5, pady=(0,5), sticky='ew')
 
-        customtkinter.CTkButton(self, text='Close', command=self._close).grid(columnspan=2, padx=5, pady=5, sticky='nsew')
+        customtkinter.CTkButton(self, text='Close', command=self._close).grid(columnspan=2, padx=5, pady=(0,5), sticky='ew')
