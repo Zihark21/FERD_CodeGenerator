@@ -38,8 +38,6 @@ def code_handler(base, data, opt: str):
                     output = '\n'.join([code[0], code[1], code[2], 'E0000000 80008000'])
                 else:
                     output = '\n'.join([code[0], key_code, code[2], 'E0000000 80008000'])
-        elif opt == 'selected':
-            output = '\n'.join([key_code, 'A8000000 00000001', code, 'E0000000 80008000'])
         else:
             output = '\n'.join([key_code, code, 'E0000000 80008000'])
         return output
