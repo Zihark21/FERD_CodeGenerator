@@ -30,29 +30,29 @@ def _data(data) -> list[str]:
         offset = handleOffset(ITEM, header, 'Item')
 
         if input:
-            if header == 'Attack_Type':
+            if header == 'Effectiveness':
+                effect = 0
+                for i, j in enumerate(input):
+                    if j:
+                        effect += int(list(config.weapon_effectiveness.values())[i], 16)
+                effect = hex(effect).replace("0x", "").zfill(2).upper()
+                code.append(code_gen(ITEM, offset, effect, ALL, 2))
+
+            elif header == 'Attack_Type':
                 str_mag = config.attack_type.get(input)
                 code.append(code_gen(ITEM, offset, str_mag, ALL, 2))
 
-            elif header == 'Weapon_Rank':
+            elif header == 'Rank':
                 code.append(code_gen(ITEM, offset, config.rank_map.get(input), ALL, 4))
-
-            elif header == 'EXP Gain':
-                expcheck = int_check(input)
-                if expcheck:
-                    exp = hex(int(input)).replace('0x', '').zfill(2).upper()
-                    code.append(code_gen(ITEM, offset, exp, ALL, 2))
-                else:
-                    return error_output(ITEM, "EXP Gain", 0, 255)
 
             elif header == 'Unlock':
                 code.append(code_gen(ITEM, offset, '00', ALL, 2))
 
-            elif header in ['Infinite', 'Brave']:
-                code.append(code_gen(ITEM, offset, '01', ALL, 2))
-
             elif header == 'Char_Unlock':
                 code.append(code_gen(ITEM, offset, '0000', ALL, 4))
+
+            elif header in ['Infinite', 'Brave']:
+                code.append(code_gen(ITEM, offset, '01', ALL, 2))
 
             elif header == 'Heal':
                 code.append(code_gen(ITEM, offset, '10', ALL, 2))

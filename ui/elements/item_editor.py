@@ -54,6 +54,7 @@ class ItemEditor(customtkinter.CTkToplevel):
         self.row += 1
 
         def reset_data():
+
             for widget in self.item_data:
                 if isinstance(widget, customtkinter.CTkEntry):
                     widget.delete(0, 'end')
@@ -64,6 +65,9 @@ class ItemEditor(customtkinter.CTkToplevel):
                 else:
                     continue
 
+            for widget in self.effectiveness:
+                widget.deselect()
+
         frame = customtkinter.CTkFrame(self, fg_color='gray17')
         frame.grid(row=self.row, column=self.col, padx=5, pady=(0,5), sticky='nsew')
         frame.grid_anchor('center')
@@ -72,25 +76,30 @@ class ItemEditor(customtkinter.CTkToplevel):
         customtkinter.CTkLabel(frame, text='Item Data', fg_color='gray20', corner_radius=6).grid(columnspan=2, sticky='ew', pady=(0,5))
 
         self.item_data = []
+        self.effectiveness = []
 
         for i, data in enumerate(config.item_data):
             i += 1
             frame.grid_rowconfigure(i, weight=1)
             customtkinter.CTkLabel(frame, text=data.replace("_", " ")).grid(row=i, column=0, padx=3, pady=(0,5), sticky='ew')
-            if data in ['Attack_Type', 'Weapon_Rank']:
-                _width = config.option_width if data == "Weapon_Rank" else config.option_width*1.75
+            if data in ['Attack_Type', 'Rank']:
+                _width = config.option_width*1.75
                 opt_list = list(config.attack_type) if data == 'Attack_Type' else config.weapon_ranks
                 option_menu = customtkinter.CTkOptionMenu(frame, values=opt_list, dynamic_resizing=False, width=_width)
-                option_menu.grid(row=i, column=1, pady=(0,5))
+                option_menu.grid(row=i, column=1, padx=(0,3), pady=(0,5))
                 option_menu.set('')
                 self.item_data.append(option_menu)
-            elif data in ['EXP_Gain']:
-                entry = customtkinter.CTkEntry(frame, justify='center', width=config.num_entry_width)
-                entry.grid(row=i, column=1, pady=(0,5))
-                self.item_data.append(entry)
+            elif data in ['Effectiveness']:
+                frame2 = customtkinter.CTkFrame(frame)
+                for effect in config.weapon_effectiveness:
+                    checkbox = customtkinter.CTkCheckBox(frame2, text=effect, width=0)
+                    checkbox.pack(pady=(0,5), anchor='w')
+                    self.effectiveness.append(checkbox)
+                self.item_data.append(self.effectiveness)
+                frame2.grid(row=i, column=1)
             elif data in ['Unlock', 'Char_Unlock', 'Infinite', 'Brave', 'Heal']:
                 checkbox = customtkinter.CTkCheckBox(frame, text=None, width=0)
-                checkbox.grid(row=i, column=1, sticky='ns')
+                checkbox.grid(row=i, column=1, pady=(0,5), sticky='ns')
                 self.item_data.append(checkbox)
 
         customtkinter.CTkButton(frame, text='Reset', command=reset_data).grid(columnspan=2, sticky='ew')
@@ -116,7 +125,7 @@ class ItemEditor(customtkinter.CTkToplevel):
             frame.grid_rowconfigure(i, weight=1)
             customtkinter.CTkLabel(frame, text=stat.replace("_", " ")).grid(row=i, column=0, padx=3, pady=(0,5), sticky='ew')
             entry = customtkinter.CTkEntry(frame, justify='center', width=config.num_entry_width)
-            entry.grid(row=i, column=1, pady=(0,5))
+            entry.grid(row=i, column=1, padx=(0,3), pady=(0,5))
             self.item_stats.append(entry)
 
         customtkinter.CTkButton(frame, text='Reset', command=reset_stats).grid(columnspan=2, sticky='ew')
@@ -142,7 +151,7 @@ class ItemEditor(customtkinter.CTkToplevel):
             frame.grid_rowconfigure(i, weight=1)
             customtkinter.CTkLabel(frame, text=bonus.replace("_", " ")).grid(row=i, column=0, padx=3, pady=(0,5))
             entry = customtkinter.CTkEntry(frame, justify='center', width=config.num_entry_width)
-            entry.grid(row=i, column=1, pady=(0,5))
+            entry.grid(row=i, column=1, padx=(0,3), pady=(0,5))
             self.item_bonus.append(entry)
         
         customtkinter.CTkButton(frame, text='Reset', command=reset_bonus).grid(columnspan=2, sticky='ew')

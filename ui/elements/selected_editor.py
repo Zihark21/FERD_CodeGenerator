@@ -69,7 +69,7 @@ class SelectedEditor(customtkinter.CTkToplevel):
             i += 1
             customtkinter.CTkLabel(frame, text=stat.replace("_", " ")).grid(row=i, column=0, padx=3, pady=(0,5))
             entry = customtkinter.CTkEntry(frame, width=config.num_entry_width, justify='center')
-            entry.grid(row=i, column=1, pady=(0,5))
+            entry.grid(row=i, column=1, padx=(0,3), pady=(0,5))
             self.selected_stats.append(entry)
 
         customtkinter.CTkButton(frame, text='Reset', command=reset_stats).grid(columnspan=2, sticky='ew')

@@ -28,6 +28,7 @@
     "Item_Uses": 228,
     "Item_Status": 229,
     "Item_Forge": 254,
+    "Item_Color": 258,
     "Item_Step": 40,
     "Sword_Rank": 504,
     "Lance_Rank": 506,

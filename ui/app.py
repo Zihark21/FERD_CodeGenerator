@@ -103,7 +103,14 @@ class App(customtkinter.CTk):
                 row_data = {}
                 if row:
                     for widget, header in zip(row, config.character_inventory):
-                        row_data[header] = widget.get()
+                        if isinstance(widget, customtkinter.CTkEntry | customtkinter.CTkComboBox | customtkinter.CTkCheckBox):
+                            row_data[header] = widget.get()
+                        elif isinstance(widget, customtkinter.CTkButton):
+                            color = widget.cget('fg_color')
+                            if color != '#808080':
+                                row_data[header] = color
+                            else:
+                                row_data[header] = ''
                     inv_data.append(row_data)
             
             return inv_data
@@ -132,7 +139,10 @@ class App(customtkinter.CTk):
         def get_item_attrs():
             item_data = {}
             for data, field in zip(self.item_editor.item_data, config.item_data):
-                item_data[field] = data.get()
+                if field != 'Effectiveness':
+                    item_data[field] = data.get()
+                else:
+                    item_data[field] = [entry.get() for entry in data]
             
             return item_data
 

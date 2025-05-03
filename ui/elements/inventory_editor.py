@@ -1,4 +1,5 @@
 import customtkinter
+from tkinter import colorchooser
 from ui import app
 from .custom_combobox import CustomCombobox
 from src import config
@@ -35,11 +36,19 @@ class InventoryEditor(customtkinter.CTkToplevel):
                         widget.delete(0, 'end')
                     elif isinstance(widget, customtkinter.CTkCheckBox):
                         widget.deselect()
-                    elif isinstance(widget, customtkinter.CTkComboBox):
+                    elif isinstance(widget, customtkinter.CTkComboBox | CustomCombobox):
                         widget.set('')
                         widget.update_text(self, open=False)
+                    elif isinstance(widget, customtkinter.CTkButton):
+                        widget.configure(fg_color='#808080')
                     else:
                         continue
+
+        def _choose_color(button: customtkinter.CTkButton):
+            color = colorchooser.askcolor(parent=self)[1]
+            if color:
+                button.configure(fg_color=color)
+                return color
 
         _values = config.item_list
         _width = len(max(_values, key=len)) * 10
@@ -81,10 +90,15 @@ class InventoryEditor(customtkinter.CTkToplevel):
                     entry = customtkinter.CTkEntry(frame, width=_width)
                     entry.grid(row=r, column=c, padx=_padx, pady=_pady, sticky='nsew')
                     inv_row.append(entry)
-                elif title in ['Wt', 'Forged', 'Blessed']:
+                elif title in ['Weightless', 'Forged', 'Blessed']:
                     checkbox = customtkinter.CTkCheckBox(frame, text=None, width=0)
                     checkbox.grid(row=r, column=c, padx=_padx, pady=_pady, sticky='ns')
                     inv_row.append(checkbox)
+                elif title in ['Color']:
+                    color_button = customtkinter.CTkButton(frame, width=50, fg_color='#808080', text=None)
+                    color_button.configure(command=lambda btn=color_button: _choose_color(btn))
+                    color_button.grid(row=r, column=c, padx=_padx, pady=_pady, sticky='nsew')
+                    inv_row.append(color_button)
                 else:
                     raise "Error in character inventory."
 

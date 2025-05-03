@@ -69,14 +69,15 @@ def _items(data, item_step) -> list[str]:
     if items:
         for i in range(7):
             item = items[i][headers[0]]
-            fname = items[i][headers[2]]
             uses = items[i][headers[1]]
-            blessed = items[i][headers[8]]
-            forged = items[i][headers[7]]
-            mt = items[i][headers[3]]
-            hit = items[i][headers[4]]
-            crit = items[i][headers[5]]
-            wt = items[i][headers[6]]
+            blessed = items[i][headers[2]]
+            forged = items[i][headers[3]]
+            fname = items[i][headers[4]]
+            mt = items[i][headers[5]]
+            hit = items[i][headers[6]]
+            crit = items[i][headers[7]]
+            wt = items[i][headers[8]]
+            clr = items[i][headers[9]]
 
             if not item:
                 continue
@@ -85,6 +86,7 @@ def _items(data, item_step) -> list[str]:
             item_uses_off = hex(int(handleOffset(CHAR, 'Item_Uses', 'Char'), 16) + (item_step * i)).replace('0x', '').upper().zfill(8)
             item_status_off = hex(int(handleOffset(CHAR, 'Item_Status', 'Char'), 16) + (item_step * i)).replace('0x', '').upper().zfill(8)
             item_forge_off = hex(int(handleOffset(CHAR, 'Item_Forge', 'Char'), 16) + (item_step * i)).replace('0x', '').upper().zfill(8)
+            item_color_off = hex(int(handleOffset(CHAR, 'Item_Color', 'Char'), 16) + (item_step * i)).replace('0x', '').upper().zfill(8)
 
             if item:
                 id = handleOffset(item, 'Item', 'Item')
@@ -135,7 +137,16 @@ def _items(data, item_step) -> list[str]:
                     if wt:
                         forge_wt_code = code_gen(CHAR, item_forge_off, 'E0', ALL, 2)
                         code.append(forge_wt_code)
-    
+
+                    if clr != '#808080':
+                        clr = str(clr).replace('#', '').upper()
+                        off = item_color_off
+                        for i in range(len(clr) // 2):
+                            rgb = clr[(i*2):(i*2)+2]
+                            clr_code = code_gen(CHAR, off, rgb, ALL, 2)
+                            code.append(clr_code)
+                            off = hex(int(off, 16) + 1).replace("0x", "").zfill(8).upper()
+
         return code
 
 def _stats(data) -> list[str]:

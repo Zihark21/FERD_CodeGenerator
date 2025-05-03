@@ -57,7 +57,8 @@
     ],
 
     "item_stats": [
-        "Weapon_Uses",
+        "EXP_Gain",
+        "Uses",
         "Might",
         "Hit",
         "Weight",
@@ -67,14 +68,14 @@
     ],
 
     "item_data": [
+        "Effectiveness",
         "Attack_Type",
-        "Weapon_Rank",
-        "EXP_Gain",
+        "Rank",
         "Unlock",
         "Char_Unlock",
         "Infinite",
-        "Brave",
-        "Heal"
+        "Heal",
+        "Brave"
     ],
 
     "item_bonus": [
@@ -103,13 +104,14 @@
     "character_inventory": [
         "Item",
         "Uses",
+        "Blessed",
+        "Forged",
         "Forge Name",
         "Mt",
         "Hit",
         "Crit",
-        "Wt",
-        "Forged",
-        "Blessed"
+        "Weightless",
+        "Color"
     ],
 
     "support_ranks": [
@@ -141,5 +143,14 @@
         "C": "0047", 
         "D": "001F", 
         "E": "0001"
+    },
+
+    "weapon_effectiveness": {
+        "Fly": "02",
+        "Knight": "04",
+        "Armor": "08",
+        "Human": "20",
+        "Beast": "40",
+        "Dragon": "80"
     }
 }

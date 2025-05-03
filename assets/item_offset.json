@@ -1,10 +1,11 @@
 {
     "Item": 80,
+    "Effectiveness": 13,
     "Weapon_Type": 18,
     "Attack_Type": 19,
-    "Weapon_Rank": 24,
+    "Rank": 24,
     "EXP_Gain": 26,
-    "Weapon_Uses": 27,
+    "Uses": 27,
     "Might": 28,
     "Hit": 29,
     "Weight": 30,
