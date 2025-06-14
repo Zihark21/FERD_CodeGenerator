@@ -139,8 +139,10 @@ class App(customtkinter.CTk):
         def get_item_attrs():
             item_data = {}
             for data, field in zip(self.item_editor.item_data, config.item_data):
-                if field != 'Effectiveness':
+                if field in ['Attack_Type', 'Rank']:
                     item_data[field] = data.get()
+                elif field == 'Effects':
+                    item_data[field] = self.item_editor.item_effect.get()
                 else:
                     item_data[field] = [entry.get() for entry in data]
             
@@ -152,7 +154,7 @@ class App(customtkinter.CTk):
             "stats": [stat.get() for stat in self.item_editor.item_stats],
             "bonuses": [bonus.get() for bonus in self.item_editor.item_bonus]
         }
-    
+
     def handleSelected(self):
 
         # def get_inventory():
@@ -173,7 +175,7 @@ class App(customtkinter.CTk):
             "ranks": [rank.get() for rank in self.selected_editor.selected_ranks],
             # "items": get_inventory()
         }
-    
+
     def handleDatabase(self, sel_code):
 
         return config.code_database[sel_code]

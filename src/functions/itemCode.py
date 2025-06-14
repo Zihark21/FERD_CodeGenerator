@@ -27,35 +27,37 @@ def _data(data) -> list[str]:
 
     for header in config.item_data:
         input = data['data'][header]
-        offset = handleOffset(ITEM, header, 'Item')
 
         if input:
-            if header == 'Effectiveness':
+            if header == 'Attack_Type':
+                offset = handleOffset(ITEM, header, 'Item')
+                code.append(code_gen(ITEM, offset, config.attack_type.get(input), ALL, 2))
+
+            elif header == 'Rank':
+                offset = handleOffset(ITEM, header, 'Item')
+                code.append(code_gen(ITEM, offset, config.rank_map.get(input), ALL, 4))
+            
+            elif header == 'Effectiveness':
+                offset = handleOffset(ITEM, header, 'Item')
                 effect = 0
                 for i, j in enumerate(input):
                     if j:
                         effect += int(list(config.weapon_effectiveness.values())[i], 16)
-                effect = hex(effect).replace("0x", "").zfill(2).upper()
-                code.append(code_gen(ITEM, offset, effect, ALL, 2))
+                effect = hex(effect).replace("0x", "").zfill(4).upper()
+                if effect != '0000':
+                    code.append(code_gen(ITEM, offset, effect, ALL, 4))
 
-            elif header == 'Attack_Type':
-                str_mag = config.attack_type.get(input)
-                code.append(code_gen(ITEM, offset, str_mag, ALL, 2))
+            elif header == 'Misc':
+                for m, i in zip(list(config.weapon_misc), input):
+                    if i:
+                        offset = handleOffset(ITEM, m, 'Item')
+                        _misc = config.weapon_misc.get(m)
+                        code.append(code_gen(ITEM, offset, _misc, ALL, len(_misc)))
 
-            elif header == 'Rank':
-                code.append(code_gen(ITEM, offset, config.rank_map.get(input), ALL, 4))
-
-            elif header == 'Unlock':
-                code.append(code_gen(ITEM, offset, '00', ALL, 2))
-
-            elif header == 'Char_Unlock':
-                code.append(code_gen(ITEM, offset, '0000', ALL, 4))
-
-            elif header in ['Infinite', 'Brave']:
-                code.append(code_gen(ITEM, offset, '01', ALL, 2))
-
-            elif header == 'Heal':
-                code.append(code_gen(ITEM, offset, '10', ALL, 2))
+            elif header == 'Effects':
+                if input != 'None':
+                    offset = handleOffset(ITEM, header, 'Item')
+                    code.append(code_gen(ITEM, offset, config.weapon_effects.get(input), ALL, 2))
 
     return code
 

@@ -68,14 +68,11 @@
     ],
 
     "item_data": [
-        "Effectiveness",
         "Attack_Type",
         "Rank",
-        "Unlock",
-        "Char_Unlock",
-        "Infinite",
-        "Heal",
-        "Brave"
+        "Effectiveness",
+        "Misc",
+        "Effects"
     ],
 
     "item_bonus": [
@@ -127,6 +124,7 @@
         "STR - Bow": "03",
         "STR - Knife": "04",
         "STR - Strike": "05",
+        "STR - Crossbow": "0D",
         "MAG - Fire": "06",
         "MAG - Thunder": "07",
         "MAG - Wind": "08",
@@ -146,11 +144,29 @@
     },
 
     "weapon_effectiveness": {
-        "Fly": "02",
-        "Knight": "04",
-        "Armor": "08",
+        "Magic_User": "01",
+        "Flying": "02",
+        "Mounted": "04",
+        "Armored": "08",
         "Human": "20",
         "Beast": "40",
-        "Dragon": "80"
+        "Dragon": "80",
+        "Bird": "100",
+        "Laguz": "10",
+        "Door": "1000"
+    },
+
+    "weapon_effects": {
+        "Remove": "00",
+        "Brave": "01",
+        "Poison": "20",
+        "No Crit": "80"
+    },
+
+    "weapon_misc": {
+        "Unlock": "00",
+        "Char_Unlock": "0000",
+        "Infinite": "01",
+        "Heal": "10"
     }
 }

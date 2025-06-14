@@ -1,6 +1,6 @@
 {
     "Item": 80,
-    "Effectiveness": 13,
+    "Effectiveness": 12,
     "Weapon_Type": 18,
     "Attack_Type": 19,
     "Rank": 24,
@@ -26,5 +26,5 @@
     "Infinite": 57,
     "Heal": 58,
     "Char_Unlock": 59,
-    "Brave": 62
+    "Effects": 62
 }
