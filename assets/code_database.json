@@ -11,7 +11,7 @@
         "KEYBIND": "True",
         "NTSC 1.0": "003CAFFC 00000004",
         "NTSC 1.01": "003CB07C 00000004",
-        "PAL": "Unknown"
+        "PAL": "003C3A1C 00000004"
     },
     "Enemies Killed": {
         "DESC": "Info:\nReplace XX with the number of enemies killed. Convert to hex. This is mostly used for Part 3 Endgame but is still a counter in all other chapters.\n\nCode:",
@@ -25,7 +25,7 @@
         "KEYBIND": "False",
         "NTSC 1.0": "04053488 7C601B78",
         "NTSC 1.01": "04053508 7C601B78",
-        "PAL": "Unknown"
+        "PAL": "04037C30 7C601B78"
     },
     "Universal EXP": {
         "DESC": "Info:\nAll EXP gain increase. This works for character and weapons. Replace XX with:\n0E - 2x\n16 - 4x\n1E - 8x\n\nCode:",
@@ -34,26 +34,26 @@
         "NTSC 1.01": "04120830 57E3XX3E",
         "PAL": "Unknown"
     },
-    "Infinite Money": {
+    "Infinite Gold": {
         "DESC": "Info:\nGold set to 50,000\n\nCode:",
         "KEYBIND": "False",
         "NTSC 1.0": "083CAAD0 0000C350\n20020004 00000000",
         "NTSC 1.01": "083CAB50 0000C350\n20020004 00000000",
-        "PAL": "Unknown"
+        "PAL": "083C34F0 0000C350\n20020004 00000000"
     },
     "Infinite BEXP": {
         "DESC": "Info:\nBEXP is set to 50,000\n\nCode:",
         "KEYBIND": "False",
         "NTSC 1.0": "083CAADC 47435000\n20020004 00000000",
         "NTSC 1.01": "083CAB5C 47435000\n20020004 00000000",
-        "PAL": "Unknown"
+        "PAL": "083C34FC 47435000\n20020004 00000000"
     },
     "BEXP Cap": {
         "DESC": "Info:\nReplace XX in first line with max number and XX in second line with min number. 03 is default for both.\nUse 08 on both to get all stats every level up.\n\nCode:",
         "KEYBIND": "False",
         "NTSC 1.0": "0006D86B 000000XX\n0006DA37 000000XX",
         "NTSC 1.01": "0006D8EB 000000XX\n0006DAB7 000000XX",
-        "PAL": "000520AF 000000XX\n0005227B 000000XX\n0005249B 000000XX"
+        "PAL": "000520AF 000000XX\n0005249B 000000XX"
     },
     "Perfect Level Up": {
         "DESC": "Info:\nMakes all units get all stat every level up. If used with BEXP Cap Adj, you will get all 8 stats on level up when using BEXP in base.\n\nCode:",
@@ -67,59 +67,59 @@
         "KEYBIND": "False",
         "NTSC 1.0": "0006D2DF 000000XX",
         "NTSC 1.01": "0006D35F 000000XX",
-        "PAL": "Unknown"
+        "PAL": "00051B23 000000XX"
     },
     "All Convoy": {
         "DESC": "Info:\nAll items in convoy. All items 50 uses.\n\nCode:",
         "KEYBIND": "True",
         "NTSC 1.0": "083E9220 80B5FD90\n21270028 00000050\n083E9224 00000032\n01270028 00000000\n083E9225 00000000\n01270028 00000000",
         "NTSC 1.01": "083E92A0 80B5FE10\n21270028 00000050\n083E92A4 00000032\n01270028 00000000\n083E92A5 00000000\n01270028 00000000",
-        "PAL": "Unknown"
+        "PAL": "083E1C80 808D2170\n21270028 00000050\n083E1C84 00000050\n01270028 00000000\n083E92A5 00000000\n01270028 00000000"
     },
     "Blessed Convoy": {
         "DESC": "Info:\nAll items in convoy. All items are blessed. Use with Clear Convoy to remove all items.\n\nCode:",
         "KEYBIND": "True",
         "NTSC 1.0": "083E9220 80B5FD90\n21270028 00000050\n083E9224 00000050\n01270028 00000000\n083E9225 00000010\n01270028 00000000",
         "NTSC 1.01": "083E92A0 80B5FE10\n21270028 00000050\n083E92A4 00000050\n01270028 00000000\n083E92A5 00000010\n01270028 00000000",
-        "PAL": "Unknown"
+        "PAL": "083E1C80 808D2170\n21270028 00000050\n083E1C84 00000050\n01270028 00000000\n083E1C85 00000010\n01270028 00000000"
     },
     "Clear Convoy": {
         "DESC": "Info:\nClears all items in convoy. Use with Blessed Convoy to remove all items.\n\nCode:",
         "KEYBIND": "True",
         "NTSC 1.0": "083E9220 00000000\n2BC10004 00000000",
         "NTSC 1.01": "083E92A0 00000000\n2BC10004 00000000",
-        "PAL": "Unknown"
+        "PAL": "083E1C80 00000000\n2BC10004 00000000\n083E92A0 00000000\n2BC10004 00000000"
     },
     "Convoy 300": {
         "DESC": "Info:\nEnables max convoy capacity for all teams and chapters to allow use for all items codes.\n\nCode:",
         "KEYBIND": "False",
         "NTSC 1.0": "024CB6DA 0000012C\n024CB6E2 0000012C\n024CB6E6 000092A0\n024CB6EA 0000012C\n024CB6EE 000092A0\n024CB6F2 0000012C\n024CB6F6 000092A0",
         "NTSC 1.01": "024CB75A 0000012C\n024CB762 0000012C\n024CB766 000092A0\n024CB76A 0000012C\n024CB76E 000092A0\n024CB772 0000012C\n024CB776 000092A0",
-        "PAL": "Unknown"
+        "PAL": "024C6962 0000012C\n024C696A 0000012C\n024C696E 000092A0\n024C6972 0000012C\n024C6976 000092A0\n024C697A 0000012C\n024C697E 000092A0"
     },
     "All Skills": {
         "DESC": "Info:\nCan assign all skills in the game.\nAuthor: Whai\n\nCode:",
         "KEYBIND": "False",
         "NTSC 1.0": "0870F828 00000000\n2050002C 00000000\n0870F830 00000002\n0023002C 00000000\n0870F834 80710A84\n2023002C 00000000",
         "NTSC 1.01": "0870F8A8 00000000\n2050002C 00000000\n0870F8B0 00000002\n0023002C 00000000\n0870F8B4 80710B04\n2023002C 00000000",
-        "PAL": "Unknown"
+        "PAL": "08701E28 00000000\n2050002C 00000000\n08701E30 00000002\n0023002C 00000000\n08701E34 80703058\n2023002C 00000000"
     },
     "Free Skills": {
         "DESC": "Info:\nAll skills cost 0.\n\nCode:",
         "KEYBIND": "False",
         "NTSC 1.0": "0870F82E 00000000\n0050002C 00000000",
         "NTSC 1.01": "0870F8AE 00000000\n0050002C 00000000",
-        "PAL": "Unknown"
+        "PAL": "08701E2E 00000000\n0050002C 00000000"
     },
     "Character Scroller": {
-        "DESC": "Info:\nYou MUST open the status menu of a unit for this code to work.\nCurrently only GameCube controller:\nHold L and use left and right to cycle between characters.\n\nCode:",
+        "DESC": "Info:\nYou MUST open the status menu of a unit for this code to work.\nCurrently only GameCube controller:\nHold L and use left and right to cycle between characters.\nAuthor: Zihark\n\nCode:",
         "KEYBIND": "Embedded",
         "NTSC 1.0": "283D78A8 00000041\nA8000000 00000001\n48000000 803C91F0\n340000EC 808C3570\n92210000 000000EC\n86000000 FFFFFF04\n94210000 000000EC\nE0000000 80008000\n283D78A8 00000042\nA8000000 00000001\n48000000 803C91F0\n360000EC 808DFA40\n92210000 000000EC\n86000000 000000FC\n94210000 000000EC\nE0000000 80008000",
         "NTSC 1.01":"283D7928 00000041\nA8000000 00000001\n48000000 803C9270\n340000EC 808C35F0\n92210000 000000EC\n86000000 FFFFFF04\n94210000 000000EC\nE0000000 80008000\n283D7928 00000042\nA8000000 00000001\n48000000 803C9270\n360000EC 808DFAC0\n92210000 000000EC\n86000000 000000FC\n94210000 000000EC\nE0000000 80008000",
         "PAL": "Unknown"
     },
     "Class Scroller": {
-        "DESC": "Info:\nYou MUST open the status menu of a unit for this code to work.\nCurrently only GameCube controller:\nHold R and use left and right to cycle between classes.\n\nCode:",
+        "DESC": "Info:\nYou MUST open the status menu of a unit for this code to work.\nCurrently only GameCube controller:\nHold R and use left and right to cycle between classes.\nAuthor: Zihark\n\nCode:",
         "KEYBIND": "Embedded",
         "NTSC 1.0": "283D78A8 00000021\nA8000000 00000001\n48000000 803C91F0\n340000F0 80B53F90\n92210000 000000F0\n86000000 FFFFFEE4\n94210000 000000F0\nE0000000 80008000\n283D78A8 00000022\nA8000000 00000001\n48000000 803C91F0\n360000F0 80B5FC28\n92210000 000000F0\n86000000 0000011C\n94210000 000000F0\nE0000000 80008000",
         "NTSC 1.01": "283D7928 00000021\nA8000000 00000001\n48000000 803C9270\n340000F0 80B54010\n92210000 000000F0\n86000000 FFFFFEE4\n94210000 000000F0\nE0000000 80008000\n283D7928 00000022\nA8000000 00000001\n48000000 803C9270\n360000F0 80B5FCA8\n92210000 000000F0\n86000000 0000011C\n94210000 000000F0\nE0000000 80008000",
