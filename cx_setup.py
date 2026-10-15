@@ -19,5 +19,5 @@ setup(
     version="1.0",
     description="",
     options=build_options,
-    executables=[Executable("RDCW.py", base="Win32GUI", icon="assets/RD_Custom.ico")],
+    executables=[Executable("RDCW.py", base="GUI", icon="assets/RD_Custom.ico")],
 )

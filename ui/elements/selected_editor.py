@@ -11,7 +11,7 @@ class SelectedEditor(customtkinter.CTkToplevel):
 
         self._close()
         self.title('Selected Editor')
-        self.resizable(False, False)
+        self.resizable(False, True)
         self.protocol('WM_DELETE_WINDOW', self._close)
 
         self.row = 0

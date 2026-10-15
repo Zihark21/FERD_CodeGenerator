@@ -1,6 +1,7 @@
-/pyinstaller
+pyinstaller
 __pycache__
 *.zip
 .vscode
 .venv
-/RDCW
+RDCW
+*.egg-info

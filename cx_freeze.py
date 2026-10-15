@@ -1,15 +1,19 @@
-import subprocess, shutil, sys, os
+import subprocess
+import shutil
+import sys
+from pathlib import Path
 
 rmv = ['RDCW', 'src/__pycache__', 'src/functions/__pycache__', 'ui/__pycache__', 'ui/elements/__pycache__']
 
 for r in rmv:
-    if os.path.exists(r):
+    rpath = Path.cwd() / r
+    if rpath.exists():
         print(f'Removing {r}')
-        shutil.rmtree(r)
+        shutil.rmtree(rpath)
 
-if os.path.exists('RDCW.zip'):
+if Path.cwd().joinpath('RDCW.zip').exists():
     print('Removing RDCW.zip')
-    os.remove('RDCW.zip')
+    Path.cwd().joinpath('RDCW.zip').unlink()
 
-subprocess.run([sys.executable, 'cx_setup.py', 'build'])
+subprocess.run(['.venv/Scripts/python.exe', 'cx_setup.py', 'build'])
 shutil.make_archive("RDCW", 'zip', "RDCW")

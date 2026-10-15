@@ -12,7 +12,7 @@ class InventoryEditor(customtkinter.CTkToplevel):
 
         self._close()
         self.title('Inventory Editor')
-        self.resizable(False, False)
+        self.resizable(False, True)
         self.protocol('WM_DELETE_WINDOW', self._close)
 
         inventory_headers = config.character_inventory
